@@ -4,12 +4,15 @@ import com.example.fastfx.fastfx.elements.ElementsCache;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
+
 public class StyleSetter {
 
+    // The main container which holds all the elements from the page
     private AnchorPane mainPageContainer;
     private Node currentNode;
     private StyleSplitter styleSplitter;
     private ParserFunctions parserFunctions;
+    private StyleOrderManager styleSorter;
 
     private StyleCache styleCache;
     private ElementsCache elementsCache;
@@ -17,12 +20,14 @@ public class StyleSetter {
     public void StyleSetter(AnchorPane mainPageContainer){
         this.mainPageContainer = mainPageContainer;
         styleSplitter = new StyleSplitter();
+        styleSorter = new StyleOrderManager();
         styleCache = new StyleCache();
         elementsCache = new ElementsCache(mainPageContainer);
     }
 
     public void setStyle(Node node, String style){
         currentNode = node;
+        String[] splitStyle = StyleSplitter.splitProperties(style);
     };
 
     public void addStyle(Node node, String newProperty){
