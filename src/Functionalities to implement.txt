@@ -1,3 +1,0 @@
--Implement margin
-   When margin is set all types of positioning will take into account
-   the set margin. Margins
