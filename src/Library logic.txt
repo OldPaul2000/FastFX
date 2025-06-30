@@ -1,7 +1,12 @@
 Legend:
 ✔ - finished
 p - possibly to implement
+===============================================
 
+*** All styles will be applied by using javafx methods instead css properties ***
+
+!Style properties can be modified after they were applied
+ when using javafx functions instead of css properties
 
 StyleSetter{
     -setGlobalStyle(style): it should be located in the controller where the @FXML objects are located
@@ -23,11 +28,26 @@ StyleOrderManager{
       e.g: if we set border radius in percentage before we set the width and height
            it won't be able to calculate the border radius if there is no width and height specified
       so if we set border radius and the height, the algorithm should put height before border radius.
+      // If a child is specified in the input style(br-r: 10px; w:100px; bc-c:red, RadioButton{w:20px, bc-c: green})
+      // a variable lastStyleIndex will store the last index of the style property encountered
+      // in the input string before the child encountering and use that offset for
+      // sorting the style properties for that child
 }
 
 StyleSplitter{
-    ✔ -splitProperties(inputStyle): splits the property value pairs from the input string style
-    ✔ -splitPropertyValue(propertyValue): splits the given property value pair
+    -splitProperties(inputStyle): splits the property value pairs from the input string style
+    -splitPropertyValue(propertyValue): splits the given property value pair
+
+    // It should accept the next input format:
+    // String style = "h:100px; w:60px; bc-c:red; " +
+                                  "child{w:200px; h:140px; bc-c:#214fea}; " +
+                                  ":subnode2{h:20px; w:30px; br-r:5px}; " +
+                                  ":subnode{h:23.4px; w:45px; br-r:7px}; " +
+                                  "::pseudo-class{w:100px}; ";
+
+    // :subnode e.g. Thumb of the Slider
+    // ::pseudo-class e.g. hover, click etc
+    // if there is no : or :: specified the algorithm will apply the style for that node's child.
 }
 
 PropertyParser{
@@ -37,6 +57,10 @@ PropertyParser{
 }
 
 StyleCache{
+    // The styles will be stored as an ArrayList.
+    // Probably the styles will need to be stored as objects instead which will have
+    // a separate arraylist for the node to style and another arraylist for
+    // every subnodes
     -setStyle(Node, style): adds the set style in a HashMap<styled node, the string style>)
     -addStyle(Node, style): adds a new property to the existing style
     -removeStyle(Node): removes the style by passing the styled node)

@@ -1,4 +1,4 @@
-package com.example.fastfx.fastfx.elements;
+package com.example.fastfx.fastfx.elements.cache;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;

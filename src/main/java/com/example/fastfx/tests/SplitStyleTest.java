@@ -1,6 +1,6 @@
 package com.example.fastfx.tests;
 
-import com.example.fastfx.fastfx.style.StyleSplitter;
+import com.example.fastfx.fastfx.style.parser.StyleSplitter;
 
 public class SplitStyleTest {
     public static void main(String[] args) {

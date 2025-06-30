@@ -40,5 +40,11 @@ public class Main {
 //        System.out.println(nums.size());
 //        System.out.println(nums);
 
+        InsertionSort insertionSort = new InsertionSort();
+
+        insertionSort.sort(new int[]{5,2,4,3});
+        System.out.println(insertionSort.getSortedNumbers());
+
+
     }
 }

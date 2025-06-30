@@ -1,6 +1,7 @@
 package com.example.fastfx;
 
-import com.example.fastfx.fastfx.elements.ElementsCache;
+import com.example.fastfx.fastfx.elements.cache.ElementsCache;
+import com.example.fastfx.fastfx.style.parser.StyleSplitter;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -82,6 +83,24 @@ public class HelloController {
 
 
     public void initialize(){
+
+            String style = "h:100px; w:60px; bc-c:red; " +
+                           "child{w:200px; h:140px; bc-c:#214fea}; " +
+                           ":subnode2{h:20px; w:30px; br-r:5px}; " +
+                           ":subnode{h:23.4px; w:45px; br-r:7px}; " +
+                           "::pseudo-class{w:100px}";
+
+//        String style = "subnode{h:20px; w:30px; br-r:5px}; ";
+
+        String[] styles = StyleSplitter.splitProperties(style);
+        System.out.println("Number of properties: " + styles.length);
+        for(int i = 0; i < styles.length; i++){
+            System.out.println(styles[i]);
+        }
+
+    }
+
+    private void methodForHoldingCode(){
 //        FastFXStyle style = new FastFXStyle(mainContainer);
         ElementsCache elementsCache = new ElementsCache(mainContainer);
 
@@ -99,13 +118,11 @@ public class HelloController {
 //        System.out.println(elementsCache.getAllChildren());
 
 
-//        System.out.println(Arrays.toString(StyleSetter.separateStyles("w:200 d:1s; h:100 d:2s; bc-c:#521def; br-r:0.8em; box:: w:1.2em; h:1.2em")));
+//        System.out.println(Arrays.toString(FStyle.separateStyles("w:200 d:1s; h:100 d:2s; bc-c:#521def; br-r:0.8em; box:: w:1.2em; h:1.2em")));
 
 
         double execTime = ((double) System.currentTimeMillis() - start) / 1000;
         System.out.println("Execution time: " + execTime);
-
-
     }
 
 }

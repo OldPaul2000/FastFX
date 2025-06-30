@@ -1,1 +1,11 @@
-- Check for css properties/values conflicts
+ --- For later ---
+- Check if Node or Region is best suited as javafx style method argument
+
+ !!! Current step !!!
+- Finish style StyleSplitter class. It should accept the next input format:
+  h:100px; w:60px; bc-c:red; :subnode{h:20px; w:30px; br-r:5px}; :subnode2{h:20px; w:30px; br-r:5px}; ::pseudo-class{w: 100px}
+
+  :subnode e.g. Thumb of the Slider
+  ::pseudo-class e.g. hover, click etc
+
+  if there is no : or :: specified the algorithm will find for that node's child
