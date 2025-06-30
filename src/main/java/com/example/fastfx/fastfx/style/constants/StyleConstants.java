@@ -1,4 +1,4 @@
-package com.example.fastfx.fastfx.style;
+package com.example.fastfx.fastfx.style.constants;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,32 +18,31 @@ public class StyleConstants {
     }
 
     private final Map<String, String> NATIVE_CSS_PROPERTIES = new HashMap<>(Map.ofEntries(
-            Map.entry("bc-c", "-fx-background-color"),
-            Map.entry("bc-i", "-fx-background-insets"),
-            Map.entry("bc-r", "-fx-background-radius"),
+            Map.entry("w", "-fx-pref-width"),
+            Map.entry("h", "-fx-pref-height"),
+            Map.entry("tx", "-fx-translate-x"),
+            Map.entry("ty", "-fx-translate-y"),
+            Map.entry("tz", "-fx-translate-z"),
+            Map.entry("rt", "-fx-rotate"),
+            Map.entry("sc-x", "-fx-scale-x"),
+            Map.entry("sc-y", "-fx-scale-y"),
             Map.entry("pd", "-fx-padding"),
             Map.entry("f-s", "-fx-font-size"),
             Map.entry("f-w", "-fx-font-weight"),
-            Map.entry("t-f", "-fx-text-fill"),
             Map.entry("br-r", "-fx-border-radius"),
             Map.entry("br-w", "-fx-border-width"),
+            Map.entry("bc-i", "-fx-background-insets"),
+            Map.entry("bc-r", "-fx-background-radius"),
+            Map.entry("op", "-fx-opacity"),
             Map.entry("br-s", "-fx-border-style"),
+            Map.entry("bc-c", "-fx-background-color"),
+            Map.entry("t-f", "-fx-text-fill"),
             Map.entry("br-c", "-fx-border-color"),
             Map.entry("f-c", "-fx-focus-color"),
             Map.entry("ff-c", "-fx-faint-focus-color"),
             Map.entry("ds", "-fx-effect:dropshadow"),
             Map.entry("is", "-fx-effect:innershadow"),
-            // Maybe below properties will be set using nodes setter methods
-            // to be also able to get them using java methods.
-            // (Styles set in css can't be retrieved using java methods)
-            Map.entry("op", "-fx-opacity"),
-            Map.entry("w", "-fx-pref-width"),
-            Map.entry("h", "-fx-pref-height"),
-            Map.entry("tx", "-fx-translate-x"),
-            Map.entry("ty", "-fx-translate-y"),
-            Map.entry("rt", "-fx-rotate"),
-            Map.entry("sc-x", "-fx-scale-x"),
-            Map.entry("sc-y", "-fx-scale-y")
+            Map.entry("vo", "(view order)")
     ));
     public Map<String, String> getNATIVE_CSS_PROPERTIES(){
         return new HashMap<>(NATIVE_CSS_PROPERTIES);

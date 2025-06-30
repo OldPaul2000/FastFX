@@ -1,4 +1,4 @@
-package com.example.fastfx.fastfx.elements;
+package com.example.fastfx.fastfx.elements.constants;
 
 import java.util.HashMap;
 import java.util.Map;
