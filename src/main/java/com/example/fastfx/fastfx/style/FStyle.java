@@ -2,11 +2,11 @@ package com.example.fastfx.fastfx.style;
 
 import com.example.fastfx.fastfx.elements.cache.ElementsCache;
 import com.example.fastfx.fastfx.style.cache.StyleCache;
-import com.example.fastfx.fastfx.style.parser.ParserFunctions;
-import com.example.fastfx.fastfx.style.parser.StyleSplitter;
+import com.example.fastfx.fastfx.style.parser.Parser;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,32 +19,35 @@ public class FStyle {
      */
     private AnchorPane mainPageContainer;
     private Node currentNode;
-    private ParserFunctions parserFunctions;
 
+    private Parser parser;
     private StyleCache styleCache;
     private ElementsCache elementsCache;
 
     public FStyle(AnchorPane mainPageContainer){
         this.mainPageContainer = mainPageContainer;
+        parser = new Parser();
         styleCache = new StyleCache();
         elementsCache = new ElementsCache(mainPageContainer);
     }
 
-
     /**
      * Set the initial style for a certain element
+     * and removes the old one if exists
      */
     public void setStyle(Node node, String style){
         currentNode = node;
-        String[] splitStyle = StyleSplitter.splitProperties(style);
-        List<String> sortedStyle = StyleOrderManager.sortStyle(splitStyle);
-        for(int i = 0; i < sortedStyle.size(); i++){
-            System.out.println(sortedStyle.get(i));
+        styleCache.setStyle(node, new ArrayList<>());
+        parser.parseStyle(style, styleCache.getStyle(node));
+        List<String> cacheStyle = styleCache.getStyle(node);
+        for(int i = 0; i < cacheStyle.size(); i++){
+            // JavaFX methods will be called here
+            System.out.println(cacheStyle.get(i));
         }
     };
 
     /**
-     * Add new properties to the existing style
+     * Add one or more properties to the existing style
      */
     public void addStyle(Node node, String newProperty){
 
@@ -58,7 +61,7 @@ public class FStyle {
     };
 
     /**
-     * Remove a certain property from the element e.g: bc-c
+     * Remove one or more properties from the element e.g: bc-c; br-r
      */
     public void removeProperty(Node node, String property){
 
@@ -69,6 +72,7 @@ public class FStyle {
      * e.g: initial property: bc-c:red
      * -> style parameter value: bc-c:blue
      * -> new property value: bc-c:blue
+     * accepts more properties bc-r; br-r
      */
     public void updateStyle(Node node, String style){
 

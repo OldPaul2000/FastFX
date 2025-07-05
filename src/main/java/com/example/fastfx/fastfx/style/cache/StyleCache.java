@@ -2,26 +2,28 @@ package com.example.fastfx.fastfx.style.cache;
 
 import javafx.scene.Node;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StyleCache {
 
-    private Map<Node, List<String>> sortedProperties;
+    private Map<Node, List<String>> sortedStyle;
 
     public StyleCache(){
-        sortedProperties = new HashMap<>();
+        sortedStyle = new HashMap<>();
     }
 
-    public void setStyle(Node node, String[] style){
-        sortedProperties.put(node, new ArrayList<>());
-
+    public void setStyle(Node node, List<String> style){
+        sortedStyle.put(node, style);
     }
 
-    public void addProperty(Node node, String property){
-        sortedProperties.get(node).add(property);
+    public List<String> getStyle(Node node){
+        return sortedStyle.get(node);
+    }
+
+    public void removeStyle(Node node){
+        sortedStyle.remove(node);
     }
 
 }

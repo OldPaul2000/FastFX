@@ -1,7 +1,6 @@
-package com.example.fastfx.fastfx.style;
+package com.example.fastfx.fastfx.style.parser;
 
 import com.example.fastfx.fastfx.style.constants.StylesOrderConstants;
-import com.example.fastfx.fastfx.style.parser.StyleSplitter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,47 +12,69 @@ import java.util.List;
 
 public class StyleOrderManager {
 
-
-    public static List<String> sortStyle(String[] style){
+    /**
+     * Sort the initial input style
+     */
+    public List<String> sortStyle(String[] newStyle, List<String> cacheStyle){
         List<String> sortedStyle = new ArrayList<>();
-        for(int i = 0; i < style.length; i++){
-            addPropertyInProperSpace(sortedStyle, style[i]);
+        for(int i = 0; i < newStyle.length; i++){
+//            addPropertyInProperSpace(sortedStyle, newStyle[i]);
         }
         return sortedStyle;
     }
 
-    public static void addPropertyInProperSpace(List<String> existingStyle, String newProperty){
+    /**
+     * The first argument represents an existing style from style cache
+     * and the second one the property or properties to set. It
+     * positions the new property in its proper place
+     */
+    private void addPropertyInProperSpace(List<String> cacheStyle, int indexOffset,
+                                         String subNode, String newProperty){
+        if(newProperty.startsWith("::")){
+
+        }
+        else if(newProperty.startsWith(":")){
+
+        }
+        else if(newProperty.startsWith(".")){
+
+        }
+        else{
+            if(newProperty.endsWith("}")){
+                newProperty.replace("}","");
+            }
+        }
 
         int newPropertyIndex = getPropertyIndex(newProperty);
 
-        if(existingStyle.size() == 0){
-            existingStyle.add(newProperty);
+        if(cacheStyle.size() == 0){
+            cacheStyle.add(newProperty);
         }
-        else if(existingStyle.size() == 1){
-            int firstStylePropertyIndex =  getPropertyIndex(existingStyle.get(0));
+        else if(cacheStyle.size() == 1){
+            int firstStylePropertyIndex =  getPropertyIndex(cacheStyle.get(0));
             if(newPropertyIndex > firstStylePropertyIndex){
-                existingStyle.add(newProperty);
+                cacheStyle.add(newProperty);
             }
             else{
-                existingStyle.add(0, newProperty);
+                cacheStyle.add(0, newProperty);
             }
         }
         else{
-            for(int i = 0; i < existingStyle.size() - 1; i++){
-                String currStyle = existingStyle.get(i);
+            for(int i = 0; i < cacheStyle.size() - 1; i++){
+                String currStyle = cacheStyle.get(i);
                 int currStyleIndex = getPropertyIndex(currStyle);
-                String nextStyle = existingStyle.get(i + 1);
+                String nextStyle = cacheStyle.get(i + 1);
                 int nextStyleIndex = getPropertyIndex(nextStyle);
                 if(newPropertyIndex > currStyleIndex && newPropertyIndex < nextStyleIndex){
-                    existingStyle.add(i + 1, newProperty);
+                    cacheStyle.add(i + 1, newProperty);
                     break;
                 }
                 if(i == 0 && newPropertyIndex < currStyleIndex){
-                    existingStyle.add(i, newProperty);
+                    cacheStyle.add(i, newProperty);
                     break;
                 }
-                if(i == existingStyle.size() - 2 && getPropertyIndex(newProperty) > nextStyleIndex){
-                    existingStyle.add(newProperty);
+                if(i == cacheStyle.size() - 2 && getPropertyIndex(newProperty) > nextStyleIndex){
+                    cacheStyle.add(newProperty);
                     break;
                 }
             }
@@ -64,11 +85,17 @@ public class StyleOrderManager {
      * The input will be the entire style property (h:100px), the property name will be extracted
      * and passed to StylesOrderConstants.getPropertyIndex() method
      */
-
-    private static int getPropertyIndex(String styleProperty){
-        String property = StyleSplitter.splitPropertyValue(styleProperty)[0];
+    private int getPropertyIndex(String styleProperty){
+        String property = splitPropertyValue(styleProperty)[0];
         return StylesOrderConstants.getPropertyIndex(property);
     }
+
+    private String[] splitPropertyValue(String propertyValue){
+        return propertyValue.split("\\s*:\\s*");
+    }
+
+
+
 
 
     // Insertion sort algorithm

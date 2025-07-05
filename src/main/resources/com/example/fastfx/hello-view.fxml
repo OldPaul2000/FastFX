@@ -75,8 +75,7 @@
                 layoutX="160" layoutY="20" style="-fx-tick-label-fill:white" orientation="VERTICAL"></Slider>
     </AnchorPane>
 
-<!--    style="-fx-background-color:#738079"-->
-    <AnchorPane fx:id="radioButtonsContainer"  prefWidth="200" prefHeight="400"  layoutX="885" >
+    <AnchorPane fx:id="radioButtonsContainer"  prefWidth="200" prefHeight="400"  layoutX="885" style="-fx-background-color:#738079">
         <RadioButton fx:id="radio1" layoutX="20" layoutY="20">Option 1</RadioButton>
         <RadioButton fx:id="radio2" layoutX="20" layoutY="60">Option 2</RadioButton>
         <RadioButton fx:id="radio3" layoutX="20" layoutY="100">Option 3</RadioButton>
