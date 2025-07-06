@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<AnchorPane fx:id="mainContainer" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.fastfx.HelloController">
+<AnchorPane fx:id="mainContainer" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.fastfx.HelloController" style="-fx-background-color:black">
 
     <AnchorPane fx:id="buttonsContainer" prefWidth="200" prefHeight="400" layoutX="5" style="-fx-background-color:#ae5142">
         <Button fx:id="button1" text="Button 1"  prefHeight="30" layoutX="20" layoutY="20"/>

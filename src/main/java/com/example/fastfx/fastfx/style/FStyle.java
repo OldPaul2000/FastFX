@@ -35,7 +35,7 @@ public class FStyle {
      * Set the initial style for a certain element
      * and removes the old one if exists
      */
-    public void setStyle(Node node, String style){
+    public List<String> setStyle(Node node, String style){
         currentNode = node;
         styleCache.setStyle(node, new ArrayList<>());
         parser.parseStyle(style, styleCache.getStyle(node));
@@ -44,6 +44,7 @@ public class FStyle {
             // JavaFX methods will be called here
             System.out.println(cacheStyle.get(i));
         }
+        return styleCache.getStyle(node);
     };
 
     /**

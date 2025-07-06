@@ -39,4 +39,7 @@ public class StylesOrderConstants {
             return PROPERTIES_ORDER.get(property);
         }
 
+        public static boolean containsProperty(String property){
+                return PROPERTIES_ORDER.containsKey(property);
+        }
 }

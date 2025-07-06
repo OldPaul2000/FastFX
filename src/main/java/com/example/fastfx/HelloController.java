@@ -91,16 +91,58 @@ public class HelloController {
 
         FStyle fStyle = new FStyle(mainContainer);
 
-        String style = "h:100px; w:60px; bc-c:red; " +
-                       "Button{bc-c:red}; " +
-                       ".child{w:200px; h:140px; bc-c:#214fea}; " +
-                       ":subnode2{h:20px; w:30px; br-r:5px}; " +
-                       ":subnode{h:23.4px; w:45px; br-r:7px}; " +
-                       "::pseudo-class{w:100px}";
+        String style1 = "bc-c:red; h:100px; w:60px; br-r: 8%; " +
+                       "Button{bc-c:green}; " +
+                       ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                       ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                       ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                       "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        fStyle.setStyle(button1, style);
+        String style2 = "bc-c:red;" +
+                "Button{bc-c:green; tx:20%; ty:40rem; br-r: 0.8rem}; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
+        String style3 = "bc-c:red; w:60px; bc-c:green; h:200px; " +
+                "Button{bc-c:green}; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px}";
 
+        String style4 =
+                "Button{bc-c:green}; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
+        String style5 = "bc-c:red; h:100px; w:60px; " +
+                "Button{bc-c:green}; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
+        String style6 = "bc-c:red; h:100px; w:60px; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element{h:20px; br-r:5px; w:30px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
+        String style7 = "bc-c:red; h:100px; w:60px; " +
+                "Button{bc-c:green}; " +
+                ".child{bc-c:#214fea; w:200px; h:140px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
+        String style8 = "bc-c:red; h:100px; w:60px; " +
+                "Button{bc-c:green}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
+        System.out.println(fStyle.setStyle(button1, style1));
     }
 
 
