@@ -1,5 +1,7 @@
 package com.example.fastfx.fastfx.style.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Parser {
@@ -10,13 +12,30 @@ public class Parser {
         orderManager = new StyleOrderManager();
     }
 
+    /** Parse the style to be set to the specific element*/
     public void parseStyle(String style, List<String> cacheStyle){
         String[] splitStyle = splitProperties(style);
         for(int i = 0; i < splitStyle.length; i++){
             String currentProperty = splitStyle[i];
-//            System.out.println(currentProperty);
             orderManager.setPropertyInProperPlace(cacheStyle, currentProperty);
         }
+    }
+
+    /** Parse the added style. If the new property or properties are valid,
+     *  an ArrayList with these properties will be returned in order to call
+     *  the JavaFX methods to apply these new styles
+     */
+    public List<String> parseAddedStyle(String style, List<String> cacheStyle){
+        String[] splitStyle = splitProperties(style);
+        System.out.println("Split style: " + Arrays.toString(splitStyle));
+        List<String> newAddedStyle = new ArrayList<>();
+        for(int i = 0; i < splitStyle.length; i++){
+            String addedProperty = orderManager.addPropertyInExistingStyle(cacheStyle, splitStyle[i]);
+            if(addedProperty != null){
+                newAddedStyle.add(addedProperty);
+            }
+        }
+        return newAddedStyle;
     }
 
     /**

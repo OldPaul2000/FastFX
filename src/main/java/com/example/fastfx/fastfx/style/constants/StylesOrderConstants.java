@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class StylesOrderConstants {
 
+        /** Style properties and their specific indexes*/
         private static final Map<String, Integer> PROPERTIES_ORDER = new HashMap<>(
                 Map.ofEntries(
                         Map.entry("w", 1),

@@ -139,10 +139,19 @@ public class HelloController {
                 "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
         String style8 = "bc-c:red; h:100px; w:60px; " +
-                "Button{bc-c:green}; " +
-                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+                        "Button{bc-c:green}; " +
+                        "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        System.out.println(fStyle.setStyle(button1, style1));
+        String addStyle1 = "ty:30px; tx:10px";
+        String addStyle2 = "Button{ty:-5.7px}";
+        String addStyle3 = "::pseudo-class{sc-x:1.3}";
+        String addStyle4 = ".child{op:0.7; bc-c:red}";
+
+        fStyle.setStyle(button1, style8);
+        fStyle.addStyle(button1, addStyle1);
+        fStyle.addStyle(button1, addStyle2);
+        fStyle.addStyle(button1, addStyle3);
+        fStyle.addStyle(button1, addStyle4);
     }
 
 
