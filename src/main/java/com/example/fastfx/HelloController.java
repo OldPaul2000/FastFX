@@ -142,18 +142,21 @@ public class HelloController {
                         "Button{bc-c:green}; " +
                         "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        String addStyle1 = "ty:30px; tx:10px";
-        String addStyle2 = "Button{ty:-5.7px}";
-        String addStyle3 = "::pseudo-class{sc-x:1.3}";
+        String addStyle1 = "ty:30px; tx:10px;";
+        String addStyle2 = "Button{ty:-5.7px};";
+        String addStyle3 = "::pseudo-class{sc-x:1.3};";
         String addStyle4 = ".child{op:0.7; bc-c:red}";
 
         fStyle.setStyle(button1, style8);
-        fStyle.addStyle(button1, addStyle1);
-        fStyle.addStyle(button1, addStyle2);
-        fStyle.addStyle(button1, addStyle3);
-        fStyle.addStyle(button1, addStyle4);
+        fStyle.addStyle(button1, addStyle1 + addStyle2 + addStyle3 + addStyle4);
+//        fStyle.addStyle(button1, addStyle2);
+//        fStyle.addStyle(button1, addStyle3);
+//        fStyle.addStyle(button1, addStyle4);
 
-        fStyle.removeStyle(button1);
+        String updateStyle1 = "ty:40px;";
+        String updateStyle2 = "Button{ty:0};";
+        String updateStyle3 = ".child{op:1; bc-c:blue}";
+        fStyle.updateStyle(button1, updateStyle1 + updateStyle2 + updateStyle3);
     }
 
 

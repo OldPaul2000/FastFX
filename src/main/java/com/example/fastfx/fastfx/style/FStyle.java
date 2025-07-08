@@ -63,7 +63,8 @@ public class FStyle {
      * accepts more properties bc-r; br-r
      */
     public void updateStyle(Node node, String style){
-
+        List<String> newVals = parser.parseStyleToUpdate(style, styleCache.getStyle(node));
+        System.out.println("newVals: " + newVals);
     }
 
     /**

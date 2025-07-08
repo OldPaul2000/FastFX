@@ -12,11 +12,10 @@ public class StyleOrderManager {
 
     private int startCountingIndex = 0;
     private int endCountingIndex = 0;
-    private boolean wasPseudoName = false;
-    private boolean wasProperty = false;
     private boolean countingLimitsSet = false;
 
     // Works. Need more testing
+
     /** Method to call for adding the new property or properties in the existing style*/
     public String addPropertyInExistingStyle(List<String> cacheStyle, String newProperty){
         boolean isPseudoName = isPseudoName(newProperty);
@@ -32,8 +31,6 @@ public class StyleOrderManager {
                 endCountingIndex = startCountingIndex;
                 cacheStyle.add(currProperty);
             }
-            wasPseudoName = true;
-            wasProperty = false;
             countingLimitsSet = true;
         }
         else{

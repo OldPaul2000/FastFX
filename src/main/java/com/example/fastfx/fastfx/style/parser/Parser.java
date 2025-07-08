@@ -38,6 +38,58 @@ public class Parser {
         return newAddedStyle;
     }
 
+    // Works. Need more testing
+
+    /** Logic for replacing old values for existing properties with new values*/
+    public List<String> parseStyleToUpdate(String style, List<String> cacheStyle){
+        List<String> updatedProperties = new ArrayList<>();
+        String[] splitStyle = splitProperties(style);
+        int startCountingIndex = 0;
+        int endCountingIndex = calculateEndCountingIndex(0, cacheStyle);
+        for(int i = 0; i < splitStyle.length; i++){
+            String currElement = splitStyle[i];
+            if(isPseudoElement(currElement)){
+                startCountingIndex = cacheStyle.indexOf(currElement) + 1;
+                endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle) + 1;
+                updatedProperties.add(currElement);
+            }
+            for(int j = startCountingIndex; j < endCountingIndex; j++){
+                String currCacheProperty = cacheStyle.get(j);
+                if(containsProperty(currElement, currCacheProperty)){
+                    cacheStyle.set(j, replaceClosingBracket(currElement));
+                    updatedProperties.add(replaceClosingBracket(currElement));
+                }
+            }
+        }
+        return updatedProperties;
+    }
+
+    /** Checks if the cache style contains the passed property to update
+     *  comparing their property names(e.g: w:100px -> w)
+     */
+    private boolean containsProperty(String updatedProperty, String styleCacheProperty){
+        String updatedPropertyName = splitPropertyValue(updatedProperty)[0];
+        String styleCachePropertyName = splitPropertyValue(styleCacheProperty)[0];
+        return updatedPropertyName.equals(styleCachePropertyName);
+    }
+
+    private int calculateEndCountingIndex(int startIndex, List<String> cacheStyle) {
+        for(int i = startIndex; i < cacheStyle.size(); i++){
+            if(isPseudoElement(cacheStyle.get(i)) || i == cacheStyle.size() - 1){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private boolean isPseudoElement(String property){
+        return !property.matches(".+:.+");
+    }
+
+    private String replaceClosingBracket(String property){
+        return property.replaceAll("}", "");
+    }
+
     /**
      * Separates property and value from each other.
      * e.g: w:100px -->  [w, 100px]
