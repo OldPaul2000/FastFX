@@ -152,6 +152,8 @@ public class HelloController {
         fStyle.addStyle(button1, addStyle2);
         fStyle.addStyle(button1, addStyle3);
         fStyle.addStyle(button1, addStyle4);
+
+        fStyle.removeStyle(button1);
     }
 
 

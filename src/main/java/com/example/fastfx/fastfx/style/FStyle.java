@@ -47,28 +47,12 @@ public class FStyle {
         System.out.println(styleCache.getStyle(node));
     };
 
-    // Finish building addStyle method logic
-
     /**
      * Add one or more properties to the existing style
      */
     public void addStyle(Node node, String newProperty){
         parser.parseAddedStyle(newProperty, styleCache.getStyle(node));
         System.out.println(styleCache.getStyle(node));
-    }
-
-    /**
-     * Remove all style from a certain element and also from style cache
-     */
-    public void removeStyle(Node node){
-
-    };
-
-    /**
-     * Remove one or more properties from the element e.g: bc-c; br-r
-     */
-    public void removeProperty(Node node, String property){
-
     }
 
     /**
@@ -79,6 +63,25 @@ public class FStyle {
      * accepts more properties bc-r; br-r
      */
     public void updateStyle(Node node, String style){
+
+    }
+
+    /**
+     * Remove all style from a certain element and also from style cache
+     */
+    public void removeStyle(Node node){
+        List<String> currStyle = styleCache.getStyle(node);
+        for(int i = 0; i < currStyle.size(); i++){
+            //Perform all necessary method calls
+        }
+        styleCache.removeStyle(node);
+        System.out.println(styleCache.getStyle(node));
+    };
+
+    /**
+     * Remove one or more properties from the element e.g: bc-c; br-r
+     */
+    public void removeProperty(Node node, String property){
 
     }
 
