@@ -40,7 +40,7 @@ public class Parser {
 
     // Works. Need more testing
 
-    /** Logic for replacing old values for existing properties with new values*/
+    /** Logic for replacing old values of existing properties with new values*/
     public List<String> parseStyleToUpdate(String style, List<String> cacheStyle){
         List<String> updatedProperties = new ArrayList<>();
         String[] splitStyle = splitProperties(style);
@@ -64,6 +64,58 @@ public class Parser {
         return updatedProperties;
     }
 
+    // Works. Need more testing
+
+    /** Logic for removing existing properties*/
+    public List<String> parseStyleToRemove(String style, List<String> cacheStyle){
+        List<String> removedProperties = new ArrayList<>();
+        String[] splitStyle = splitProperties(style);
+        int startCountingIndex = 0;
+        int endCountingIndex = calculateEndCountingIndex(0, cacheStyle);
+        for(int i = 0; i < splitStyle.length; i++){
+            String currElement = splitStyle[i];
+            currElement = replaceClosingBracket(currElement);
+            if(endCountingIndex - startCountingIndex == 1){
+                removedProperties.add(cacheStyle.get(startCountingIndex));
+                cacheStyle.remove(startCountingIndex);
+            }
+            if(isPseudoForDeleteMethod(currElement)){
+                startCountingIndex = cacheStyle.indexOf(currElement) + 1;
+                endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                removedProperties.add(currElement);
+            }
+            for(int j = startCountingIndex; j < endCountingIndex; j++){
+                if(j == cacheStyle.size()){
+                    j--;
+                    endCountingIndex--;
+                }
+                String currCacheProperty = cacheStyle.get(j);
+                if(containsProperty(currElement, currCacheProperty)){
+                    removedProperties.add(replaceClosingBracket(cacheStyle.get(j)));
+                    cacheStyle.remove(j);
+
+                    if(j > 0){
+                        j--;
+                    }
+                    endCountingIndex--;
+                    if(currentAndNextPropertyArePseudo(cacheStyle.get(j), cacheStyle.get(j + 1))){
+                        removedProperties.add(0, cacheStyle.get(j));
+                        cacheStyle.remove(j);
+                    }
+                }
+                if(j > 0){
+                    if(currentAndNextPropertyArePseudo(cacheStyle.get(j - 1), cacheStyle.get(j))){
+                        cacheStyle.remove(j - 1);
+                    }
+                    if(isPseudoForDeleteMethod(cacheStyle.get(j)) && j == cacheStyle.size() - 1){
+                        cacheStyle.remove(j);
+                    }
+                }
+            }
+        }
+        return removedProperties;
+    }
+
     /** Checks if the cache style contains the passed property to update
      *  comparing their property names(e.g: w:100px -> w)
      */
@@ -75,11 +127,22 @@ public class Parser {
 
     private int calculateEndCountingIndex(int startIndex, List<String> cacheStyle) {
         for(int i = startIndex; i < cacheStyle.size(); i++){
-            if(isPseudoElement(cacheStyle.get(i)) || i == cacheStyle.size() - 1){
+            if(isPseudoForDeleteMethod(cacheStyle.get(i)) || i == cacheStyle.size() - 1){
                 return i;
             }
         }
         return 0;
+    }
+
+    private boolean currentAndNextPropertyArePseudo(String current, String next){
+        boolean currentIsPseudo = isPseudoForDeleteMethod(current);
+        boolean nextIsPseudo = isPseudoForDeleteMethod(next);
+        return currentIsPseudo && nextIsPseudo;
+    }
+
+    private boolean isPseudoForDeleteMethod(String property){
+        return Character.isUpperCase(property.charAt(0)) || property.startsWith(":") ||
+                property.startsWith("::") || property.startsWith(".");
     }
 
     private boolean isPseudoElement(String property){

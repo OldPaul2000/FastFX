@@ -6,9 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Color;
 
 import java.util.Set;
 
@@ -84,10 +81,7 @@ public class HelloController {
     @FXML
     public RadioButton radio4;
 
-    boolean clicked = false;
     public void initialize(){
-
-        checkBox1.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
 
         FStyle fStyle = new FStyle(mainContainer);
 
@@ -132,31 +126,29 @@ public class HelloController {
                 ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
                 "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
+        String style8 = "bc-c:red; h:100px; w:60px; " +
+                "Button{bc-c:green}; " +
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
+
         String style7 = "bc-c:red; h:100px; w:60px; " +
                 "Button{bc-c:green}; " +
                 ".child{bc-c:#214fea; w:200px; h:140px}; " +
                 ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
                 "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        String style8 = "bc-c:red; h:100px; w:60px; " +
-                        "Button{bc-c:green}; " +
-                        "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        String addStyle1 = "ty:30px; tx:10px;";
-        String addStyle2 = "Button{ty:-5.7px};";
-        String addStyle3 = "::pseudo-class{sc-x:1.3};";
-        String addStyle4 = ".child{op:0.7; bc-c:red}";
+        fStyle.setStyle(button1, style7);
 
-        fStyle.setStyle(button1, style8);
-        fStyle.addStyle(button1, addStyle1 + addStyle2 + addStyle3 + addStyle4);
-//        fStyle.addStyle(button1, addStyle2);
-//        fStyle.addStyle(button1, addStyle3);
-//        fStyle.addStyle(button1, addStyle4);
+        String removeStyle0 = "w;h;";
+        String removeStyle1 = "Button{bc-c};";
+        String removeStyle2 = ".child{bc-c;w;h};";
+        String removeStyle3 = "w;bc-c";
+        String removeStyle4 = "::pseudo-class{w;h;pd;bc-c};";
+        String removeStyle5 = ":pseudo-element2{w;h;pd;bc-c}";
+//        fStyle.removeProperty(button1, removeStyle0 + removeStyle1);
+        fStyle.removeProperty(button1, removeStyle2 + removeStyle5);
+//        fStyle.removeProperty(button1, removeStyle5);
 
-        String updateStyle1 = "ty:40px;";
-        String updateStyle2 = "Button{ty:0};";
-        String updateStyle3 = ".child{op:1; bc-c:blue}";
-        fStyle.updateStyle(button1, updateStyle1 + updateStyle2 + updateStyle3);
     }
 
 
@@ -166,7 +158,6 @@ public class HelloController {
 
 
     private void methodForHoldingCode(){
-//        FastFXStyle style = new FastFXStyle(mainContainer);
         ElementsCache elementsCache = new ElementsCache(mainContainer);
 
         long start = System.currentTimeMillis();
