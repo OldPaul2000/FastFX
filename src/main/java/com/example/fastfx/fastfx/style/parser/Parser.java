@@ -125,6 +125,7 @@ public class Parser {
         return updatedPropertyName.equals(styleCachePropertyName);
     }
 
+    /** Calculates the next pseudo-element or pseudo-class index*/
     private int calculateEndCountingIndex(int startIndex, List<String> cacheStyle) {
         for(int i = startIndex; i < cacheStyle.size(); i++){
             if(isPseudoForDeleteMethod(cacheStyle.get(i)) || i == cacheStyle.size() - 1){
@@ -134,21 +135,31 @@ public class Parser {
         return 0;
     }
 
+    /** Check if the current and next element are both pseudo-elements/classes
+     *  in order to remove the current pseudo-element/class(which has no more styles)
+     */
     private boolean currentAndNextPropertyArePseudo(String current, String next){
         boolean currentIsPseudo = isPseudoForDeleteMethod(current);
         boolean nextIsPseudo = isPseudoForDeleteMethod(next);
         return currentIsPseudo && nextIsPseudo;
     }
 
+    /** Check if the current element is a pseudo-element/class.
+     *  Used in parseStyleToRemove method
+     */
     private boolean isPseudoForDeleteMethod(String property){
         return Character.isUpperCase(property.charAt(0)) || property.startsWith(":") ||
                 property.startsWith("::") || property.startsWith(".");
     }
 
+    /** Check if the current element is a pseudo-element/class.
+     *  Used in parseStyleToUpdate method
+     */
     private boolean isPseudoElement(String property){
         return !property.matches(".+:.+");
     }
 
+    /** Remove the closing bracket from the last style property of the element*/
     private String replaceClosingBracket(String property){
         return property.replaceAll("}", "");
     }
