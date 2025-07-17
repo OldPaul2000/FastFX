@@ -133,9 +133,8 @@ public class HelloController {
         String style7 = "bc-c:red; h:100px; w:60px; " +
                 "Button{bc-c:green}; " +
                 ".child{bc-c:#214fea; w:200px; h:140px}; " +
-                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}; " +
-                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
-
+                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}; " +
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}";
 
         fStyle.setStyle(button1, style7);
 
@@ -143,12 +142,16 @@ public class HelloController {
         String removeStyle1 = "Button{bc-c};";
         String removeStyle2 = ".child{bc-c;w;h};";
         String removeStyle3 = "w;bc-c";
-        String removeStyle4 = "::pseudo-class{w;h;pd;bc-c};";
+        String removeStyle4 = "::pseudo-class{pd;bc-c;w};";
         String removeStyle5 = ":pseudo-element2{w;h;pd;bc-c}";
+        String removeStyle6 = "Button";
+        String removeStyle7 = ".child";
+        String removeStyle8 = ":pseudo-element2";
+        String removeStyle9 = "::pseudo-class";
+        String removeStyle10 = ":pseudo-element2;.child;Button";
 //        fStyle.removeProperty(button1, removeStyle0 + removeStyle1);
-        fStyle.removeProperty(button1, removeStyle2 + removeStyle5);
+        fStyle.removeProperty(button1, removeStyle4);
 //        fStyle.removeProperty(button1, removeStyle5);
-
     }
 
 
