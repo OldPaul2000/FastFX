@@ -1,13 +1,12 @@
 package com.example.fastfx;
 
-import com.example.fastfx.fastfx.elements.cache.ElementsCache;
 import com.example.fastfx.fastfx.style.FStyle;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelloController {
 
@@ -130,58 +129,91 @@ public class HelloController {
                 "Button{bc-c:green}; " +
                 "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}";
 
-        String style7 = "bc-c:red; h:100px; w:60px; " +
-                "Button{bc-c:green}; " +
-                ".child{bc-c:#214fea; w:200px; h:140px}; " +
-                "::pseudo-class{w:100px; bc-c:yellow; pd:10%; h:200px}; " +
-                ":pseudo-element2{br-r:7px; h:23.4px; w:45px}";
+        String style7 = "bc-c:red; h:120px; w:60px; " +   // Index 0 -> 2
+                "Button{bc-c:green}; " +                  // Index 3 -> 4
+                ".child{bc-c:#214fea; w:200px; h:140px}; " + // Index 5 -> 8
+                "::pseudo-class{w:130px; bc-c:yellow; pd:10%; h:200px};" + // Index 9 -> 13
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px; pd:none};"; // Index 14 -> 18
 
-        fStyle.setStyle(button1, style7);
+        String style9 = "bc-c:red; h:120px; w:60px; " +   // Index 0 -> 2
+                "Button{bc-c:green}; " +                  // Index 3 -> 4
+                "::pseudo-class{w:130px; bc-c:yellow; pd:10%; h:200px};" + // Index 5 -> 9
+                ":pseudo-element2{br-r:7px; h:23.4px; w:45px; pd:none};" + // Index 10 -> 14
+                ".child{br-r:0; bc-c:#214fea; w:200px; h:140px}; "; // Index 15 -> 18
 
-        String removeStyle0 = "w;h;";
-        String removeStyle1 = "Button{bc-c};";
-        String removeStyle2 = ".child{bc-c;w;h};";
-        String removeStyle3 = "w;bc-c";
-        String removeStyle4 = "::pseudo-class{pd;bc-c;w};";
-        String removeStyle5 = ":pseudo-element2{w;h;pd;bc-c}";
-        String removeStyle6 = "Button";
-        String removeStyle7 = ".child";
-        String removeStyle8 = ":pseudo-element2";
-        String removeStyle9 = "::pseudo-class";
-        String removeStyle10 = ":pseudo-element2;.child;Button";
-//        fStyle.removeProperty(button1, removeStyle0 + removeStyle1);
-        fStyle.removeProperty(button1, removeStyle4);
-//        fStyle.removeProperty(button1, removeStyle5);
-    }
+//        fStyle.setStyle(button1, style7);
 
+        List<String> removeStyles = new ArrayList<>();
 
+        String removeStyle1 = "h"; //Works
+        String removeStyle2 = "h;bc-c"; //Works
+        String removeStyle3 = "w;bc-c;h"; //Works
+        String removeStyle4 = "Button{bc-c}"; //Works
+        String removeStyle5 = ".child{bc-c;h}"; //Works
+        String removeStyle6 = ".child{bc-c;h;w}"; //Works
+        String removeStyle7 = ".child{br-r; bc-c; w; h}"; // Doesn't work properly for style9
+        String removeStyle8 = ":pseudo-element2{w}"; //Works
+        String removeStyle9 = ":pseudo-element2{h;br-r}"; //Works
+        String removeStyle10 = ":pseudo-element2{br-r}"; //Works
+        String removeStyle11 = ":pseudo-element2{pd; br-r; h; w}"; //Doesn't remove first property(if is the last pseudo)
+        String removeStyle12 = "::pseudo-class{bc-c;pd;w;h}"; //Works
+        String removeStyle13 = "Button"; //Works
+        String removeStyle14 = ".child"; //Works
+        String removeStyle15 = ":pseudo-element2"; //Works
+        String removeStyle16 = "::pseudo-class{w;h;pd;bc-c}"; //Works
+        String removeStyle17 = ":pseudo-element2;.child{h;bc-c;w};::pseudo-class{w;pd;h}"; //Works
+        String removeStyle18 = ":pseudo-element2;.child{h};::pseudo-class{w;pd}"; //Works
+        String removeStyle19 = ":pseudo-element2;.child{w};::pseudo-class{w;pd}"; //Works
+        String removeStyle20 = ":pseudo-element2;.child{bc-c};::pseudo-class{w;pd}"; //Works
+        String removeStyle21 = ":pseudo-element2;.child{h;w};::pseudo-class{w;pd}"; //Works
+        String removeStyle22 = ":pseudo-element2;.child{h;w};::pseudo-class{w;pd;h;bc-c}"; //Works
+        String removeStyle23 = ":pseudo-element2;.child{w;bc-c};::pseudo-class{w;pd}"; //Works
+        String removeStyle24 = ":pseudo-element2;.child{w;bc-c};::pseudo-class{w;pd};Button"; //Works
+        String removeStyle25 = ":pseudo-element2;.child{w;bc-c};::pseudo-class{w;pd};Button{bc-c}"; //Works
+        String removeStyle26 = ":pseudo-element2;.child;::pseudo-class"; //Works.
+        String removeStyle27 = "w;h;:pseudo-element2;.child;::pseudo-class"; //Works.
+        String removeStyle28 = "w;h;:pseudo-element2;.child{h;w;bc-c};::pseudo-class{w;pd;h;bc-c}"; //Works
+        String removeStyle29 = "w;h;:pseudo-element2{h; w; pd; br-r};Button{bc-c};.child{h;w;bc-c};::pseudo-class{w;pd;h;bc-c}"; //Works
+        String removeStyle30 = "w;h;.child{h;w;bc-c};::pseudo-class{w;pd;h;bc-c};:pseudo-element2{h; w; br-r; pd}"; //Works
 
+        removeStyles.add(removeStyle1);
+        removeStyles.add(removeStyle2);
+        removeStyles.add(removeStyle3);
+        removeStyles.add(removeStyle4);
+        removeStyles.add(removeStyle5);
+        removeStyles.add(removeStyle6);
+        removeStyles.add(removeStyle7);
+        removeStyles.add(removeStyle8);
+        removeStyles.add(removeStyle9);
+        removeStyles.add(removeStyle10);
+        removeStyles.add(removeStyle11);
+        removeStyles.add(removeStyle12);
+        removeStyles.add(removeStyle13);
+        removeStyles.add(removeStyle14);
+        removeStyles.add(removeStyle15);
+        removeStyles.add(removeStyle16);
+        removeStyles.add(removeStyle17);
+        removeStyles.add(removeStyle18);
+        removeStyles.add(removeStyle19);
+        removeStyles.add(removeStyle20);
+        removeStyles.add(removeStyle21);
+        removeStyles.add(removeStyle22);
+        removeStyles.add(removeStyle23);
+        removeStyles.add(removeStyle24);
+        removeStyles.add(removeStyle25);
+        removeStyles.add(removeStyle26);
+        removeStyles.add(removeStyle27);
+        removeStyles.add(removeStyle28);
+        removeStyles.add(removeStyle29);
+        removeStyles.add(removeStyle30);
 
-
-
-
-    private void methodForHoldingCode(){
-        ElementsCache elementsCache = new ElementsCache(mainContainer);
-
-        long start = System.currentTimeMillis();
-
-
-        Set<Node> nodes = radioButtonsContainer.lookupAll("RadioButton");
-        for(Node node :nodes){
-            if(node.getId().equals("radio3")){
-                System.out.println(node.getId());
-            }
+        for(int i = 0; i < removeStyles.size(); i++){
+            System.out.println("Style to remove index: " + i);
+            fStyle.setStyle(button1, style7);
+            fStyle.removeProperty(button1, removeStyles.get(i));
+            System.out.println();
         }
 
-//       elementsCache.searchAllElements();
-//        System.out.println(elementsCache.getAllChildren());
-
-
-//        System.out.println(Arrays.toString(FStyle.separateStyles("w:200 d:1s; h:100 d:2s; bc-c:#521def; br-r:0.8em; box:: w:1.2em; h:1.2em")));
-
-
-        double execTime = ((double) System.currentTimeMillis() - start) / 1000;
-        System.out.println("Execution time: " + execTime);
     }
 
 }

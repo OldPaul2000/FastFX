@@ -1,0 +1,174 @@
+public List<String> parseStyleToRemove(String style, List<String> cacheStyle){
+        List<String> removedProperties = new ArrayList<>();
+        String[] splitStyle = splitProperties(style);
+        int startCountingIndex = 0;
+        int endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+        for(int i = 0; i < splitStyle.length; i++){
+            String currElement = replaceClosingBracket(splitStyle[i]);
+            //====================================================================================
+            if(splitStyle.length > 1){
+                if(i < splitStyle.length - 1){
+                    if(currentAndNextPropertyArePseudo(currElement, splitStyle[i + 1])){
+                        System.out.println("Curr and next are pseudo: ");
+                        startCountingIndex = cacheStyle.indexOf(currElement);
+                        endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                        for(int j = startCountingIndex; j < endCountingIndex; j++){
+                            removedProperties.add(cacheStyle.get(j));
+                            cacheStyle.remove(j);
+                            j--;
+                            endCountingIndex--;
+                            if(j == cacheStyle.size() - 2){
+                                removedProperties.add(cacheStyle.get(cacheStyle.size() - 1));
+                                cacheStyle.remove(cacheStyle.size() - 1);
+                            }
+                        }
+                    }
+                    else if(isPseudoForDeleteMethod(currElement)){
+                        System.out.println("Only curr is pseudo: " + currElement);
+                        startCountingIndex = cacheStyle.indexOf(currElement);
+                        endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                        System.out.println("startCountingIndex: " + startCountingIndex);
+                        System.out.println("endCountingIndex: " + endCountingIndex);
+                        removedProperties.add(cacheStyle.get(startCountingIndex));
+//                        cacheStyle.remove(startCountingIndex);
+//                        endCountingIndex--;
+//                        startCountingIndex++;
+                    }
+                    else{
+//                        System.out.println("Is not pseudo");
+//                        System.out.println("startCountingIndex: " + startCountingIndex);
+//                        System.out.println("endCountingIndex: " + endCountingIndex);
+                        System.out.println("Is property");
+                        System.out.println(cacheStyle);
+                        for(int j = startCountingIndex; j < endCountingIndex; j++){
+//                            System.out.println("j: " + j);
+//                            System.out.println("Curr cache property: " + cacheStyle.get(j));
+                            String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
+
+                            if(currElement.equals(propertyToRemove)){
+                                System.out.println("Is equal");
+//                                System.out.println("j: " + j);
+                                System.out.println("endCountingIndex: " + endCountingIndex);
+//                                System.out.println("Curr cache style: " + cacheStyle.get(j));
+                                System.out.println("Next style: " + cacheStyle.get(j + 1));
+                                removedProperties.add(cacheStyle.get(j));
+                                cacheStyle.remove(j);
+                                j--;
+                                endCountingIndex--;
+                            }
+                            System.out.println("JJJ: " + j);
+                            if(j > 0 && j < cacheStyle.size() - 1){
+                                if(currentAndNextPropertyArePseudo(cacheStyle.get(j - 1), cacheStyle.get(j + 1))){
+                                    cacheStyle.remove(j - 1);
+                                }
+                            }
+
+                            System.out.println("Curr element: " + currElement);
+//                            System.out.println("Curr cache style: " + cacheStyle.get(j- 1));
+//                            System.out.println("Next cache style: " + cacheStyle.get(j + 1));
+                            System.out.println();
+                        }
+                    }
+                }
+                if(i == splitStyle.length - 1){
+                    if(isPseudoForDeleteMethod(currElement)){
+                        startCountingIndex = cacheStyle.indexOf(currElement);
+                        endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                        for(int j = startCountingIndex; j < endCountingIndex; j++){
+                            removedProperties.add(cacheStyle.get(j));
+                            cacheStyle.remove(j);
+                            j--;
+                            endCountingIndex--;
+                            if(j == cacheStyle.size() - 2){
+                                removedProperties.add(cacheStyle.get(j + 1));
+                                cacheStyle.remove(j + 1);
+                            }
+                        }
+                    }
+                    else{
+                        System.out.println("Is last property: " + currElement);
+                        System.out.println("SCI: " + startCountingIndex);
+                        System.out.println("ECI: " + endCountingIndex);
+                        for(int j = startCountingIndex; j < endCountingIndex; j++){
+                            System.out.println("Curr last cache style: " + cacheStyle.get(j));
+//                            System.out.println("SCI: " + startCountingIndex);
+//                            System.out.println("ECI: " + endCountingIndex);
+                            System.out.println("j: " + j);
+                            System.out.println(cacheStyle.size());
+                            String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
+                            if(currElement.equals(propertyToRemove)){
+                                removedProperties.add(cacheStyle.get(j));
+                                    cacheStyle.remove(j);
+                                    j--;
+                                    endCountingIndex--;
+//                                if(j == cacheStyle.size() - 1){
+//                                    removedProperties.add(cacheStyle.get(j + 1));
+//                                    cacheStyle.remove(j + 1);
+//                                }
+//                                else{
+//                                    removedProperties.add(cacheStyle.get(j));
+//                                    cacheStyle.remove(j);
+//                                    break;
+//                                }
+                            }
+                            if(isPseudoForDeleteMethod(cacheStyle.get(cacheStyle.size() - 1))){
+                                cacheStyle.remove(cacheStyle.size() - 1);
+                            }
+                            else if(j > 1 && isPseudoForDeleteMethod(cacheStyle.get(j)) &&
+                                    isPseudoForDeleteMethod(cacheStyle.get(j + 1))){
+                                cacheStyle.remove(j);
+                                j--;
+                                endCountingIndex--;
+                            }
+
+                            System.out.println("JJJJ: " + j);
+                            System.out.println("SIZE: " + cacheStyle.size());
+                            if(j == cacheStyle.size() - 2){
+                                propertyToRemove = splitPropertyValue(cacheStyle.get(j + 1))[0];
+                                if(propertyToRemove.equals(currElement)){
+                                    removedProperties.add(cacheStyle.get(j + 1));
+                                    cacheStyle.remove(j + 1);
+                                    j--;
+                                }
+                                System.out.println("JJJJJJJJJ: " + j);
+
+                            }
+
+//                            System.out.println("STYLEEE: " + cacheStyle.get(j));
+                        }
+                    }
+                }
+            }
+            //====================================================================================
+            // Below part is finished
+            else{
+                if(isPseudoForDeleteMethod(currElement)){
+                    startCountingIndex = cacheStyle.indexOf(currElement);
+                    endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                    for(int j = startCountingIndex; j < endCountingIndex; j++){
+                        removedProperties.add(cacheStyle.get(j));
+                        cacheStyle.remove(j);
+                        j--;
+                        endCountingIndex--;
+                        if(j == cacheStyle.size() - 2){
+                            removedProperties.add(cacheStyle.get(cacheStyle.size() - 1));
+                            cacheStyle.remove(cacheStyle.size() - 1);
+                        }
+                    }
+                }
+                else{
+                    startCountingIndex = 0;
+                    endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
+                    for(int j = startCountingIndex; j < endCountingIndex; j++){
+                        String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
+                        if(propertyToRemove.equals(currElement)){
+                            removedProperties.add(cacheStyle.get(j));
+                            cacheStyle.remove(j);
+                            j--;
+                        }
+                    }
+                }
+            }
+        }
+        return removedProperties;
+    }

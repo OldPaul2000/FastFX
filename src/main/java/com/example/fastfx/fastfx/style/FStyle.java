@@ -44,15 +44,13 @@ public class FStyle {
             // JavaFX methods will be called here
 //            System.out.println(cacheStyle.get(i));
         }
-//        System.out.println("Set style: " + styleCache.getStyle(node));
     };
 
     /**
      * Add one or more properties to the existing style
      */
     public void addStyle(Node node, String newProperty){
-
-        parser.parseAddedStyle(newProperty, styleCache.getStyle(node));
+        parser.parseStyleToAdd(newProperty, styleCache.getStyle(node));
         System.out.println(styleCache.getStyle(node));
     }
 
@@ -87,10 +85,8 @@ public class FStyle {
         System.out.println("Old style: " + styleCache.getStyle(node));
         long start = System.currentTimeMillis();
         List<String> removedVals = parser.parseStyleToRemove(property, styleCache.getStyle(node));
-        double end = ((double) System.currentTimeMillis() - start) / 1000;
-        System.out.println("Delete execution time: " + end);
         System.out.println("New style: " + styleCache.getStyle(node));
-        System.out.println("removed properties: " + removedVals);
+
     }
 
 }

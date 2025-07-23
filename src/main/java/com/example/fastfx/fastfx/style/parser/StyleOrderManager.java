@@ -16,7 +16,16 @@ public class StyleOrderManager {
 
     // Works. Need more testing
 
-    /** Method to call for adding the new property or properties in the existing style*/
+    public void resetLimitIndexesValues(){
+        startCountingIndex = 0;
+        endCountingIndex = 0;
+        countingLimitsSet = false;
+        propertyIndexOffset = 0;
+    }
+
+    /**
+     * Method to call for adding the new property or properties in the existing style
+     */
     public String addPropertyInExistingStyle(List<String> cacheStyle, String newProperty){
         boolean isPseudoName = isPseudoName(newProperty);
         String currProperty = replaceClosingBracket(newProperty);
@@ -47,7 +56,8 @@ public class StyleOrderManager {
         return currProperty;
     }
 
-    /** Finds the last index where to stop searching for the proper
+    /**
+     *  Finds the last index where to stop searching for the proper
      *  place of the new property in the existing style for the specific element
      */
     private int getEndCountingIndex(int addedPropertyIndexOffset, List<String> cacheStyle){
@@ -60,7 +70,9 @@ public class StyleOrderManager {
         return 0;
     }
 
-    /** Adds new property in the existing style in the proper place*/
+    /**
+     * Adds new property in the existing style in the proper place
+     */
     private void addNewProperty(String newProperty, List<String> cacheStyle){
         int newPropertyIndex = getPropertyIndex(newProperty);
         if(endCountingIndex - startCountingIndex == 0){
@@ -168,7 +180,8 @@ public class StyleOrderManager {
         }
     }
 
-    /** Checks if the property is pseudo class or pseudo element or a child and
+    /**
+     *  Checks if the property is pseudo class or pseudo element or a child and
      *  not a regular property(w, h, tx etc)
      */
     private boolean isPseudoName(String property){
@@ -176,7 +189,9 @@ public class StyleOrderManager {
                 property.startsWith(".") || property.matches("[a-zA-Z0-9]+"));
     }
 
-    /** Replace the closing bracket from the end of the property*/
+    /**
+     * Replace the closing bracket from the end of the property
+     */
     private String replaceClosingBracket(String property){
         if(property.endsWith("}")){
             return property.replace("}","");
@@ -196,7 +211,8 @@ public class StyleOrderManager {
         return 0;
     }
 
-    /** Splits property and its value in an array with 2 elements:
+    /**
+     *  Splits property and its value in an array with 2 elements:
      *  e.g:
      *  arr[0] = w
      *  arr[1] = 100px
