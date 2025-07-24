@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class StyleConstants {
 
-    // Custom styles need some verifying and updates
+    // Custom styles need some verifying and updates.
 
     private static StyleConstants styleConstants;
     public static StyleConstants getInstance(){

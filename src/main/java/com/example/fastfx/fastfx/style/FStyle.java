@@ -44,14 +44,19 @@ public class FStyle {
             // JavaFX methods will be called here
 //            System.out.println(cacheStyle.get(i));
         }
+
     };
 
     /**
      * Add one or more properties to the existing style
      */
     public void addStyle(Node node, String newProperty){
-        parser.parseStyleToAdd(newProperty, styleCache.getStyle(node));
-        System.out.println(styleCache.getStyle(node));
+        System.out.println("Old style: " + styleCache.getStyle(node));
+        List<String> addedProperties = parser.parseStyleToAdd(newProperty, styleCache.getStyle(node));
+        System.out.println("Style after adding: " + styleCache.getStyle(node));
+        System.out.println("Added properties: " + addedProperties);
+        System.out.println();
+//        System.out.println(styleCache.getStyle(node));
     }
 
     /**
@@ -62,31 +67,39 @@ public class FStyle {
      * accepts more properties bc-r; br-r
      */
     public void updateStyle(Node node, String style){
-        List<String> newVals = parser.parseStyleToUpdate(style, styleCache.getStyle(node));
-        System.out.println("newVals: " + newVals);
+        System.out.println("Old style: " + styleCache.getStyle(node));
+        List<String> newProperties = parser.parseStyleToUpdate(style, styleCache.getStyle(node));
+        System.out.println("Updated style: " + styleCache.getStyle(node));
+        System.out.println("Updated properties: " + newProperties);
+        System.out.println();
+//        System.out.println("newVals: " + newVals);
     }
 
     /**
      * Remove all style from a certain element and also from style cache
      */
     public void removeStyle(Node node){
+        System.out.println("Old style: " + styleCache.getStyle(node));
         List<String> currStyle = styleCache.getStyle(node);
         for(int i = 0; i < currStyle.size(); i++){
             //Perform all necessary remove methods calls
         }
         styleCache.removeStyle(node);
-        System.out.println(styleCache.getStyle(node));
+        System.out.println("New style: " + styleCache.getStyle(node));
     }
 
     /**
      * Remove one or more properties from the element e.g: bc-c; br-r
      */
     public void removeProperty(Node node, String property){
+//        System.out.println("Old style length: " + styleCache.getStyle(node).size());
         System.out.println("Old style: " + styleCache.getStyle(node));
         long start = System.currentTimeMillis();
-        List<String> removedVals = parser.parseStyleToRemove(property, styleCache.getStyle(node));
+        List<String> removedProperties = parser.parseStyleToRemove(property, styleCache.getStyle(node));
+//        System.out.println("New style length: " + styleCache.getStyle(node).size());
         System.out.println("New style: " + styleCache.getStyle(node));
-
+        System.out.println("Removed properties: " + removedProperties);
+        System.out.println();
     }
 
 }

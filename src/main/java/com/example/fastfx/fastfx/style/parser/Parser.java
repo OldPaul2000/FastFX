@@ -1,7 +1,6 @@
 package com.example.fastfx.fastfx.style.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Parser {
@@ -12,7 +11,9 @@ public class Parser {
         orderManager = new StyleOrderManager();
     }
 
-    /** Parse the style to be set to the specific element*/
+    /**
+     * Parse the style to be set to the specific element
+     */
     public void parseStyle(String style, List<String> cacheStyle){
         String[] splitStyle = splitProperties(style);
         for(int i = 0; i < splitStyle.length; i++){
@@ -22,13 +23,14 @@ public class Parser {
         orderManager.resetLimitIndexesValues();
     }
 
-    /** Parse the added style. If the new property or properties are valid,
+    /**
+     *  Parse the added style. If the new property or properties are valid,
      *  an ArrayList with these properties will be returned in order to call
      *  the JavaFX methods to apply these new styles
      */
     public List<String> parseStyleToAdd(String style, List<String> cacheStyle){
         String[] splitStyle = splitProperties(style);
-        System.out.println("Split style: " + Arrays.toString(splitStyle));
+//        System.out.println("Split style: " + Arrays.toString(splitStyle));
         List<String> newAddedStyle = new ArrayList<>();
         for(int i = 0; i < splitStyle.length; i++){
             String addedProperty = orderManager.addPropertyInExistingStyle(cacheStyle, splitStyle[i]);
@@ -51,10 +53,11 @@ public class Parser {
         int endCountingIndex = calculateEndCountingIndex(0, cacheStyle);
         for(int i = 0; i < splitStyle.length; i++){
             String currElement = splitStyle[i];
-            if(isPseudoElement(currElement)){
+            if(isPseudoForUpdateMethod(currElement)){
                 startCountingIndex = cacheStyle.indexOf(currElement) + 1;
                 endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle) + 1;
                 updatedProperties.add(currElement);
+                continue;
             }
             for(int j = startCountingIndex; j < endCountingIndex; j++){
                 String currCacheProperty = cacheStyle.get(j);
@@ -248,8 +251,9 @@ public class Parser {
      *  Check if the current element is a pseudo-element/class.
      *  Used in parseStyleToUpdate method
      */
-    private boolean isPseudoElement(String property){
-        return !property.matches(".+:.+");
+    private boolean isPseudoForUpdateMethod(String property){
+        return Character.isUpperCase(property.charAt(0)) || property.startsWith(":") ||
+                property.startsWith("::") || property.startsWith(".");
     }
 
     /**
