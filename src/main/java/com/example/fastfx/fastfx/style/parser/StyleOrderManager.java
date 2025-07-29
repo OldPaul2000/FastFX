@@ -14,8 +14,6 @@ public class StyleOrderManager {
     private int endCountingIndex = 0;
     private boolean countingLimitsSet = false;
 
-    // Works. Need more testing
-
     public void resetLimitIndexesValues(){
         startCountingIndex = 0;
         endCountingIndex = 0;
@@ -31,6 +29,7 @@ public class StyleOrderManager {
         String currProperty = replaceClosingBracket(newProperty);
 
         if(isPseudoName){
+            System.out.println("Is pseudo: " + currProperty);
             if(cacheStyle.contains(newProperty)){
                 startCountingIndex = cacheStyle.indexOf(currProperty) + 1;
                 endCountingIndex = getEndCountingIndex(startCountingIndex, cacheStyle);
@@ -43,6 +42,7 @@ public class StyleOrderManager {
             countingLimitsSet = true;
         }
         else{
+            System.out.println("Is property: " + currProperty);
             if(!countingLimitsSet){
                 startCountingIndex = 0;
                 endCountingIndex = getEndCountingIndex(startCountingIndex, cacheStyle);
@@ -57,25 +57,16 @@ public class StyleOrderManager {
     }
 
     /**
-     *  Finds the last index where to stop searching for the proper
-     *  place of the new property in the existing style for the specific element
-     */
-    private int getEndCountingIndex(int addedPropertyIndexOffset, List<String> cacheStyle){
-        for(int i = addedPropertyIndexOffset; i < cacheStyle.size(); i++){
-            String currElement = cacheStyle.get(i);
-            if(!currElement.matches(".+:.+") || i == cacheStyle.size() - 1){
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    /**
      * Adds new property in the existing style in the proper place
      */
     private void addNewProperty(String newProperty, List<String> cacheStyle){
         int newPropertyIndex = getPropertyIndex(newProperty);
-        if(endCountingIndex - startCountingIndex == 0){
+        System.out.println("SCI: " + startCountingIndex);
+        System.out.println("ECI: " + endCountingIndex);
+        if(startCountingIndex == 0 && endCountingIndex == 0){
+            cacheStyle.add(0, newProperty);
+        }
+        else if(endCountingIndex - startCountingIndex == 0){
             cacheStyle.add(newProperty);
         }
         for(int i = startCountingIndex; i < endCountingIndex; i++){
@@ -88,6 +79,10 @@ public class StyleOrderManager {
                 int currStyleIndex = getPropertyIndex(currStyle);
                 String nextStyle = cacheStyle.get(i + 1);
                 int nextStyleIndex = getPropertyIndex(nextStyle);
+                System.out.println("currStyle: " + currStyle);
+                System.out.println("curr style index: " + currStyleIndex);
+                System.out.println("nextStyle: " + nextStyle);
+                System.out.println("next style index: " + nextStyleIndex);
                 if(newPropertyIndex > currStyleIndex && newPropertyIndex < nextStyleIndex){
                     cacheStyle.add(i + 1, newProperty);
                     endCountingIndex++;
@@ -105,6 +100,20 @@ public class StyleOrderManager {
                 }
             }
         }
+    }
+
+    /**
+     *  Finds the last index where to stop searching for the proper
+     *  place of the new property in the existing style for the specific element
+     */
+    private int getEndCountingIndex(int addedPropertyIndexOffset, List<String> cacheStyle){
+        for(int i = addedPropertyIndexOffset; i < cacheStyle.size(); i++){
+            String currElement = cacheStyle.get(i);
+            if(isPseudoName(currElement) || i == cacheStyle.size() - 1){
+                return i;
+            }
+        }
+        return 0;
     }
 
     //======================================================================================================

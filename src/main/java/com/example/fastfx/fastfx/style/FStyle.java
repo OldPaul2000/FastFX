@@ -44,16 +44,25 @@ public class FStyle {
             // JavaFX methods will be called here
 //            System.out.println(cacheStyle.get(i));
         }
-
+        System.out.println("Set style");
+        printStyle(styleCache.getStyle(node));
     };
 
     /**
      * Add one or more properties to the existing style
      */
     public void addStyle(Node node, String newProperty){
-        System.out.println("Old style: " + styleCache.getStyle(node));
+        if(styleCache.getStyle(node) == null){
+            styleCache.setStyle(node, new ArrayList<>());
+        }
+        System.out.println("Old style length: " + styleCache.getStyle(node).size());
+        System.out.println("Old style");
+        printStyle(styleCache.getStyle(node));
+
         List<String> addedProperties = parser.parseStyleToAdd(newProperty, styleCache.getStyle(node));
-        System.out.println("Style after adding: " + styleCache.getStyle(node));
+        System.out.println("New style length: " + styleCache.getStyle(node).size());
+        System.out.println("New style");
+        printStyle(styleCache.getStyle(node));
         System.out.println("Added properties: " + addedProperties);
         System.out.println();
 //        System.out.println(styleCache.getStyle(node));
@@ -67,9 +76,13 @@ public class FStyle {
      * accepts more properties bc-r; br-r
      */
     public void updateStyle(Node node, String style){
-        System.out.println("Old style: " + styleCache.getStyle(node));
+        System.out.println("Old style length: " + styleCache.getStyle(node).size());
+        System.out.println("Old style");
+        printStyle(styleCache.getStyle(node));;
         List<String> newProperties = parser.parseStyleToUpdate(style, styleCache.getStyle(node));
-        System.out.println("Updated style: " + styleCache.getStyle(node));
+        System.out.println("New style length: " + styleCache.getStyle(node).size());
+        System.out.println("New updated style");
+        printStyle(styleCache.getStyle(node));;
         System.out.println("Updated properties: " + newProperties);
         System.out.println();
 //        System.out.println("newVals: " + newVals);
@@ -92,14 +105,37 @@ public class FStyle {
      * Remove one or more properties from the element e.g: bc-c; br-r
      */
     public void removeProperty(Node node, String property){
-//        System.out.println("Old style length: " + styleCache.getStyle(node).size());
-        System.out.println("Old style: " + styleCache.getStyle(node));
+        System.out.println("Old style length: " + styleCache.getStyle(node).size());
+        System.out.println("Old style");
+        printStyle(styleCache.getStyle(node));
+
         long start = System.currentTimeMillis();
         List<String> removedProperties = parser.parseStyleToRemove(property, styleCache.getStyle(node));
-//        System.out.println("New style length: " + styleCache.getStyle(node).size());
-        System.out.println("New style: " + styleCache.getStyle(node));
+        System.out.println("New style length: " + styleCache.getStyle(node).size());
+        System.out.println("New style after removal");
+        printStyle(styleCache.getStyle(node));
         System.out.println("Removed properties: " + removedProperties);
         System.out.println();
+    }
+
+    private void printStyle(List<String> style){
+        for(int i = 0; i < style.size(); i++){
+            String curr = style.get(i);
+            if(isPseudoForDeleteMethod(curr)){
+                System.out.println();
+                System.out.print("                ");
+                System.out.print(curr + " -> ");
+            }
+            else{
+                System.out.print(curr + "; ");
+            }
+        }
+        System.out.println();
+    }
+
+    private boolean isPseudoForDeleteMethod(String property){
+        return Character.isUpperCase(property.charAt(0)) || property.startsWith(":") ||
+                property.startsWith("::") || property.startsWith(".");
     }
 
 }

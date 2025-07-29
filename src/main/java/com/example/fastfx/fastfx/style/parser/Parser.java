@@ -29,8 +29,8 @@ public class Parser {
      *  the JavaFX methods to apply these new styles
      */
     public List<String> parseStyleToAdd(String style, List<String> cacheStyle){
+        orderManager.resetLimitIndexesValues();
         String[] splitStyle = splitProperties(style);
-//        System.out.println("Split style: " + Arrays.toString(splitStyle));
         List<String> newAddedStyle = new ArrayList<>();
         for(int i = 0; i < splitStyle.length; i++){
             String addedProperty = orderManager.addPropertyInExistingStyle(cacheStyle, splitStyle[i]);
@@ -80,7 +80,7 @@ public class Parser {
         String[] splitStyle = splitProperties(style);
         int startCountingIndex = 0;
         int endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
-        for(int i = 0; i < splitStyle.length; i++){;
+        for(int i = 0; i < splitStyle.length; i++){
             String currElement = replaceClosingBracket(splitStyle[i]);
             if(splitStyle.length > 1){
                 if(i < splitStyle.length - 1){
@@ -106,12 +106,16 @@ public class Parser {
                     else{
                         for(int j = startCountingIndex ; j <= endCountingIndex; j++){
                             String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
-
                             if(currElement.equals(propertyToRemove)){
                                 removedProperties.add(cacheStyle.get(j));
                                 cacheStyle.remove(j);
-                                j--;
                                 endCountingIndex--;
+                                if(j > 1 && j < cacheStyle.size() - 1 &&
+                                        currentAndNextPropertyArePseudo(cacheStyle.get(j - 1), cacheStyle.get(j + 1))){
+                                    cacheStyle.remove(j - 1);
+                                    endCountingIndex--;
+                                }
+                                break;
                             }
                             else if(j > 0 && j < cacheStyle.size() - 1){
                                 if(currentAndNextPropertyArePseudo(cacheStyle.get(j - 1), cacheStyle.get(j))){
@@ -138,6 +142,11 @@ public class Parser {
                         }
                     }
                     else{
+                        if(cacheStyle.size() == 1 && currElement.equals(splitPropertyValue(cacheStyle.get(0))[0])){
+                            removedProperties.add(cacheStyle.get(0));
+                            cacheStyle.remove(0);
+                        }
+                        endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
                         for(int j = startCountingIndex; j < endCountingIndex; j++){
                             if(j < cacheStyle.size() - 1){
                                 String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
@@ -166,7 +175,6 @@ public class Parser {
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -188,17 +196,18 @@ public class Parser {
                 }
                 else{
                     endCountingIndex = calculateEndCountingIndex(startCountingIndex, cacheStyle);
-                    for(int j = startCountingIndex; j < endCountingIndex; j++){
+                    for(int j = startCountingIndex; j <= endCountingIndex; j++){
                         String propertyToRemove = splitPropertyValue(cacheStyle.get(j))[0];
                         if(propertyToRemove.equals(currElement)){
                             removedProperties.add(cacheStyle.get(j));
                             cacheStyle.remove(j);
-                            j--;
+                            endCountingIndex--;
+                            break;
                         }
                     }
                 }
             }
-            if(isPseudoForDeleteMethod(cacheStyle.get(cacheStyle.size() - 1))){
+            if(cacheStyle.size() > 0 && isPseudoForDeleteMethod(cacheStyle.get(cacheStyle.size() - 1))){
                 cacheStyle.remove(cacheStyle.size() - 1);
             }
         }

@@ -129,14 +129,72 @@ public class HelloController {
 
         long start = System.currentTimeMillis();
 
-        fStyle.setStyle(button1, style);
-        fStyle.removeProperty(button1, removeStyle1);
-        fStyle.addStyle(button1, "h:100px");
-        fStyle.updateStyle(button1, "h:300.5px");
-        fStyle.updateStyle(button1, "Button{bc-c:#123456}");
-        fStyle.addStyle(button1, "Button{w:3rem; h:1.2rem}");
-        fStyle.updateStyle(button1, "Button{h: 1.4rem}");
-        fStyle.updateStyle(button1, "::pseudo-class{w:12rem; bc-c:#f23a22}");
+//        fStyle.setStyle(button1, "bc-c:red");
+//        fStyle.addStyle(button1, "bc-c:red");
+        fStyle.setStyle(button1, "sc-y:1.4;sc-x:1.3;::click{bc-c:red}"); //Doesn't sort the properties
+        System.out.println("------------------------------------------------------------------------");
+//        fStyle.addStyle(button1, "sc-x:1.3");
+//        System.out.println("------------------------------------------------------------------------");
+//        fStyle.addStyle(button1, "br-w:0.2rem;rt:290");
+        fStyle.addStyle(button1, "::click{rt:290;sc-x:2}");
+        System.out.println("------------------------------------------------------------------------");
+//        fStyle.addStyle(button1, ":label{f-s:10px; f-w:500}"); //Doesn't sort the properties
+
+        //Add more test cases for the below code
+//        System.out.println("Set style(1)");
+//        fStyle.setStyle(button1, style);
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Remove property(2)");
+//        fStyle.removeProperty(button1, "h"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(3)");
+//        fStyle.addStyle(button1, "h:100px"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(4)");
+//        fStyle.updateStyle(button1, "h:300.5px"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(5)");
+//        fStyle.updateStyle(button1, "Button{bc-c:#123456}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(6)");
+//        fStyle.addStyle(button1, "Button{w:3rem; h:1.2rem}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(7)");
+//        fStyle.updateStyle(button1, "Button{h: 1.4rem}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(8)");
+//        fStyle.updateStyle(button1, "::pseudo-class{w:12rem; bc-c:#f23a22}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(9)");
+//        fStyle.addStyle(button1, "Label{f-s:1.4rem; f-w:400}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(10)");
+//        fStyle.updateStyle(button1, "Label{f-w:500}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Update style(11)");
+//        fStyle.updateStyle(button1, "w:9.4rem;.child{w:220px}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Remove property(12)");
+//        fStyle.removeProperty(button1, "Button;Label"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Remove property(13)");
+//        fStyle.removeProperty(button1, "h;::pseudo-class{w;pd};.child{bc-c;w;h};:pseudo-element2{br-r;w}"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Remove property(14)");
+//        fStyle.removeProperty(button1, ":pseudo-element2{pd;h};::pseudo-class"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(15)");
+//        fStyle.addStyle(button1, "br-r: 3px 3px 3px 3px; f-s: 0.8rem"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Remove property(16)");
+//        fStyle.removeProperty(button1, "f-s; w; bc-c; br-r"); //Works
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(17)");
+//        fStyle.addStyle(button1, "::click{bc-c:green; br-r:0.8rem; f-w:700}");
+//        System.out.println("------------------------------------------------------------------------");
+//        System.out.println("Add style(18)");
+//        fStyle.addStyle(button1, "bc-c:red");
+
 
         long end = System.currentTimeMillis() - start;
         System.out.println("Exec time: " + (double)end / 1000);
