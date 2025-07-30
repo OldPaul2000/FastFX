@@ -41,8 +41,6 @@ public class Parser {
         return newAddedStyle;
     }
 
-    // Works. Need more testing
-
     /**
      * Logic for replacing old values of existing properties with new values
      */
@@ -69,8 +67,6 @@ public class Parser {
         }
         return updatedProperties;
     }
-
-    // Works. Need more testing
 
     /**
      * Logic for removing existing properties
