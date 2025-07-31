@@ -64,8 +64,6 @@ public class FStyle {
         System.out.println("New style");
         printStyle(styleCache.getStyle(node));
         System.out.println("Added properties: " + addedProperties);
-        System.out.println();
-//        System.out.println(styleCache.getStyle(node));
     }
 
     /**
@@ -84,8 +82,6 @@ public class FStyle {
         System.out.println("New updated style");
         printStyle(styleCache.getStyle(node));;
         System.out.println("Updated properties: " + newProperties);
-        System.out.println();
-//        System.out.println("newVals: " + newVals);
     }
 
     /**
@@ -115,7 +111,6 @@ public class FStyle {
         System.out.println("New style after removal");
         printStyle(styleCache.getStyle(node));
         System.out.println("Removed properties: " + removedProperties);
-        System.out.println();
     }
 
     private void printStyle(List<String> style){

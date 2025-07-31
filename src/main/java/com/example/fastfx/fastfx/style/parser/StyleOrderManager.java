@@ -67,7 +67,7 @@ public class StyleOrderManager {
             String firstProperty = cacheStyle.get(startCountingIndex);
             int firstPropertyIndex = getPropertyIndex(firstProperty);
             if(newPropertyIndex > firstPropertyIndex){
-                cacheStyle.add(newProperty);
+                cacheStyle.add(startCountingIndex + 1, newProperty);
             }
             else{
                 cacheStyle.add(startCountingIndex, newProperty);
@@ -90,7 +90,7 @@ public class StyleOrderManager {
                     endCountingIndex++;
                     break;
                 }
-                if(i == cacheStyle.size() - 2 && getPropertyIndex(newProperty) > nextStyleIndex){
+                if(i == cacheStyle.size() - 2 && newPropertyIndex > nextStyleIndex){
                     cacheStyle.add(newProperty);
                     endCountingIndex++;
                     break;
