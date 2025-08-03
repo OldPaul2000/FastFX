@@ -59,13 +59,33 @@ public class StyleOrderManager {
      */
     private void addNewProperty(String newProperty, List<String> cacheStyle){
         int newPropertyIndex = getPropertyIndex(newProperty);
-        if(endCountingIndex - startCountingIndex == 0){
-            cacheStyle.add(newProperty);
+        if(cacheStyle.size() == 1){
+            if(newPropertyIndex > getPropertyIndex(cacheStyle.get(0))){
+                cacheStyle.add(newProperty);
+            }
+            else{
+                cacheStyle.add(0, newProperty);
+            }
+            endCountingIndex++;
+        }
+        else if(endCountingIndex - startCountingIndex == 0){
+            if(endCountingIndex < cacheStyle.size()){
+                if(newPropertyIndex > getPropertyIndex(cacheStyle.get(endCountingIndex))){
+                    cacheStyle.add(newProperty);
+                }
+                else {
+                    cacheStyle.add(endCountingIndex, newProperty);
+                }
+            }
+            else{
+                cacheStyle.add(newProperty);
+            }
             endCountingIndex++;
         }
         else if(endCountingIndex - startCountingIndex == 1){
             String firstProperty = cacheStyle.get(startCountingIndex);
             int firstPropertyIndex = getPropertyIndex(firstProperty);
+
             if(newPropertyIndex > firstPropertyIndex){
                 cacheStyle.add(startCountingIndex + 1, newProperty);
             }
@@ -80,6 +100,7 @@ public class StyleOrderManager {
                 int currStyleIndex = getPropertyIndex(currStyle);
                 String nextStyle = cacheStyle.get(i + 1);
                 int nextStyleIndex = getPropertyIndex(nextStyle);
+
                 if(newPropertyIndex > currStyleIndex && newPropertyIndex < nextStyleIndex){
                     cacheStyle.add(i + 1, newProperty);
                     endCountingIndex++;
@@ -122,8 +143,8 @@ public class StyleOrderManager {
     public void setPropertyInProperPlace(List<String> cacheStyle, String newProperty){
         boolean isPseudoName = isPseudoName(newProperty);
         String currProperty = replaceClosingBracket(newProperty);
-
         int newPropertyIndex = getPropertyIndex(currProperty);
+
         if(isPseudoName){
             cacheStyle.add(currProperty);
             propertyIndexOffset = cacheStyle.size();
