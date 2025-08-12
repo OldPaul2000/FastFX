@@ -83,10 +83,10 @@ public class HelloController {
 
         long start = System.currentTimeMillis();
 
-        testCase1(fStyle, button1);
+        
 
         long end = System.currentTimeMillis() - start;
-        System.out.println("Exec time: " + (double)end / 1000);
+        System.out.println("Exec time: " + (double)end);
 
     }
 

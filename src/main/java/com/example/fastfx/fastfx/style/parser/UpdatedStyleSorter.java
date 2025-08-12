@@ -1,4 +1,4 @@
-package com.example.fastfx.fastfx.style;
+package com.example.fastfx.fastfx.style.parser;
 
 import com.example.fastfx.fastfx.style.constants.StylesOrderConstants;
 
