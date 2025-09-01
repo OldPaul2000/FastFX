@@ -22,7 +22,6 @@ public class FStyle {
 
     private Parser parser;
     private StyleCache styleCache;
-
     private UpdatedStyleSorter propertiesSorter = UpdatedStyleSorter.getInstance();
 
     public FStyle(AnchorPane mainPageContainer){

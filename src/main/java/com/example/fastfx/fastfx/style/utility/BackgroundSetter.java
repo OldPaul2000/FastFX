@@ -12,32 +12,36 @@ import javafx.scene.paint.Paint;
 public class BackgroundSetter {
 
     public static void setBackgroundColor(Region element, Color color){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        if(background == null){
-            backgroundFill = new BackgroundFill(color, null, null);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            CornerRadii radii = backgroundFill.getRadii();
-            Insets insets = backgroundFill.getInsets();
-            element.setBackground(new Background(new BackgroundFill(color, radii, insets)));
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background == null){
+                backgroundFill = new BackgroundFill(color, null, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                CornerRadii radii = backgroundFill.getRadii();
+                Insets insets = backgroundFill.getInsets();
+                element.setBackground(new Background(new BackgroundFill(color, radii, insets)));
+            }
         }
     }
 
     public static void setBackgroundColor(Region element, String colorValue){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        if(background == null){
-            backgroundFill = new BackgroundFill(Color.valueOf(colorValue), null, null);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            CornerRadii radii = backgroundFill.getRadii();
-            Insets insets = backgroundFill.getInsets();
-            element.setBackground(new Background(new BackgroundFill(Color.valueOf(colorValue), radii, insets)));
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf(colorValue), null, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                CornerRadii radii = backgroundFill.getRadii();
+                Insets insets = backgroundFill.getInsets();
+                element.setBackground(new Background(new BackgroundFill(Color.valueOf(colorValue), radii, insets)));
+            }
         }
     }
 
@@ -46,22 +50,24 @@ public class BackgroundSetter {
      */
     public static void setBackgroundRadius(Region element, double topLeft, double topRight,
                                            double bottomRight, double bottomLeft){
-        CornerRadii radii = new CornerRadii(topLeft, topRight, bottomRight, bottomLeft, false);
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        if(background == null){
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("e2e2e2");
+        if(element != null){
+            CornerRadii radii = new CornerRadii(topLeft, topRight, bottomRight, bottomLeft, false);
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
+                element.setBackground(new Background(backgroundFill));
             }
-            Insets insets = backgroundFill.getInsets();
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, insets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("e2e2e2");
+                }
+                Insets insets = backgroundFill.getInsets();
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, insets)));
+            }
         }
     }
 
@@ -83,22 +89,24 @@ public class BackgroundSetter {
      * Set insets for every side individually
      */
     public static void setInsets(Region element, double top, double right, double bottom, double left){
-        Insets insets = new Insets(top, right, bottom, left);
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        if(background == null){
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("#e2e2e2");
+        if(element != null){
+            Insets insets = new Insets(top, right, bottom, left);
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
+                element.setBackground(new Background(backgroundFill));
             }
-            CornerRadii radii = backgroundFill.getRadii();
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, insets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                CornerRadii radii = backgroundFill.getRadii();
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, insets)));
+            }
         }
     }
 
@@ -117,94 +125,102 @@ public class BackgroundSetter {
     }
 
     public static void setTopInset(Region element, double insetValue){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        Insets insets;
-        if(background == null){
-            insets = new Insets(insetValue, 0, 0, 0);
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("#e2e2e2");
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            Insets insets;
+            if(background == null){
+                insets = new Insets(insetValue, 0, 0, 0);
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
+                element.setBackground(new Background(backgroundFill));
             }
-            CornerRadii radii = backgroundFill.getRadii();
-            insets = backgroundFill.getInsets();
-            Insets newInsets = new Insets(insetValue, insets.getRight(), insets.getBottom(), insets.getLeft());
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                CornerRadii radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                Insets newInsets = new Insets(insetValue, insets.getRight(), insets.getBottom(), insets.getLeft());
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            }
         }
     }
 
     public static void setRightInset(Region element, double insetValue){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        Insets insets;
-        if(background == null){
-            insets = new Insets(0, insetValue, 0, 0);
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("#e2e2e2");
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            Insets insets;
+            if(background == null){
+                insets = new Insets(0, insetValue, 0, 0);
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
+                element.setBackground(new Background(backgroundFill));
             }
-            CornerRadii radii = backgroundFill.getRadii();
-            insets = backgroundFill.getInsets();
-            Insets newInsets = new Insets(insets.getTop(), insetValue, insets.getBottom(), insets.getLeft());
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                CornerRadii radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                Insets newInsets = new Insets(insets.getTop(), insetValue, insets.getBottom(), insets.getLeft());
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            }
         }
     }
 
     public static void setBottomInset(Region element, double insetValue){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        Insets insets;
-        if(background == null){
-            insets = new Insets(0, 0, insetValue, 0);
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("#e2e2e2");
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            Insets insets;
+            if(background == null){
+                insets = new Insets(0, 0, insetValue, 0);
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
+                element.setBackground(new Background(backgroundFill));
             }
-            CornerRadii radii = backgroundFill.getRadii();
-            insets = backgroundFill.getInsets();
-            Insets newInsets = new Insets(insets.getTop(), insets.getRight(), insetValue, insets.getLeft());
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                CornerRadii radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                Insets newInsets = new Insets(insets.getTop(), insets.getRight(), insetValue, insets.getLeft());
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            }
         }
     }
 
     public static void setLeftInset(Region element, double insetValue){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        Insets insets;
-        if(background == null){
-            insets = new Insets(0, 0, 0, insetValue);
-            backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
-            element.setBackground(new Background(backgroundFill));
-        }
-        else{
-            backgroundFill = background.getFills().get(0);
-            Paint backgroundColor = backgroundFill.getFill();
-            Color color = (Color)backgroundColor;
-            if(color.toString().equals("0xffffffba")){
-                backgroundColor = Color.valueOf("#e2e2e2");
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            Insets insets;
+            if(background == null){
+                insets = new Insets(0, 0, 0, insetValue);
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), null, insets);
+                element.setBackground(new Background(backgroundFill));
             }
-            CornerRadii radii = backgroundFill.getRadii();
-            insets = backgroundFill.getInsets();
-            Insets newInsets = new Insets(insets.getTop(), insets.getRight(), insets.getBottom(), insetValue);
-            element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                CornerRadii radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                Insets newInsets = new Insets(insets.getTop(), insets.getRight(), insets.getBottom(), insetValue);
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
+            }
         }
     }
 
