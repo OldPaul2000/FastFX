@@ -1,6 +1,8 @@
-package com.example.fastfx.fastfx.style.layouts;
+package com.example.fastfx.fastfx.style.layouts.flex;
 
 import com.example.fastfx.fastfx.elements.utility.UI;
+import com.example.fastfx.fastfx.style.layouts.Margin;
+import com.example.fastfx.fastfx.style.layouts.Padding;
 import com.example.fastfx.fastfx.style.utility.MarginSetter;
 import javafx.scene.layout.Region;
 

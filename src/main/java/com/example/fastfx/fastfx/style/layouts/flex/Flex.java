@@ -1,6 +1,10 @@
-package com.example.fastfx.fastfx.style.layouts;
+package com.example.fastfx.fastfx.style.layouts.flex;
 
 import com.example.fastfx.fastfx.elements.utility.UI;
+import com.example.fastfx.fastfx.style.layouts.Alignment;
+import com.example.fastfx.fastfx.style.layouts.Justify;
+import com.example.fastfx.fastfx.style.layouts.Margin;
+import com.example.fastfx.fastfx.style.layouts.Padding;
 import com.example.fastfx.fastfx.style.utility.MarginListener;
 import com.example.fastfx.fastfx.style.utility.MarginSetter;
 import javafx.beans.value.ChangeListener;
@@ -193,7 +197,7 @@ public class Flex {
     }
 
     public String getAlignment(){
-        return this.contentAlignment;
+        return contentAlignment;
     }
 
     /**
@@ -218,7 +222,7 @@ public class Flex {
     }
 
     public String getJustify(){
-        return this.contentJustify;
+        return contentJustify;
     }
 
     /**

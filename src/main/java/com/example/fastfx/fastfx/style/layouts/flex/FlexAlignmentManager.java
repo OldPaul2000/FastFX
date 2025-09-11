@@ -1,5 +1,8 @@
-package com.example.fastfx.fastfx.style.layouts;
+package com.example.fastfx.fastfx.style.layouts.flex;
 
+import com.example.fastfx.fastfx.style.layouts.Alignment;
+import com.example.fastfx.fastfx.style.layouts.Margin;
+import com.example.fastfx.fastfx.style.layouts.Padding;
 import com.example.fastfx.fastfx.style.utility.MarginSetter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
@@ -10,7 +13,7 @@ public class FlexAlignmentManager {
      * Align the new element taking into account all properties set for the flex object
      */
     public void alignElement(String flexDirection, Region element, AnchorPane container,
-                              Padding padding, String contentAlignment){
+                             Padding padding, String contentAlignment){
         double x = 0;
         double y = 0;
         double mt = 0;

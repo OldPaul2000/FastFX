@@ -1,4 +1,4 @@
-package com.example.fastfx.fastfx.style.layouts;
+package com.example.fastfx.fastfx.style.layouts.flex;
 
 /**
  * Constant values for direction property

@@ -160,6 +160,44 @@ public class UI {
         return 0;
     }
 
+    /**
+     * Return the index of the specified child
+     */
+    public static int getChildIndex(AnchorPane parent, Node child){
+        if(parent != null && child != null){
+            return UI.getChildren(parent).indexOf(child);
+        }
+        return -1;
+    }
+
+
+    /**
+     * Switch the elements places in the parent nodes list
+     */
+    public static void switchElementsIndex(AnchorPane parent, int el1Index, int el2Index){
+        if(parent != null){
+            List<Node> children = parent.getChildren();
+            if (children.size() > 1){
+                if(el1Index >= 0 && el1Index < children.size() &&
+                    el2Index >= 0 && el2Index < children.size() &&
+                    el1Index != el2Index){
+                    Node tempChild1 = children.get(el1Index);
+                    Node tempChild2 = children.get(el2Index);
+                    if(el1Index < el2Index){
+                        children.remove(tempChild1);
+                        children.set(el1Index, tempChild2);
+                        children.add(el2Index, tempChild1);
+                    }
+                    else{
+                        children.remove(tempChild2);
+                        children.add(el1Index, tempChild2);
+                        children.set(el2Index, tempChild1);
+                    }
+                }
+            }
+        }
+    }
+
     private static final Set<String> POSITIONS = new HashSet<>(
             Set.of("first", "last")
     );
