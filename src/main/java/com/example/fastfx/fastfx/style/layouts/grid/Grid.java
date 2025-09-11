@@ -86,7 +86,7 @@ public class Grid {
             }
         }
     }
-
+ 
     /**
      * Calculate the max height child for the specific column
      */
