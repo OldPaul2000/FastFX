@@ -2,6 +2,7 @@ package com.example.fastfx.fastfx.elements.utility;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 import java.util.HashSet;
@@ -12,6 +13,49 @@ import java.util.Set;
  * Utility class for simplifying adding and removing children from the UI
  */
 public class UI {
+
+    /**
+     * Add a new child at the specified location in the specified parent
+     */
+    public static void add(String position, Pane parent, Region child){
+        if(parent != null && child != null){
+            if(POSITIONS.contains(position)){
+                if(position.equals("first")){
+                    parent.getChildren().add(0, child);
+                }
+                if(position.equals("last")){
+                    parent.getChildren().add(child);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add a new child at the specified index in the specified parent
+     */
+    public static void add(int indexPosition, Pane parent, Region child){
+        if(parent != null && child != null){
+            List<Node> children = parent.getChildren();
+            if(indexPosition > children.size() - 1){
+                children.add(child);
+            }
+            else if(indexPosition < 0){
+                children.add(0, child);
+            }
+            else{
+                children.add(indexPosition, child);
+            }
+        }
+    }
+
+    /**
+     * Add a new child at the end of the children list of the specified parent
+     */
+    public static void add(Pane parent, Region child){
+        if(parent != null && child != null){
+            add("last", parent, child);
+        }
+    }
 
     /**
      * Add a new child at the specified location in the specified parent
@@ -62,7 +106,7 @@ public class UI {
     public static Node remove(String position, AnchorPane parent){
         Node child = null;
         if(parent != null){
-            if(POSITIONS.contains(position) && parent.getChildren().size() > 0){
+            if(POSITIONS.contains(position) && !parent.getChildren().isEmpty()){
                 if(position.equals("first")){
                     child = parent.getChildren().get(0);
                     parent.getChildren().remove(child);
@@ -163,6 +207,16 @@ public class UI {
     /**
      * Return the index of the specified child
      */
+    public static int getChildIndex(Pane parent, Node child){
+        if(parent != null && child != null){
+            return UI.getChildren(parent).indexOf(child);
+        }
+        return -1;
+    }
+
+    /**
+     * Return the index of the specified child
+     */
     public static int getChildIndex(AnchorPane parent, Node child){
         if(parent != null && child != null){
             return UI.getChildren(parent).indexOf(child);
@@ -170,28 +224,31 @@ public class UI {
         return -1;
     }
 
-
     /**
      * Switch the elements places in the parent nodes list
      */
-    public static void switchElementsIndex(AnchorPane parent, int el1Index, int el2Index){
+    public static void switchElementsIndex(Pane parent, int el1Index, int el2Index){
         if(parent != null){
             List<Node> children = parent.getChildren();
             if (children.size() > 1){
                 if(el1Index >= 0 && el1Index < children.size() &&
-                    el2Index >= 0 && el2Index < children.size() &&
-                    el1Index != el2Index){
+                        el2Index >= 0 && el2Index < children.size() &&
+                        el1Index != el2Index){
                     Node tempChild1 = children.get(el1Index);
                     Node tempChild2 = children.get(el2Index);
-                    if(el1Index < el2Index){
-                        children.remove(tempChild1);
-                        children.set(el1Index, tempChild2);
-                        children.add(el2Index, tempChild1);
+                    children.remove(tempChild1);
+                    children.remove(tempChild2);
+                    if(el1Index > children.size() - 1){
+                        children.add(tempChild2);
                     }
                     else{
-                        children.remove(tempChild2);
                         children.add(el1Index, tempChild2);
-                        children.set(el2Index, tempChild1);
+                    }
+                    if(el2Index > children.size() - 1){
+                        children.add(tempChild1);
+                    }
+                    else{
+                        children.add(el2Index, tempChild1);
                     }
                 }
             }

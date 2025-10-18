@@ -14,9 +14,10 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("grid-view.fxml"));
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        Scene scene = new Scene(fxmlLoader.load(), screenWidth, screenHeight - 70);
+        Scene scene = new Scene(fxmlLoader.load(), 500, 200);
         stage.setTitle("Hello!");
         stage.setScene(scene);
+//        stage.setIconified(true);
         stage.setMaximized(true);
         stage.show();
     }

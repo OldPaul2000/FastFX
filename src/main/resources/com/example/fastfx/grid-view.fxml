@@ -6,11 +6,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
 <AnchorPane fx:id="mainContainer"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.fastfx.GridTestController"
             style="-fx-background-color:black">
-    <AnchorPane fx:id="gridContainer"></AnchorPane>
+    <Pane fx:id="gridContainer"></Pane>
 
 </AnchorPane>

@@ -1,18 +1,17 @@
 package com.example.fastfx;
 
 import com.example.fastfx.fastfx.elements.utility.UI;
-import com.example.fastfx.fastfx.style.layouts.flex.Flex;
+import com.example.fastfx.fastfx.style.layouts.Alignment;
+import com.example.fastfx.fastfx.style.layouts.Justify;
 import com.example.fastfx.fastfx.style.layouts.grid.Grid;
 import com.example.fastfx.fastfx.style.utility.BackgroundSetter;
 import com.example.fastfx.fastfx.style.utility.MarginSetter;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 public class GridTestController {
@@ -20,99 +19,165 @@ public class GridTestController {
     @FXML
     public AnchorPane mainContainer;
     @FXML
-    public AnchorPane gridContainer;
+    public Pane gridContainer;
 
     AnchorPane square = null;
     public void initialize(){
 
-//        System.out.println(5 / 4);
-//        System.out.println(7 / 4);
-//        System.out.println(9 / 4);
-
         long start = System.currentTimeMillis();
         //=============== EXECUTION TIME ===============
 
-//        System.out.println(((double) 1 / 2));
-//        System.out.println(((double) 2 / 2));
-//        System.out.println(((double) 3 / 2));
-//        System.out.println(((double) 4 / 2));
-//        System.out.println(((double) 5 / 2));
-//        System.out.println(((double) 6 / 2));
-
-
         Grid grid = new Grid(gridContainer);
-//        columns = 4;
-//        rows = 3;
-        Button gridButton1 = new Button("Button 1");
-        grid.addElement(gridButton1);
-        Button gridButton2 = new Button("Button 2");
-        grid.addElement(gridButton2);
-        Button gridButton3 = new Button("Button 3");
-        grid.addElement(gridButton3);
-        Button gridButton4 = new Button("Button 4");
-        grid.addElement(gridButton4);
-        Button gridButton5 = new Button("Button 5");
-        grid.addElement(gridButton5);
-        Button gridButton6 = new Button("Button 6");
-        grid.addElement(gridButton6);
-        Button gridButton7 = new Button("Button 7");
-        grid.addElement(gridButton7);
-        Button gridButton8 = new Button("Button 8");
-        grid.addElement(gridButton8);
-        Button gridButton9 = new Button("Button 9");
-        grid.addElement(gridButton9);
-        Button gridButton10 = new Button("Button 10");
-        grid.addElement(gridButton10);
-        Button gridButton11 = new Button("Button 11");
-        grid.addElement(gridButton11);
-        Button gridButton12 = new Button("Button 12");
-        grid.addElement(gridButton12);
-
+        grid.width(500);
+        grid.height(500);
+        grid.templateRows("1fr 1fr 1fr");
+        grid.templateColumns("1fr 1fr 1fr");
+//        grid.gap(25);
+//        grid.padding(25);
+        grid.alignItems("center");
+        grid.justifyItems("center");
+//        System.out.println("Allocated heights: " + grid.getAllocatedHeights());
+//        System.out.println("Allocated widths: " + grid.getAllocatedWidths());
         System.out.println("=================================");
 
-        System.out.println(grid.getElementRow(gridButton1));
-        System.out.println(grid.getElementColumn(gridButton1));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton2));
-        System.out.println(grid.getElementColumn(gridButton2));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton3));
-        System.out.println(grid.getElementColumn(gridButton3));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton4));
-        System.out.println(grid.getElementColumn(gridButton4));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton5));
-        System.out.println(grid.getElementColumn(gridButton5));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton6));
-        System.out.println(grid.getElementColumn(gridButton6));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton7));
-        System.out.println(grid.getElementColumn(gridButton7));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton8));
-        System.out.println(grid.getElementColumn(gridButton8));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton9));
-        System.out.println(grid.getElementColumn(gridButton9));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton10));
-        System.out.println(grid.getElementColumn(gridButton10));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton11));
-        System.out.println(grid.getElementColumn(gridButton11));
-        System.out.println();
-        System.out.println(grid.getElementRow(gridButton12));
-        System.out.println(grid.getElementColumn(gridButton12));
-        System.out.println();
 
-        UI.switchElementsIndex(gridContainer, 0, 1);
+        Button gridButton1 = new Button("Button 1");
+        gridButton1.setPrefWidth(100);
+        gridButton1.setPrefHeight(100);
+        grid.add(gridButton1);
+//        grid.setElWidthPercent(gridButton1, 50);
+//        grid.setElHeightPercent(gridButton1, 50);
 
-        gridContainer.getChildren().forEach((el) -> {
-            System.out.println(el);
-        });
+        Button gridButton2 = new Button("Button 2");
+        gridButton2.setPrefWidth(100);
+        gridButton2.setPrefHeight(100);
+        grid.add(gridButton2);
+//        grid.setElWidthPercent(gridButton2, 50);
+//        grid.setElHeightPercent(gridButton2, 50);
 
+        Button gridButton3 = new Button("Button 3");
+        gridButton3.setPrefWidth(100);
+        gridButton3.setPrefHeight(100);
+        grid.add(gridButton3);
+//        grid.setElWidthPercent(gridButton3, 90);
+//        grid.setElHeightPercent(gridButton3, 90);
+
+        Button gridButton4 = new Button("Button 4");
+        gridButton4.setPrefWidth(100);
+        gridButton4.setPrefHeight(100);
+        grid.add(gridButton4);
+
+        Button gridButton5 = new Button("Button 5");
+        gridButton5.setPrefWidth(100);
+        gridButton5.setPrefHeight(100);
+        grid.add(gridButton5);
+
+        Button gridButton6 = new Button("Button 6");
+        gridButton6.setPrefWidth(100);
+        gridButton6.setPrefHeight(100);
+        grid.add(gridButton6);
+
+        Button gridButton7 = new Button("Button 7");
+        gridButton7.setPrefWidth(100);
+        gridButton7.setPrefHeight(100);
+        grid.add(gridButton7);
+
+        Button gridButton8 = new Button("Button 8");
+        gridButton8.setPrefWidth(100);
+        gridButton8.setPrefHeight(100);
+//        grid.add(gridButton8);
+
+        Button gridButton9 = new Button("Button 9");
+        gridButton9.setPrefWidth(100);
+        gridButton9.setPrefHeight(100);
+//        grid.add(gridButton9);
+
+//        gridButton5.setPrefWidth(200);
+//        grid.absY(gridButton9, 10);
+//        grid.absX(gridButton9, 90);
+//        grid.removeAbsPositioning(gridButton9);
+
+//        grid.switchElements(gridButton5, gridButton7);
+
+
+//        UI.switchElementsIndex(gridContainer, 1, 3);
+
+//        grid.setElWidthPercent(gridButton1, 50);
+//        grid.setElHeightPercent(gridButton1, 50);
+//        grid.setElWidthPercent(gridButton2, 50);
+//        grid.setElHeightPercent(gridButton2, 50);
+//        grid.setElWidthPercent(gridButton3, 50);
+//        grid.setElHeightPercent(gridButton3, 50);
+//        grid.setElWidthPercent(gridButton4, 50);
+//        grid.setElHeightPercent(gridButton4, 50);
+//        grid.setElWidthPercent(gridButton5, 50);
+//        grid.setElHeightPercent(gridButton5, 50);
+//        grid.setElWidthPercent(gridButton6, 50);
+//        grid.setElHeightPercent(gridButton6, 50);
+//        grid.setElWidthPercent(gridButton7, 50);
+//        grid.setElHeightPercent(gridButton7, 50);
+//        grid.setElWidthPercent(gridButton8, 50);
+//        grid.setElHeightPercent(gridButton8, 50);
+//        grid.setElWidthPercent(gridButton9, 50);
+//        grid.setElHeightPercent(gridButton9, 50);
+
+//        grid.setElWidthPercent(gridButton1, 100);
+//        grid.setElHeightPercent(gridButton1, 100);
+//        grid.setElWidthPercent(gridButton2, 100);
+//        grid.setElHeightPercent(gridButton2, 100);
+//        grid.setElWidthPercent(gridButton3, 100);
+//        grid.setElHeightPercent(gridButton3, 100);
+//        grid.setElWidthPercent(gridButton4, 100);
+//        grid.setElHeightPercent(gridButton4, 100);
+//        grid.setElWidthPercent(gridButton5, 100);
+//        grid.setElHeightPercent(gridButton5, 100);
+//        grid.setElWidthPercent(gridButton6, 100);
+//        grid.setElHeightPercent(gridButton6, 100);
+//        grid.setElWidthPercent(gridButton7, 100);
+//        grid.setElHeightPercent(gridButton7, 100);
+//        grid.setElWidthPercent(gridButton8, 100);
+//        grid.setElHeightPercent(gridButton8, 100);
+//        grid.setElWidthPercent(gridButton9, 100);
+//        grid.setElHeightPercent(gridButton9, 100);
+
+
+
+//        Button gridButton10 = new Button("Button 10");
+//        gridButton10.setPrefWidth(70);
+//        gridButton10.setPrefHeight(30);
+//        grid.add(gridButton10);
+//
+//        Button gridButton11 = new Button("Button 11");
+//        gridButton11.setPrefWidth(70);
+//        gridButton11.setPrefHeight(30);
+//        grid.add(gridButton11);
+//
+//        Button gridButton12 = new Button("Button 12");
+//        gridButton12.setPrefWidth(70);
+//        gridButton12.setPrefHeight(30);
+//        grid.add(gridButton12);
+//
+//        Button gridButton13 = new Button("Button 13");
+//        gridButton13.setPrefWidth(70);
+//        gridButton13.setPrefHeight(30);
+//        grid.add(gridButton13);
+//
+//        Button gridButton14 = new Button("Button 14");
+//        gridButton14.setPrefWidth(70);
+//        gridButton14.setPrefHeight(30);
+//        grid.add(gridButton14);
+//
+//        Button gridButton15 = new Button("Button 15");
+//        gridButton15.setPrefWidth(70);
+//        gridButton15.setPrefHeight(30);
+//        grid.add(gridButton15);
+//
+//        Button gridButton16 = new Button("Button 16");
+//        gridButton16.setPrefWidth(70);
+//        gridButton16.setPrefHeight(30);
+//        grid.add(gridButton16);
+
+// ======================== CONTROL TESTING PANEL ================================================
         double layX = 1400;
         double layY = 50;
 
@@ -201,8 +266,9 @@ public class GridTestController {
         widthSlider.setMinHeight(500);
         widthSlider.setLayoutX(layX - 50);
         widthSlider.setLayoutY(layY);
-        widthSlider.setMin(300);
-        widthSlider.setMax(1000);
+        widthSlider.setMin(0);
+        widthSlider.setMax(gridContainer.getPrefWidth() * 2);
+        widthSlider.setValue(gridContainer.getPrefWidth());
         UI.add(mainContainer, widthSlider);
 
         Slider heightSlider = new Slider();
@@ -210,33 +276,25 @@ public class GridTestController {
         heightSlider.setMinHeight(500);
         heightSlider.setLayoutX(layX - 100);
         heightSlider.setLayoutY(layY);
-        heightSlider.setMin(100);
-        heightSlider.setMax(1000);
+        heightSlider.setMin(0);
+        heightSlider.setMax(gridContainer.getPrefHeight() * 2);
+        heightSlider.setValue(gridContainer.getPrefHeight());
         UI.add(mainContainer, heightSlider);
 
         gridContainer.setLayoutX(100);
         gridContainer.setLayoutY(70);
         BackgroundSetter.setBackgroundColor(gridContainer, "#ae5142");
 
-        Flex flex = new Flex(gridContainer);
-        flex.setWidth(500);
-        flex.setHeight(500);
-        flex.setFlexDirection("row");
-        flex.alignContent("start");
-        flex.justifyContent("start");
-//        flex.setPadding(10);
-//        flex.setGap(40);
-
 
         button1.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
             square = new AnchorPane();
             squareStyle(square);
 //            MarginSetter.setMargin(square, 0, 10, 0, 10);
-            flex.addElement(2,square);
+            grid.add(square);
         });
 
         button2.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-            flex.setGap(10);
+            grid.gap(10);
         });
 
         button3.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
@@ -260,27 +318,27 @@ public class GridTestController {
         });
 
         button7.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-//            if(grid.getAlignment().equals(Alignment.START.alignment())){
-//                grid.alignItems(Alignment.CENTER);
-//            }
-//            else if(grid.getAlignment().equals(Alignment.CENTER.alignment())){
-//                grid.alignItems(Alignment.END);
-//            }
-//            else if(grid.getAlignment().equals(Alignment.END.alignment())){
-//                grid.alignItems(Alignment.START);
-//            }
+            if(grid.getItemsAlignment().equals(Alignment.START.alignment())){
+                grid.alignItems(Alignment.CENTER.alignment());
+            }
+            else if(grid.getItemsAlignment().equals(Alignment.CENTER.alignment())){
+                grid.alignItems(Alignment.END.alignment());
+            }
+            else if(grid.getItemsAlignment().equals(Alignment.END.alignment())){
+                grid.alignItems(Alignment.START.alignment());
+            }
         });
 
         button8.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-//            if(grid.getJustify().equals(Justify.START.justify())){
-//                grid.justifyContent(Justify.CENTER);
-//            }
-//            else if(grid.getJustify().equals(Justify.CENTER.justify())){
-//                grid.justifyContent(Justify.END);
-//            }
-//            else if(grid.getJustify().equals(Justify.END.justify())){
-//                grid.justifyContent(Justify.START);
-//            }
+            if(grid.getItemsJustify().equals(Justify.START.justify())){
+                grid.justifyItems(Justify.CENTER.justify());
+            }
+            else if(grid.getItemsJustify().equals(Justify.CENTER.justify())){
+                grid.justifyItems(Justify.END.justify());
+            }
+            else if(grid.getItemsJustify().equals(Justify.END.justify())){
+                grid.justifyItems(Justify.START.justify());
+            }
 //            System.out.println("Justify: " + grid.getJustify());
         });
 
@@ -293,16 +351,19 @@ public class GridTestController {
         });
 
         widthSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            flex.setWidth((Double) newVal);
+            grid.width((Double) newVal);
         });
 
         heightSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            flex.setHeight((Double) newVal);
+            grid.height((Double) newVal);
         });
 
         //=============== EXECUTION TIME ===============
         long end = System.currentTimeMillis() - start;
         System.out.println("Exec time: " + (double)end);
+
+
+        // ======================== CONTROL TESTING PANEL ================================================
 
     }
 
