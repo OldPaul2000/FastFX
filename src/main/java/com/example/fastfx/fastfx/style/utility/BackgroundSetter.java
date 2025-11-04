@@ -45,6 +45,27 @@ public class BackgroundSetter {
         }
     }
 
+    public static void setBackgroundOpacity(Region element, double opacity){
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("e2e2e2"), null, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                CornerRadii radii = backgroundFill.getRadii();
+                Insets insets = backgroundFill.getInsets();
+                Color oldColor = (Color)backgroundFill.getFill();
+                int red = (int)(oldColor.getRed() * 255);
+                int green = (int)(oldColor.getGreen() * 255);
+                int blue = (int)(oldColor.getBlue() * 255);
+                element.setBackground(new Background(new BackgroundFill(Color.rgb(red, green, blue, opacity), radii, insets)));
+            }
+        }
+    }
+
     /**
      * Set radius for every corner individually
      */
@@ -83,6 +104,126 @@ public class BackgroundSetter {
      */
     public static void setBackgroundRadius(Region element, double radius){
         setBackgroundRadius(element, radius, radius, radius, radius);
+    }
+
+    /**
+     * Set the radius for the top left corner
+     */
+    public static void setTopLeftBackgroundRadius(Region element, double radius){
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            CornerRadii radii = new CornerRadii(radius, 0, 0, 0, false);
+            Insets insets;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                CornerRadii newRadii = new CornerRadii(radius, radius, radii.getTopRightVerticalRadius(),radii.getTopRightHorizontalRadius(),
+                        radii.getBottomRightHorizontalRadius(), radii.getBottomRightVerticalRadius(), radii.getBottomLeftVerticalRadius(), radii.getBottomLeftHorizontalRadius(),
+                        false, false, false, false, false, false, false, false);
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, newRadii, insets)));
+            }
+        }
+    }
+
+    /**
+     * Set the radius for the top right corner
+     */
+    public static void setTopRightBackgroundRadius(Region element, double radius){
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            CornerRadii radii = new CornerRadii(0, radius, 0, 0, false);
+            Insets insets;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                CornerRadii newRadii = new CornerRadii(radii.getTopLeftHorizontalRadius(), radii.getTopLeftVerticalRadius(), radius, radius,
+                        radii.getBottomRightHorizontalRadius(), radii.getBottomRightVerticalRadius(), radii.getBottomLeftVerticalRadius(), radii.getBottomLeftHorizontalRadius(),
+                        false, false, false, false, false, false, false, false);
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, newRadii, insets)));
+            }
+        }
+    }
+
+    /**
+     * Set the radius for the bottom right corner
+     */
+    public static void setBottomRightBackgroundRadius(Region element, double radius){
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            CornerRadii radii = new CornerRadii(radius, 0, 0, 0, false);
+            Insets insets;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                CornerRadii newRadii = new CornerRadii(radii.getTopLeftHorizontalRadius(), radii.getTopLeftVerticalRadius(), radii.getTopRightVerticalRadius(), radii.getTopRightHorizontalRadius(),
+                        radius, radius, radii.getBottomLeftVerticalRadius(), radii.getBottomLeftHorizontalRadius(),
+                        false, false, false, false, false, false, false, false);
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, newRadii, insets)));
+            }
+        }
+    }
+
+    /**
+     * Set the radius for the bottom left corner
+     */
+    public static void setBottomLeftBackgroundRadius(Region element, double radius){
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            CornerRadii radii = new CornerRadii(radius, 0, 0, 0, false);
+            Insets insets;
+            if(background == null){
+                backgroundFill = new BackgroundFill(Color.valueOf("#e2e2e2"), radii, null);
+                element.setBackground(new Background(backgroundFill));
+            }
+            else{
+                backgroundFill = background.getFills().get(0);
+                Paint backgroundColor = backgroundFill.getFill();
+                Color color = (Color)backgroundColor;
+                if(color.toString().equals("0xffffffba")){
+                    backgroundColor = Color.valueOf("#e2e2e2");
+                }
+                radii = backgroundFill.getRadii();
+                insets = backgroundFill.getInsets();
+                CornerRadii newRadii = new CornerRadii(radii.getTopLeftHorizontalRadius(), radii.getTopLeftVerticalRadius(), radii.getTopRightVerticalRadius(), radii.getTopRightHorizontalRadius(),
+                        radii.getBottomRightHorizontalRadius(), radii.getBottomRightVerticalRadius(), radius, radius,
+                        false, false, false, false, false, false, false, false);
+                element.setBackground(new Background(new BackgroundFill(backgroundColor, newRadii, insets)));
+            }
+        }
     }
 
     /**
