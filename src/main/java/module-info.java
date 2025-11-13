@@ -6,6 +6,7 @@ module com.example.fastfx2 {
     requires jdk.jfr;
     requires javafx.base;
     requires java.sql;
+    requires jdk.dynalink;
 
 
     opens com.example.fastfx to javafx.fxml;
