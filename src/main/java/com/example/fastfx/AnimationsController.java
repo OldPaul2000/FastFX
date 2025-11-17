@@ -2,9 +2,10 @@ package com.example.fastfx;
 
 import com.example.fastfx.fastfx.elements.utility.UI;
 import com.example.fastfx.fastfx.style.utility.BackgroundSetter;
-import com.example.fastfx.fastfx.userinteraction.ElementMover;
+import com.example.fastfx.fastfx.style.utility.FontSetter;
+import com.example.fastfx.fastfx.userinteraction.ElementMover3;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseButton;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class AnimationsController {
@@ -16,14 +17,15 @@ public class AnimationsController {
         BackgroundSetter.setBackgroundColor(mainContainer, "#2c4773");
 
         Pane pane = new Pane();
-        pane.setPrefWidth(200);
-        pane.setPrefHeight(200);
+        pane.setPrefWidth(400);
+        pane.setPrefHeight(300);
         pane.setLayoutX(50);
         pane.setLayoutY(50);
         BackgroundSetter.setBackgroundColor(pane, "#333333");
         UI.add(mainContainer, pane);
 
         Pane movableElement = new Pane();
+        movableElement.setId("Movable el 1");
         movableElement.setPrefWidth(50);
         movableElement.setPrefHeight(50);
         movableElement.setLayoutX(20);
@@ -33,27 +35,51 @@ public class AnimationsController {
         UI.add(pane, movableElement);
 
         Pane windowBar = new Pane();
+        windowBar.setId("Window bar");
         windowBar.prefWidthProperty().bind(movableElement.prefWidthProperty());
         windowBar.setPrefHeight(20);
         BackgroundSetter.setBackgroundColor(windowBar, "#999999");
         UI.add(movableElement, windowBar);
 
+        Label barTitle = new Label("Window");
+        FontSetter.setFont(barTitle, "black", 10);
+        barTitle.setLayoutY(3);
+        barTitle.setLayoutX(5);
+        UI.add(windowBar, barTitle);
+
+//        System.out.println(((Region) barTitle).);
+
         Pane movableElement2 = new Pane();
         movableElement2.setPrefWidth(50);
         movableElement2.setPrefHeight(50);
-        movableElement2.setLayoutX(100);
+        movableElement2.setLayoutX(80);
         movableElement2.setLayoutY(20);
         BackgroundSetter.setBackgroundColor(movableElement2, "green");
-//        UI.add(pane, movableElement2);
+        UI.add(pane, movableElement2);
+
+        Pane windowBar2 = new Pane();
+        windowBar2.setId("Window bar2");
+        windowBar2.prefWidthProperty().bind(movableElement2.prefWidthProperty());
+        windowBar2.setPrefHeight(20);
+        BackgroundSetter.setBackgroundColor(windowBar2, "#999999");
+        UI.add(movableElement2, windowBar2);
+
+//        ElementMover mover = new ElementMover(pane, movableElement);
+//        mover.addPermittedChild(windowBar);
+//        mover.initialize();
+
+        ElementMover3 mover = new ElementMover3(pane);
+        mover.addElement(movableElement);
+//        mover.addPermittedChild(movableElement, movableElement);
+        mover.permitAllChildren(movableElement);
+//        mover.setEdgeLimits(movableElement, 7);
+
 
 //        ElementResizer resizer = new ElementResizer(pane);
-//        resizer.printStatus();
 //        resizer.addElement(movableElement, ResizeMode.DRAG_EDGES);
+//        resizer.addElement(movableElement2, ResizeMode.DRAG_EDGES);
 
-        ElementMover mover = new ElementMover(pane, movableElement);
-        mover.addMouseButton(MouseButton.PRIMARY);
-        mover.addPermittedChild(windowBar);
-        mover.initialize();
+
 
     }
 }

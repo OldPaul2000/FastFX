@@ -61,31 +61,31 @@ public class ElementMover {
     }
 
     /**
-     * Represents the left limit in pixels in which the movable element can be moved.
+     * Represents the left offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void leftOffset(double xMinusBoundPercentage) {
-        this.xMinusBoundOffset = xMinusBoundPercentage;
+    public void leftOffset(double xMinusBound) {
+        this.xMinusBoundOffset = xMinusBound;
     }
 
     /**
-     * Represents the top limit in pixels in which the movable element can be moved.
+     * Represents the top offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void topOffset(double yMinusBoundPercentage) {
-        this.yMinusBoundOffset = yMinusBoundPercentage;
+    public void topOffset(double yMinusBound) {
+        this.yMinusBoundOffset = yMinusBound;
     }
 
     /**
-     * Represents the right limit in pixels in which the movable element can be moved.
+     * Represents the right offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void rightOffset(double xPlusBoundPercentage) {
-        this.xPlusBoundOffset = -xPlusBoundPercentage;
+    public void rightOffset(double xPlusBound) {
+        this.xPlusBoundOffset = -xPlusBound;
     }
 
     /**
-     * Represents the bottom limit in pixels in which the movable element can be moved.
+     * Represents the bottom offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void bottomOffset(double yPlusBoundPercentage) {
-        this.yPlusBoundOffset = -yPlusBoundPercentage;
+    public void bottomOffset(double yPlusBound) {
+        this.yPlusBoundOffset = -yPlusBound;
     }
 
     /**
@@ -93,7 +93,7 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setEdgeLimits(double limit){
+    public void setEdgeLimits(double limit) {
         this.topEdgeLimit = limit;
         this.rightEdgeLimit = limit;
         this.bottomEdgeLimit = limit;
@@ -136,7 +136,7 @@ public class ElementMover {
         this.leftEdgeLimit = leftEdgeLimit;
     }
 
-    public void resetEdgeLimits(){
+    public void resetEdgeLimits() {
         setEdgeLimits(0);
     }
 
@@ -219,14 +219,25 @@ public class ElementMover {
      */
     public void initialize() {
         mousePressedEvent = e -> {
+            System.out.println("target: " + e.getTarget());
             if (mouseButtons.contains(e.getButton())) {
-                calculatedXPlusBoundOffset = parent.getPrefWidth() - movableElement.getPrefWidth() + xPlusBoundOffset;
-                calculatedYPlusBoundOffset = parent.getPrefHeight() - movableElement.getPrefHeight() + yPlusBoundOffset;
-                isPermittedChild = validateTarget(e);
-                if (isPermittedChild) {
-                    initialX = e.getX();
-                    initialY = e.getY();
-                    movableElement.setCursor(cursor);
+                double x = e.getX();
+                double y = e.getY();
+                System.out.println("x: " + x);
+                System.out.println("y: " + y);
+                if (x > leftEdgeLimit && x < movableElement.getPrefWidth() - rightEdgeLimit
+                        && y > topEdgeLimit && y < movableElement.getPrefHeight() - bottomEdgeLimit) {
+                    calculatedXPlusBoundOffset = parent.getPrefWidth() - movableElement.getPrefWidth() + xPlusBoundOffset;
+                    calculatedYPlusBoundOffset = parent.getPrefHeight() - movableElement.getPrefHeight() + yPlusBoundOffset;
+                    isPermittedChild = validateTarget(e);
+                    if (isPermittedChild) {
+                        initialX = x;
+                        initialY = y;
+                        movableElement.setCursor(cursor);
+                    }
+                }
+                else {
+                    isPermittedChild = false;
                 }
             }
         };
@@ -235,10 +246,13 @@ public class ElementMover {
         moveDragEvent = e -> {
             if (mouseButtons.contains(e.getButton())) {
                 if (isPermittedChild) {
-                    double x = e.getSceneX() - parent.getLayoutX() - initialX;
-                    double y = e.getSceneY() - parent.getLayoutY() - initialY;
-                    movableElement.setLayoutX(Math.max(xMinusBoundOffset, Math.min(x, calculatedXPlusBoundOffset)));
-                    movableElement.setLayoutY(Math.max(yMinusBoundOffset, Math.min(y, calculatedYPlusBoundOffset)));
+                    if (initialX > leftEdgeLimit && initialX < movableElement.getPrefWidth() - rightEdgeLimit
+                            && initialY > topEdgeLimit && initialY < movableElement.getPrefHeight() - bottomEdgeLimit) {
+                        double x = e.getSceneX() - parent.getLayoutX() - initialX;
+                        double y = e.getSceneY() - parent.getLayoutY() - initialY;
+                        movableElement.setLayoutX(Math.max(xMinusBoundOffset, Math.min(x, calculatedXPlusBoundOffset)));
+                        movableElement.setLayoutY(Math.max(yMinusBoundOffset, Math.min(y, calculatedYPlusBoundOffset)));
+                    }
                 }
             }
         };
@@ -248,6 +262,7 @@ public class ElementMover {
             if (mouseButtons.contains(e.getButton())) {
                 if (validateTarget(e)) {
                     movableElement.setCursor(Cursor.DEFAULT);
+                    System.out.println();
                 }
             }
         };
@@ -261,6 +276,7 @@ public class ElementMover {
         boolean valid = false;
         Node target = (Node) e.getTarget();
         Node targetParent = ((Node) e.getTarget()).getParent();
+        System.out.println("targetParent: " + targetParent);
         if (permittedChildren.contains(target)) {
             valid = true;
         }

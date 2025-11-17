@@ -226,17 +226,21 @@ public class ElementResizer {
             mouseWheelEvents.remove(element);
         }
     }
-    //===========================================================================================
 
     private boolean top = false;
     private boolean right = false;
     private boolean bottom = false;
     private boolean left = false;
+    private boolean topLeft = false;
+    private boolean topRight = false;
+    private boolean bottomRight = false;
+    private boolean bottomLeft = false;
     private Region currTarget = null;
 
     private void addMouseMoveEvent() {
         if (mouseMoveEvent == null) {
             mouseMoveEvent = e -> {
+                System.out.println("Move");
                 Region target = (Region) e.getTarget();
                 addResizeCursor(target, e);
             };
@@ -251,22 +255,54 @@ public class ElementResizer {
         boolean validated = validateTarget(currTarget);
         if (validated) {
             double resizeRangeOffset = resizeEdgeLimits.get(currTarget);
-            if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()) {
+            if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
+                    && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
+                    && resizeSides.get(currTarget).contains(ResizeSide.TR_CORNER)) {
+                currTarget.setCursor(Cursor.NE_RESIZE);
+                resetResizeSides();
+                topRight = true;
+            }
+            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
+                    && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
+                    && resizeSides.get(currTarget).contains(ResizeSide.BR_CORNER)) {
+                currTarget.setCursor(Cursor.SE_RESIZE);
+                resetResizeSides();
+                bottomRight = true;
+            }
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
+                    && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
+                    && resizeSides.get(currTarget).contains(ResizeSide.BL_CORNER)) {
+                currTarget.setCursor(Cursor.SW_RESIZE);
+                resetResizeSides();
+                bottomLeft = true;
+            }
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
+                    && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
+                    && resizeSides.get(currTarget).contains(ResizeSide.TL_CORNER)) {
+                currTarget.setCursor(Cursor.NW_RESIZE);
+                resetResizeSides();
+                topLeft = true;
+            }
+            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
+                    && resizeSides.get(currTarget).contains(ResizeSide.RIGHT)) {
                 currTarget.setCursor(Cursor.H_RESIZE);
                 resetResizeSides();
                 right = true;
             }
-            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset) {
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
+                    && resizeSides.get(currTarget).contains(ResizeSide.LEFT)) {
                 currTarget.setCursor(Cursor.H_RESIZE);
                 resetResizeSides();
                 left = true;
             }
-            else if (y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()) {
+            else if (y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
+                    && resizeSides.get(currTarget).contains(ResizeSide.BOTTOM)) {
                 currTarget.setCursor(Cursor.V_RESIZE);
                 resetResizeSides();
                 bottom = true;
             }
-            else if (y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset) {
+            else if (y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
+                    && resizeSides.get(currTarget).contains(ResizeSide.TOP)) {
                 currTarget.setCursor(Cursor.V_RESIZE);
                 resetResizeSides();
                 top = true;
@@ -313,6 +349,10 @@ public class ElementResizer {
         right = false;
         bottom = false;
         left = false;
+        topLeft = false;
+        topRight = false;
+        bottomRight = false;
+        bottomLeft = false;
     }
 
     public void removeMouseMoveEvent() {
@@ -328,21 +368,40 @@ public class ElementResizer {
                 if (currTarget != null) {
                     double x = e.getX();
                     double y = e.getY();
-                    if (top) {
+                    if (topLeft) {
                         currTarget.setPrefHeight(currTarget.getPrefHeight() + currTarget.getLayoutY() - y);
                         currTarget.setLayoutY(y);
-                    }
-                    if (right) {
-                        currTarget.setPrefWidth(Math.abs(currTarget.getLayoutX() - x));
-                    }
-                    if (bottom) {
-                        currTarget.setPrefHeight(Math.abs(currTarget.getLayoutY() - y));
-                    }
-                    if (left) {
                         currTarget.setPrefWidth(currTarget.getPrefWidth() + currTarget.getLayoutX() - x);
                         currTarget.setLayoutX(x);
                     }
-                    ;
+                    else if (top) {
+                        currTarget.setPrefHeight(currTarget.getPrefHeight() + currTarget.getLayoutY() - y);
+                        currTarget.setLayoutY(y);
+                    }
+                    if (topRight) {
+                        currTarget.setPrefHeight(currTarget.getPrefHeight() + currTarget.getLayoutY() - y);
+                        currTarget.setLayoutY(y);
+                        currTarget.setPrefWidth(Math.abs(currTarget.getLayoutX() - x));
+                    }
+                    else if (right) {
+                        currTarget.setPrefWidth(Math.abs(currTarget.getLayoutX() - x));
+                    }
+                    if (bottomRight) {
+                        currTarget.setPrefHeight(Math.abs(currTarget.getLayoutY() - y));
+                        currTarget.setPrefWidth(Math.abs(currTarget.getLayoutX() - x));
+                    }
+                    else if (bottom) {
+                        currTarget.setPrefHeight(Math.abs(currTarget.getLayoutY() - y));
+                    }
+                    if (bottomLeft) {
+                        currTarget.setPrefHeight(Math.abs(currTarget.getLayoutY() - y));
+                        currTarget.setPrefWidth(currTarget.getPrefWidth() + currTarget.getLayoutX() - x);
+                        currTarget.setLayoutX(x);
+                    }
+                    else if (left) {
+                        currTarget.setPrefWidth(currTarget.getPrefWidth() + currTarget.getLayoutX() - x);
+                        currTarget.setLayoutX(x);
+                    }
                 }
             };
             parent.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragEvent);
