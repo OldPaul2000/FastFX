@@ -135,7 +135,7 @@ public class ElementMover2 {
      */
     public void setTopOffset(Region element, double top) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setTopBoundOffset(top);
+            boundOffsets.get(element).setTop(top);
         }
     }
 
@@ -144,7 +144,7 @@ public class ElementMover2 {
      */
     public void setRightOffset(Region element, double right) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setRightBoundOffset(right);
+            boundOffsets.get(element).setRight(right);
         }
     }
 
@@ -153,7 +153,7 @@ public class ElementMover2 {
      */
     public void setBottomOffset(Region element, double bottom) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setBottomBoundOffset(bottom);
+            boundOffsets.get(element).setBottom(bottom);
         }
     }
 
@@ -162,7 +162,7 @@ public class ElementMover2 {
      */
     public void setLeftOffset(Region element, double left) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setLeftBoundOffset(left);
+            boundOffsets.get(element).setLeft(left);
         }
     }
 

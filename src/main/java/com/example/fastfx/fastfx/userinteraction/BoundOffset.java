@@ -18,17 +18,17 @@ public class BoundOffset {
     }
 
     public void setBoundsOffset(double offset){
-        setTopBoundOffset(offset);
-        setRightBoundOffset(offset);
-        setBottomBoundOffset(offset);
-        setLeftBoundOffset(offset);
+        setTop(offset);
+        setRight(offset);
+        setBottom(offset);
+        setLeft(offset);
     }
 
     public double getTop() {
         return topBoundOffset;
     }
 
-    public void setTopBoundOffset(double topBoundOffset) {
+    public void setTop(double topBoundOffset) {
         this.topBoundOffset = topBoundOffset;
     }
 
@@ -36,7 +36,7 @@ public class BoundOffset {
         return rightBoundOffset;
     }
 
-    public void setRightBoundOffset(double rightBoundOffset) {
+    public void setRight(double rightBoundOffset) {
         this.rightBoundOffset = rightBoundOffset;
     }
 
@@ -44,7 +44,7 @@ public class BoundOffset {
         return bottomBoundOffset;
     }
 
-    public void setBottomBoundOffset(double bottomBoundOffset) {
+    public void setBottom(double bottomBoundOffset) {
         this.bottomBoundOffset = bottomBoundOffset;
     }
 
@@ -52,7 +52,7 @@ public class BoundOffset {
         return leftBoundOffset;
     }
 
-    public void setLeftBoundOffset(double leftBoundOffset) {
+    public void setLeft(double leftBoundOffset) {
         this.leftBoundOffset = leftBoundOffset;
     }
 }

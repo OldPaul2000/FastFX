@@ -124,7 +124,10 @@ public class ElementMover3 {
     public void setBoundsOffset(Region element, double offset){
         BoundOffset boundOffset = boundOffsets.get(element);
         if(boundOffset != null){
-            boundOffset.setBoundsOffset(offset);
+            boundOffset.setTop(offset);
+            boundOffset.setRight(-offset);
+            boundOffset.setBottom(-offset);
+            boundOffset.setLeft(offset);
         }
     }
 
@@ -133,7 +136,7 @@ public class ElementMover3 {
      */
     public void setTopOffset(Region element, double top) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setTopBoundOffset(top);
+            boundOffsets.get(element).setTop(top);
         }
     }
 
@@ -142,7 +145,7 @@ public class ElementMover3 {
      */
     public void setRightOffset(Region element, double right) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setRightBoundOffset(right);
+            boundOffsets.get(element).setRight(-right);
         }
     }
 
@@ -151,7 +154,7 @@ public class ElementMover3 {
      */
     public void setBottomOffset(Region element, double bottom) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setBottomBoundOffset(bottom);
+            boundOffsets.get(element).setBottom(-bottom);
         }
     }
 
@@ -160,7 +163,7 @@ public class ElementMover3 {
      */
     public void setLeftOffset(Region element, double left) {
         if(boundOffsets.containsKey(element)){
-            boundOffsets.get(element).setLeftBoundOffset(left);
+            boundOffsets.get(element).setLeft(left);
         }
     }
 
@@ -237,10 +240,6 @@ public class ElementMover3 {
         return mouseReleasedEvent;
     }
 
-    private void addMouseReleasedEvent(Region element){
-
-    }
-
     /**
      * The cursor to appear on mouse press.
      */
@@ -278,8 +277,8 @@ public class ElementMover3 {
     private double currRightBoundOffset;
     private double currBottomBoundOffset;
     private double currLeftBoundOffset;
-    double calculatedXPlusBoundOffset;
-    double calculatedYPlusBoundOffset;
+    double calculatedRightBoundOffset;
+    double calculatedBottomBoundOffset;
 
     public void initialize() {
         mousePressedEvent = e -> {
@@ -300,8 +299,8 @@ public class ElementMover3 {
                 currLeftBoundOffset = boundOffset.getLeft();
                 if (x > currLeftEdgeLimit && x < currElement.getPrefWidth() - currRightEdgeLimit
                         && y > currTopEdgeLimit && y < currElement.getPrefHeight() - currBottomEdgeLimit) {
-                    calculatedXPlusBoundOffset = parent.getPrefWidth() - currElement.getPrefWidth() + currRightBoundOffset;
-                    calculatedYPlusBoundOffset = parent.getPrefHeight() - currElement.getPrefHeight() + currBottomBoundOffset;
+                    calculatedRightBoundOffset = parent.getPrefWidth() - currElement.getPrefWidth() + currRightBoundOffset;
+                    calculatedBottomBoundOffset = parent.getPrefHeight() - currElement.getPrefHeight() + currBottomBoundOffset;
                     initialX = x;
                     initialY = y;
                     currElement.setCursor(cursors.get(currElement));
@@ -319,8 +318,8 @@ public class ElementMover3 {
                         && initialY > currTopEdgeLimit && initialY < currElement.getPrefHeight() - currBottomEdgeLimit) {
                     double x = e.getSceneX() - parent.getLayoutX() - initialX;
                     double y = e.getSceneY() - parent.getLayoutY() - initialY;
-                    currElement.setLayoutX(Math.max(currLeftBoundOffset, Math.min(x, calculatedXPlusBoundOffset)));
-                    currElement.setLayoutY(Math.max(currTopBoundOffset, Math.min(y, calculatedYPlusBoundOffset)));
+                    currElement.setLayoutX(Math.max(currLeftBoundOffset, Math.min(x, calculatedRightBoundOffset)));
+                    currElement.setLayoutY(Math.max(currTopBoundOffset, Math.min(y, calculatedBottomBoundOffset)));
                 }
             }
         };
@@ -336,20 +335,26 @@ public class ElementMover3 {
         parent.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEvent);
     }
 
+    /**
+     * Finds the current clicked element and checks if it's present in movableElements.
+     * If it's true then the algorithm will return the element
+     * else it will return null.
+     */
     private Region findCurrentElement(Event event){
         Node currTarget = (Node) event.getTarget();
-        Region currEl = (Region) event.getTarget();
+        Region currEl;
         if(currTarget instanceof Text){
-            if(movableElements.containsKey(currEl)){
-
-            }
+            currEl = (Region) currTarget.getParent();
+        }
+        else{
+            currEl = (Region) currTarget;
         }
         while (currEl != null){
             if(movableElements.containsKey(currEl)){
                 return currEl;
             }
             currEl = (Region) currEl.getParent();
-            if(currEl == null || currTarget.equals(parent)){
+            if(currEl == null || currEl.equals(parent)){
                 return null;
             }
         }
@@ -357,22 +362,20 @@ public class ElementMover3 {
     }
 
     /**
-     * Returns true if the current target is present in the permittedChildren.
+     * Returns true if the current target is present in the permittedChildren(movableElements element hashset).
      */
     private boolean validateTarget(Region element, Event e) {
+        if(element == null){
+            return false;
+        }
         boolean valid = false;
         Node nodeTarget = (Node) e.getTarget();
-        Region regionTarget = (Region) nodeTarget;
-        Node targetParent = ((Node) e.getTarget()).getParent();
         Set<EventTarget> permittedChildren = movableElements.get(element);
-        if(permittedChildren != null){
-            if (permittedChildren.contains(regionTarget)) {
-                valid = true;
-            }
-            // Fix this error
-            if (nodeTarget instanceof Text) {
-                valid = movableElements.get(regionTarget).contains(targetParent);
-            }
+        if (permittedChildren.contains(nodeTarget)) {
+            valid = true;
+        }
+        if(nodeTarget instanceof Text){
+            valid = true;
         }
         return valid;
     }

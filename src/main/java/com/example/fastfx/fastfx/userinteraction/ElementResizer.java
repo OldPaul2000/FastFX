@@ -240,18 +240,16 @@ public class ElementResizer {
     private void addMouseMoveEvent() {
         if (mouseMoveEvent == null) {
             mouseMoveEvent = e -> {
-                System.out.println("Move");
-                Region target = (Region) e.getTarget();
-                addResizeCursor(target, e);
+                addResizeCursor(e);
             };
             parent.addEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveEvent);
         }
     }
 
-    private void addResizeCursor(Region target, MouseEvent e) {
+    private void addResizeCursor(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
-        currTarget = filterTarget(target);
+        currTarget = filterTarget(e);
         boolean validated = validateTarget(currTarget);
         if (validated) {
             double resizeRangeOffset = resizeEdgeLimits.get(currTarget);
@@ -318,7 +316,8 @@ public class ElementResizer {
     /**
      * Filter the parent element from the current target
      */
-    private Region filterTarget(Region currTarget) {
+    private Region filterTarget(MouseEvent e) {
+        Region currTarget = (Region) e.getTarget();
         if (currTarget != null) {
             Region parent = (Region) currTarget.getParent();
             if (dragResizableElements.contains(parent)) {
