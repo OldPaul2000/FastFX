@@ -1,6 +1,6 @@
 package com.example.fastfx;
 
-import com.example.fastfx.fastfx.style.FStyle;
+import com.example.fastfx.src.style.FStyle;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;

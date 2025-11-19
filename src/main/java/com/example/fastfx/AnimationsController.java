@@ -1,11 +1,11 @@
 package com.example.fastfx;
 
-import com.example.fastfx.fastfx.elements.utility.UI;
-import com.example.fastfx.fastfx.style.utility.BackgroundSetter;
-import com.example.fastfx.fastfx.style.utility.FontSetter;
-import com.example.fastfx.fastfx.userinteraction.ElementMover;
-import com.example.fastfx.fastfx.userinteraction.ElementResizer;
-import com.example.fastfx.fastfx.userinteraction.ResizeMode;
+import com.example.fastfx.src.utility.ui.UI;
+import com.example.fastfx.src.utility.style.BackgroundSetter;
+import com.example.fastfx.src.utility.style.FontSetter;
+import com.example.fastfx.src.userinteraction.ElementMover;
+import com.example.fastfx.src.userinteraction.ElementResizer;
+import com.example.fastfx.src.userinteraction.ResizeMode;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;

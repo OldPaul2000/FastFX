@@ -1,10 +1,10 @@
 package com.example.fastfx;
 
-import com.example.fastfx.fastfx.elements.utility.UI;
-import com.example.fastfx.fastfx.style.layouts.flex.Flex;
-import com.example.fastfx.fastfx.style.layouts.Justify;
-import com.example.fastfx.fastfx.style.utility.BackgroundSetter;
-import com.example.fastfx.fastfx.style.utility.MarginSetter;
+import com.example.fastfx.src.utility.ui.UI;
+import com.example.fastfx.src.style.layouts.flex.Flex;
+import com.example.fastfx.src.style.layouts.Justify;
+import com.example.fastfx.src.utility.style.BackgroundSetter;
+import com.example.fastfx.src.utility.style.MarginSetter;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
