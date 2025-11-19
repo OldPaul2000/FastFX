@@ -2,15 +2,21 @@ package com.example.fastfx.fastfx.userinteraction;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class lets the user resize a specific element by dragging its edges<br>
+ * or by using the mouse wheel.
+ */
 public class ElementResizer {
 
     private Region parent;
@@ -64,6 +70,22 @@ public class ElementResizer {
         if (resizableElements.contains(element)) {
             removeMouseWheelEvent(element);
             removeProperties(element);
+        }
+    }
+
+    private void removeProperties(Region element) {
+        resizableElements.remove(element);
+        dragResizableElements.remove(element);
+        resizeModes.remove(element);
+        resizeFactors.remove(element);
+        dimensionsRatios.remove(element);
+        keepPositions.remove(element);
+        resizeSides.remove(element);
+        resizeEdgeLimits.remove(element);
+        resizeAxes.remove(element);
+        if (dragResizableElements.isEmpty()) {
+            removeMouseMoveEvent();
+            removeMouseDragEvent();
         }
     }
 
@@ -219,7 +241,7 @@ public class ElementResizer {
         mouseWheelEvents.put(element, event);
     }
 
-    private void removeMouseWheelEvent(Region element) {
+    public void removeMouseWheelEvent(Region element) {
         EventHandler<ScrollEvent> event = mouseWheelEvents.get(element);
         if (event != null) {
             element.removeEventHandler(ScrollEvent.SCROLL, event);
@@ -313,18 +335,32 @@ public class ElementResizer {
         }
     }
 
+    public void removeMouseMoveEvent() {
+        if (mouseMoveEvent != null) {
+            parent.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveEvent);
+            mouseMoveEvent = null;
+        }
+    }
+
     /**
      * Filter the parent element from the current target
      */
     private Region filterTarget(MouseEvent e) {
-        Region currTarget = (Region) e.getTarget();
-        if (currTarget != null) {
-            Region parent = (Region) currTarget.getParent();
-            if (dragResizableElements.contains(parent)) {
-                return parent;
+        Node currTarget = (Node) e.getTarget();
+        Region currEl;
+        if (currTarget instanceof Text) {
+            currEl = (Region) currTarget.getParent();
+        }
+        else {
+            currEl = (Region) currTarget;
+        }
+        while (currEl != null) {
+            if (resizableElements.contains(currEl)) {
+                return currEl;
             }
-            if (dragResizableElements.contains(currTarget)) {
-                return currTarget;
+            currEl = (Region) currEl.getParent();
+            if (currEl == null || currEl.equals(parent)) {
+                return null;
             }
         }
         return null;
@@ -352,13 +388,6 @@ public class ElementResizer {
         topRight = false;
         bottomRight = false;
         bottomLeft = false;
-    }
-
-    public void removeMouseMoveEvent() {
-        if (mouseMoveEvent != null) {
-            parent.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveEvent);
-            mouseMoveEvent = null;
-        }
     }
 
     private void addMouseDragEvent() {
@@ -407,26 +436,10 @@ public class ElementResizer {
         }
     }
 
-    private void removeMouseDragEvent() {
+    public void removeMouseDragEvent() {
         if (mouseDragEvent != null) {
             parent.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragEvent);
             mouseDragEvent = null;
-        }
-    }
-
-    private void removeProperties(Region element) {
-        resizableElements.remove(element);
-        dragResizableElements.remove(element);
-        resizeModes.remove(element);
-        resizeFactors.remove(element);
-        dimensionsRatios.remove(element);
-        keepPositions.remove(element);
-        resizeSides.remove(element);
-        resizeEdgeLimits.remove(element);
-        resizeAxes.remove(element);
-        if (dragResizableElements.isEmpty()) {
-            removeMouseMoveEvent();
-            removeMouseDragEvent();
         }
     }
 
@@ -469,22 +482,5 @@ public class ElementResizer {
      */
     public void setResizeEdgeLimit(Region element, double limit) {
         this.resizeEdgeLimits.put(element, Math.abs(limit));
-    }
-
-    public void printStatus() {
-        System.out.println("resizableElements: " + resizableElements.size());
-        System.out.println("resizeFactors: " + resizeFactors.size());
-        System.out.println("dimensionsRatios: " + dimensionsRatios.size());
-        System.out.println("resizeAxes: " + resizeAxes.size());
-        System.out.println("keepPositions: " + keepPositions.size());
-        System.out.println("=====================================");
-        System.out.println("resizeModes: " + resizeModes.size());
-        System.out.println("dragResizableElements: " + dragResizableElements.size());
-        System.out.println("resizeSides: " + resizeSides.size());
-        System.out.println("resizeEdgeLimits: " + resizeEdgeLimits.size());
-        System.out.println("mouseMoveEvent: " + mouseMoveEvent);
-        System.out.println("mouseDragEvent: " + mouseDragEvent);
-        System.out.println("mouseWheelEvents: " + mouseWheelEvents.size());
-        System.out.println();
     }
 }

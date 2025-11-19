@@ -3,7 +3,7 @@ package com.example.fastfx;
 import com.example.fastfx.fastfx.elements.utility.UI;
 import com.example.fastfx.fastfx.style.utility.BackgroundSetter;
 import com.example.fastfx.fastfx.style.utility.FontSetter;
-import com.example.fastfx.fastfx.userinteraction.ElementMover3;
+import com.example.fastfx.fastfx.userinteraction.ElementMover;
 import com.example.fastfx.fastfx.userinteraction.ElementResizer;
 import com.example.fastfx.fastfx.userinteraction.ResizeMode;
 import javafx.fxml.FXML;
@@ -64,7 +64,7 @@ public class AnimationsController {
         BackgroundSetter.setBackgroundColor(windowBar2, "#999999");
         UI.add(movableElement2, windowBar2);
 
-        ElementMover3 mover = new ElementMover3(pane);
+        ElementMover mover = new ElementMover(pane);
         mover.addElement(movableElement);
         mover.permitAllChildren(movableElement);
         mover.setEdgeLimits(movableElement, 7);
@@ -72,12 +72,9 @@ public class AnimationsController {
         mover.permitAllChildren(movableElement2);
         mover.setEdgeLimits(movableElement2, 7);
 
-
-        // Fix LabeledText cast error for ElementResizer on line 320
         ElementResizer resizer = new ElementResizer(pane);
         resizer.addElement(movableElement, ResizeMode.DRAG_EDGES);
-        resizer.addElement(movableElement2, ResizeMode.DRAG_EDGES);
-
+        resizer.removeElement(movableElement);
 
 
     }

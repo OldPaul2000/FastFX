@@ -1,58 +1,58 @@
 package com.example.fastfx.fastfx.userinteraction;
 
+/**
+ * The limits in which the element can be moved inside its parent.<br>
+ * It's used to prevent the element exceeding its parent edges and<br>
+ * prevents making it completely hidden if the parent is set to hide<br>
+ * the content when overflowing.
+ */
 public class BoundOffset {
-    private double topBoundOffset;
-    private double rightBoundOffset;
-    private double bottomBoundOffset;
-    private double leftBoundOffset;
+
+    private double top;
+    private double right;
+    private double bottom;
+    private double left;
 
     public BoundOffset(double boundOffset) {
         this(boundOffset, boundOffset, boundOffset, boundOffset);
     }
 
-    public BoundOffset(double topBoundOffset, double rightBoundOffset, double bottomBoundOffset, double leftBoundOffset) {
-        this.topBoundOffset = topBoundOffset;
-        this.rightBoundOffset = rightBoundOffset;
-        this.bottomBoundOffset = bottomBoundOffset;
-        this.leftBoundOffset = leftBoundOffset;
-    }
-
-    public void setBoundsOffset(double offset){
-        setTop(offset);
-        setRight(offset);
-        setBottom(offset);
-        setLeft(offset);
+    public BoundOffset(double top, double right, double bottom, double left) {
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
     }
 
     public double getTop() {
-        return topBoundOffset;
+        return top;
     }
 
     public void setTop(double topBoundOffset) {
-        this.topBoundOffset = topBoundOffset;
+        this.top = topBoundOffset;
     }
 
     public double getRight() {
-        return rightBoundOffset;
+        return right;
     }
 
     public void setRight(double rightBoundOffset) {
-        this.rightBoundOffset = rightBoundOffset;
+        this.right = rightBoundOffset;
     }
 
     public double getBottom() {
-        return bottomBoundOffset;
+        return bottom;
     }
 
     public void setBottom(double bottomBoundOffset) {
-        this.bottomBoundOffset = bottomBoundOffset;
+        this.bottom = bottomBoundOffset;
     }
 
     public double getLeft() {
-        return leftBoundOffset;
+        return left;
     }
 
     public void setLeft(double leftBoundOffset) {
-        this.leftBoundOffset = leftBoundOffset;
+        this.left = leftBoundOffset;
     }
 }

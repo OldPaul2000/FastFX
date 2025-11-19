@@ -1,59 +1,60 @@
 package com.example.fastfx.fastfx.userinteraction;
 
+/**
+ * Used in <strong>ElementResizer</strong> and <strong>ElementMover</strong>.<br>
+ * Sets the edge offset in which the resize cursor will appear when moving the mouse<br>
+ * inside the resizable element and make resizing by drag possible.<br>
+ * Also sets the area in which the drag event for moving the element will have<br>
+ * effect therefore the element can be moved.<br>
+ * This prevents interference between the moving and resizing events.
+ */
 public class EdgeLimit {
 
-    private double topEdgeLimit;
-    private double rightEdgeLimit;
-    private double bottomEdgeLimit;
-    private double leftEdgeLimit;
+    private double top;
+    private double right;
+    private double bottom;
+    private double left;
 
     public EdgeLimit(double edgeLimit) {
         this(edgeLimit, edgeLimit, edgeLimit, edgeLimit);
     }
 
-    public EdgeLimit(double topEdgeLimit, double rightEdgeLimit, double bottomEdgeLimit, double leftEdgeLimit) {
-        this.topEdgeLimit = topEdgeLimit;
-        this.rightEdgeLimit = rightEdgeLimit;
-        this.bottomEdgeLimit = bottomEdgeLimit;
-        this.leftEdgeLimit = leftEdgeLimit;
-    }
-
-    public void setEdgesLimit(double limit){
-        setTopEdgeLimit(limit);
-        setRightEdgeLimit(limit);
-        setBottomEdgeLimit(limit);
-        setLeftEdgeLimit(limit);
+    public EdgeLimit(double top, double right, double bottom, double left) {
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
     }
 
     public double getTop() {
-        return topEdgeLimit;
+        return top;
     }
 
-    public void setTopEdgeLimit(double topEdgeLimit) {
-        this.topEdgeLimit = topEdgeLimit;
+    public void setTop(double top) {
+        this.top = top;
     }
 
     public double getRight() {
-        return rightEdgeLimit;
+        return right;
     }
 
-    public void setRightEdgeLimit(double rightEdgeLimit) {
-        this.rightEdgeLimit = rightEdgeLimit;
+    public void setRight(double rightEdgeLimit) {
+        this.right = rightEdgeLimit;
     }
 
     public double getBottom() {
-        return bottomEdgeLimit;
+        return bottom;
     }
 
-    public void setBottomEdgeLimit(double bottomEdgeLimit) {
-        this.bottomEdgeLimit = bottomEdgeLimit;
+    public void setBottom(double bottomEdgeLimit) {
+        this.bottom = bottomEdgeLimit;
     }
 
     public double getLeft() {
-        return leftEdgeLimit;
+        return left;
     }
 
-    public void setLeftEdgeLimit(double leftEdgeLimit) {
-        this.leftEdgeLimit = leftEdgeLimit;
+    public void setLeft(double leftEdgeLimit) {
+        this.left = leftEdgeLimit;
     }
 }
