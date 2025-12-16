@@ -9,16 +9,23 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
+    private static Stage fStage;
+    private static FXMLLoader fLoader;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("animations-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 460);
+        Scene scene = new Scene(fxmlLoader.load(), 901, 300);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+        AnimationsController controller = fxmlLoader.getController();
+        controller.getMainContainer().prefWidthProperty().bind(stage.widthProperty());
+        controller.getMainContainer().prefHeightProperty().bind(stage.heightProperty());
     }
 
     public static void main(String[] args) {
         launch();
     }
+
 }

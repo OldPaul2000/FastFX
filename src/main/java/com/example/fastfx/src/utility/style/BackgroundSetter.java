@@ -1,7 +1,10 @@
 package com.example.fastfx.src.utility.style;
 
 import javafx.geometry.Insets;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -45,6 +48,27 @@ public class BackgroundSetter {
         }
     }
 
+    public static String getBackgroundHexColor(Region element){
+        String hexColor = null;
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            hexColor = backgroundFill.getFill().toString().substring(2);
+        }
+        return hexColor;
+    }
+
+    public static Color getBackgroundColor(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return  (Color) backgroundFill.getFill();
+        }
+        return null;
+    }
+
     public static void setBackgroundOpacity(Region element, double opacity){
         if(element != null){
             Background background = element.getBackground();
@@ -64,6 +88,16 @@ public class BackgroundSetter {
                 element.setBackground(new Background(new BackgroundFill(Color.rgb(red, green, blue, opacity), radii, insets)));
             }
         }
+    }
+
+    public static double getBackgroundOpacity(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return ((Color) backgroundFill.getFill()).getOpacity();
+        }
+        return 0;
     }
 
     /**
@@ -226,6 +260,16 @@ public class BackgroundSetter {
         }
     }
 
+    public static CornerRadii getBackgroundRadius(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getRadii();
+        }
+        return null;
+    }
+
     /**
      * Set insets for every side individually
      */
@@ -363,6 +407,16 @@ public class BackgroundSetter {
                 element.setBackground(new Background(new BackgroundFill(backgroundColor, radii, newInsets)));
             }
         }
+    }
+
+    public static Insets getBackgroundInsets(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getInsets();
+        }
+        return null;
     }
 
 }

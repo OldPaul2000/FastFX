@@ -178,7 +178,7 @@ public class ElementMover {
             edgeLimit.setTop(limit);
             edgeLimit.setRight(limit);
             edgeLimit.setBottom(limit);
-            edgeLimit.setRight(limit);
+            edgeLimit.setLeft(limit);
         }
     }
 

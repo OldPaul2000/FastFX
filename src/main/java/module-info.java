@@ -1,4 +1,4 @@
-module com.example.fastfx2 {
+module com.example.fastfx {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
@@ -7,8 +7,15 @@ module com.example.fastfx2 {
     requires javafx.base;
     requires java.sql;
     requires jdk.dynalink;
+    requires java.net.http;
+    requires jdk.xml.dom;
 
 
     opens com.example.fastfx to javafx.fxml;
     exports com.example.fastfx;
+    exports com.example.fastfx.src.fcomponents;
+    exports com.example.fastfx.src.fcomponents.pseudoclass;
+    exports com.example.fastfx.src.style.layouts;
+
+
 }

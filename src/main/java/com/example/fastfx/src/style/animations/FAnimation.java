@@ -51,6 +51,22 @@ public class FAnimation {
         this.currentAnimations = new HashMap<>();
     }
 
+    public void destroyOnFinished(){
+        timeline.setOnFinished((e) -> {
+            startListeners = null;
+            endListeners = null;
+            keyFrameBuilder = null;
+            currentAnimations.forEach((anim, frames) -> {
+                frames.clear();
+                frames = null;
+            });
+            currentAnimations.clear();
+            currentAnimations = null;
+            elementShadowEffect = null;
+            timeline = null;
+        });
+    }
+
     /**
      * Set the element which the animation will be applied to.
      */
