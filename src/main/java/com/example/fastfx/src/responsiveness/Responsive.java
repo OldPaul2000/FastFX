@@ -27,7 +27,7 @@ public class Responsive {
     private boolean initializedWidthFlags;
     private boolean initializedHeightFlags;
     private boolean widthListenerNotified;
-    private boolean defaultWidthtFlagNotified;
+    private boolean defaultWidthFlagNotified;
     private boolean heightListenerNotified;
     private boolean defaultHeightFlagNotified;
     private Map<Double, SizeChangeFlag> widthFlags;
@@ -122,7 +122,7 @@ public class Responsive {
                     lowerWidthFlag = widthFlagsValues.get(i - 1);
                     lastWidthFlagIndex = i;
                     notifyDefaultWidthFlag();
-                    defaultWidthtFlagNotified = true;
+                    defaultWidthFlagNotified = true;
                     break;
                 }
                 else{
@@ -148,10 +148,6 @@ public class Responsive {
             notifyWidthChangeFlag(widthFlagsValues.get(0));
             widthListenerNotified = true;
         }
-//        System.out.println("higherFlag: " + higherWidthFlag);
-//        System.out.println("currFlag: " + currentWidthFlag);
-//        System.out.println("lowerFlag: " + lowerWidthFlag);
-//        System.out.println("index: " + lastWidthFlagIndex);
     }
 
     private void setWidthFlags(){
@@ -171,10 +167,6 @@ public class Responsive {
                 }
                 widthListenerNotified = false;
             }
-            else if(currPaneWidth < widthFlagsValues.get(widthFlagsValues.size() - 1) && !defaultWidthtFlagNotified){
-                notifyDefaultWidthFlag();
-                defaultWidthtFlagNotified = true;
-            }
         }
         else{
             if(currPaneWidth > currentWidthFlag && higherWidthFlag != -1){
@@ -191,17 +183,16 @@ public class Responsive {
                     higherWidthFlag = -1;
                 }
                 widthListenerNotified = false;
+                defaultWidthFlagNotified = false;
             }
-            else if(currPaneWidth > widthFlagsValues.get(widthFlagsValues.size() - 1) && !defaultWidthtFlagNotified){
+            else if(currPaneWidth > widthFlagsValues.get(widthFlagsValues.size() - 1) && !defaultWidthFlagNotified){
                 notifyDefaultWidthFlag();
-                defaultWidthtFlagNotified = true;
+                defaultWidthFlagNotified = true;
             }
         }
-//        System.out.println("currWidth: " + currPaneWidth);
         if(!widthListenerNotified){
              notifyWidthChangeFlag(currentWidthFlag);
              widthListenerNotified = true;
-//             defaultWidthtFlagNotified = true;
         }
     }
 

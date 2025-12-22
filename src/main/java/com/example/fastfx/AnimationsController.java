@@ -1,12 +1,9 @@
 package com.example.fastfx;
 
 import com.example.fastfx.src.fcomponents.FPane;
-import com.example.fastfx.src.responsiveness.Responsive;
+import com.example.fastfx.src.responsiveness.Responsive2;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import javafx.fxml.FXML;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AnimationsController {
 
@@ -27,36 +24,30 @@ public class AnimationsController {
                 .x("300")
                 .y(100);
 
-        Responsive responsive = new Responsive(mainContainer);
+        Responsive2 responsive = new Responsive2(mainContainer);
         responsive.defaultWidthFlag(() -> {
-            System.out.println("============ Default flag ============");
+            System.out.println("============ Default ============");
         });
         responsive.widthLowerThan(900, () -> {
             System.out.println("============ Lower than 900 ============");
-//            fPane.width("400 0.2s").height("400 0.2s");
+//            fPane.width("200 0.2s").height("200 0.2s");
         });
         responsive.widthLowerThan(800, () -> {
             System.out.println("============ Lower than 800 ============");
-//            fPane.width("300 0.2s").height("300 0.2s");
+//            fPane.width("150 0.2s").height("150 0.2s");
         });
         responsive.widthLowerThan(700, () -> {
             System.out.println("============ Lower than 700 ============");
-//            fPane.width("200 0.2s").height("200 0.2s");
+//            fPane.width("100 0.2s").height("100 0.2s");
+//            fPane.x("100 0.5s").y("100 0.5s");
         });
-//        responsive.widthLowerThan(600, () -> {
-//            System.out.println("Lower than 600");
-////            fPane.width("100 0.2s").height("100 0.2s");
-//        });
+        responsive.widthLowerThan(600, () -> {
+            System.out.println("============ Lower than 600 ============");
+//            fPane.width("50 0.2s").height("50 0.2s");
+//            fPane.x("25 0.5s").y("25 0.5s");
+        });
 
 
-        List<Integer> nums = new ArrayList<>(List.of(1,2,3,4,5,6));
-
-//        for(int i = nums.size() - 1; i >= 0; i--){
-//            System.out.println(i);
-//            if(i - 1 > 0){
-//                System.out.println("fasa");
-//            }
-//        }
 
 
         /* Properties remained to implement:
