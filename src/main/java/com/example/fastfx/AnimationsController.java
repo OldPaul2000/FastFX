@@ -3,7 +3,9 @@ package com.example.fastfx;
 import com.example.fastfx.src.fcomponents.FPane;
 import com.example.fastfx.src.responsiveness.Responsive2;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
+import com.example.fastfx.src.utility.ui.UI;
 import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
 
 public class AnimationsController {
 
@@ -24,30 +26,40 @@ public class AnimationsController {
                 .x("300")
                 .y(100);
 
+        addLine(mainContainer, 600);
+        addLine(mainContainer, 700);
+        addLine(mainContainer, 800);
+        addLine(mainContainer, 900);
+
         Responsive2 responsive = new Responsive2(mainContainer);
-        responsive.defaultWidthFlag(() -> {
-            System.out.println("============ Default ============");
+        responsive.defaultHeightFlag(() -> {
+            System.out.println("============ Default height ============");
         });
-        responsive.widthLowerThan(900, () -> {
-            System.out.println("============ Lower than 900 ============");
-//            fPane.width("200 0.2s").height("200 0.2s");
+        responsive.heightLowerThan(800, () -> {
+            System.out.println("============ Height lower than 800 ============");
+        });
+        responsive.heightLowerThan(700, () -> {
+            System.out.println("============ Height lower than 700 ============");
+        });
+        responsive.heightLowerThan(600, () -> {
+            System.out.println("============ Height lower than 600 ============");
+        });
+        responsive.heightLowerThan(500, () -> {
+            System.out.println("============ Height lower than 500 ============");
+        });
+
+        responsive.defaultWidthFlag(() -> {
+            System.out.println("============ Default width ============");
         });
         responsive.widthLowerThan(800, () -> {
-            System.out.println("============ Lower than 800 ============");
-//            fPane.width("150 0.2s").height("150 0.2s");
+            System.out.println("============ Width lower than 800 ============");
         });
         responsive.widthLowerThan(700, () -> {
-            System.out.println("============ Lower than 700 ============");
-//            fPane.width("100 0.2s").height("100 0.2s");
-//            fPane.x("100 0.5s").y("100 0.5s");
+            System.out.println("============ Width lower than 700 ============");
         });
         responsive.widthLowerThan(600, () -> {
-            System.out.println("============ Lower than 600 ============");
-//            fPane.width("50 0.2s").height("50 0.2s");
-//            fPane.x("25 0.5s").y("25 0.5s");
+            System.out.println("============ Width lower than 600 ============");
         });
-
-
 
 
         /* Properties remained to implement:
@@ -223,6 +235,12 @@ public class AnimationsController {
 //        Slider slider = new Slider();
 //        Spinner<Double> spinner = new Spinner<>();
 //        ColorPicker colorPicker = new ColorPicker();
+    }
+
+    private void addLine(Pane parent, double x){
+        FPane line = new FPane();
+        line.bgColor("#000000").height(50).width(1).y(250).x(x);
+        UI.add(parent, line);
     }
 
 }

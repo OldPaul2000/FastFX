@@ -15,7 +15,7 @@ public class Responsive2 {
     private double currentWidthFlag;
     private int currWidthFlagIndex;
     private double currentHeightFlag;
-    private int lastHeightFlagIndex;
+    private int currHeightFlagIndex;
     private double lastWidth;
     private double lastHeight;
     private boolean widthIncreasing;
@@ -24,15 +24,14 @@ public class Responsive2 {
     private boolean heightWasIncreasing;
     private boolean initializedWidthFlag;
     private boolean initializedHeightFlag;
-    private boolean widthListenerNotified;
     private boolean defaultWidthListenerNotified;
     private boolean defaultHeightListenerNotified;
     private Map<Double, SizeChangeFlag> widthFlags;
-    private SizeChangeFlag defaultWidthFlag;
     private List<Double> widthFlagsValues;
+    private SizeChangeFlag defaultWidthFlag;
     private Map<Double, SizeChangeFlag> heightFlags;
-    private SizeChangeFlag defaultHeightFlag;
     private List<Double> heightFlagsValues;
+    private SizeChangeFlag defaultHeightFlag;
 
     public Responsive2(Pane pane){
         this.pane = pane;
@@ -86,6 +85,7 @@ public class Responsive2 {
      * higher than the highest height flag.
      */
     public Responsive2 defaultHeightFlag(SizeChangeFlag sizeFlag){
+        defaultHeightFlag = sizeFlag;
         return this;
     }
 
@@ -107,6 +107,13 @@ public class Responsive2 {
         pane.prefHeightProperty().addListener((valType, oldVal, newVal) -> {
             setHeightResizeDirection((double) newVal);
             currPaneHeight = (double) newVal;
+            if(!initializedHeightFlag){
+                initCurrentHeightFlag();
+                initializedHeightFlag = true;
+            }
+            else{
+                setHeightFlag();
+            }
         });
     }
 
@@ -116,7 +123,7 @@ public class Responsive2 {
                 currentWidthFlag = widthFlagsValues.get(0);
                 currWidthFlagIndex = 0;
                 notifyWidthChangeFlag(currentWidthFlag);
-                widthListenerNotified = true;
+                widthWasIncreasing = true;
                 break;
             }
 
@@ -128,11 +135,9 @@ public class Responsive2 {
                     notifyDefaultWidthFlag();
                     currWidthFlagIndex = i;
                     defaultWidthListenerNotified = true;
-//                    widthFlagNotified = true;
                 }
                 else{
-                    notifyWidthChangeFlag(widthFlagsValues.get(i));
-                    widthListenerNotified = true;
+                    notifyWidthChangeFlag(widthFlagsValues.get(i + 1));
                 }
                 break;
             }
@@ -147,7 +152,9 @@ public class Responsive2 {
                 widthWasIncreasing = false;
             }
             if(currPaneWidth < currentWidthFlag && currWidthFlagIndex >= 0){
-                notifyWidthChangeFlag(currentWidthFlag);
+                if(!widthWasIncreasing){
+                    notifyWidthChangeFlag(currentWidthFlag);
+                }
                 currWidthFlagIndex--;
                 if(currWidthFlagIndex >= 0){
                     currentWidthFlag = widthFlagsValues.get(currWidthFlagIndex);
@@ -180,8 +187,74 @@ public class Responsive2 {
         }
     }
 
-    private void setHeightFlag(){
+    private void initCurrentHeightFlag(){
+        for(int i = heightFlagsValues.size() - 1; i >= 0; i--){
+            if(currPaneHeight < heightFlagsValues.get(0)){
+                currentHeightFlag = heightFlagsValues.get(0);
+                currHeightFlagIndex = 0;
+                notifyHeightChangeFlag(currentHeightFlag);
+                heightWasIncreasing = true;
+                break;
+            }
 
+            double currFlag = heightFlagsValues.get(i);
+            if(currPaneHeight > currFlag){
+                currentHeightFlag = currFlag;
+                currHeightFlagIndex = i;
+                if(i == heightFlagsValues.size() - 1){
+                    notifyDefaultHeightFlag();
+                    currHeightFlagIndex = i;
+                    defaultHeightListenerNotified = true;
+                }
+                else{
+                    notifyHeightChangeFlag(heightFlagsValues.get(i + 1));
+                }
+                break;
+            }
+        }
+    }
+
+    private void setHeightFlag(){
+        if(!heightIncreasing){
+            if(heightWasIncreasing && currHeightFlagIndex > 0){
+                currHeightFlagIndex--;
+                currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                heightWasIncreasing = false;
+            }
+            if(currPaneHeight < currentHeightFlag && currHeightFlagIndex >= 0){
+                if(!heightWasIncreasing){
+                    notifyHeightChangeFlag(currentHeightFlag);
+                }
+                currHeightFlagIndex--;
+                if(currHeightFlagIndex >= 0){
+                    currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                }
+                defaultHeightListenerNotified = false;
+                heightWasIncreasing = false;
+            }
+        }
+        if(heightIncreasing){
+            if(!heightWasIncreasing && currHeightFlagIndex < heightFlagsValues.size() - 1){
+                currHeightFlagIndex++;
+                currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                heightWasIncreasing = true;
+            }
+            if(currPaneHeight > currentHeightFlag && currHeightFlagIndex < heightFlagsValues.size()){
+                if(currHeightFlagIndex < 0){
+                    currHeightFlagIndex = 0;
+                }
+                currHeightFlagIndex++;
+                if(currHeightFlagIndex < heightFlagsValues.size()){
+                    currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                    notifyHeightChangeFlag(currentHeightFlag);
+                }
+                else if(!defaultHeightListenerNotified){
+                    notifyDefaultHeightFlag();
+                    defaultHeightListenerNotified = true;
+                }
+                heightWasIncreasing = true;
+            }
+        }
     }
 
     private void setWidthResizeDirection(double width){
