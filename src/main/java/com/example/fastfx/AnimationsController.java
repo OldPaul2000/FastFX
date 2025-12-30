@@ -1,7 +1,7 @@
 package com.example.fastfx;
 
 import com.example.fastfx.src.fcomponents.FPane;
-import com.example.fastfx.src.responsiveness.Responsive2;
+import com.example.fastfx.src.responsiveness.Responsive;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import com.example.fastfx.src.utility.ui.UI;
 import javafx.fxml.FXML;
@@ -31,7 +31,7 @@ public class AnimationsController {
         addLine(mainContainer, 800);
         addLine(mainContainer, 900);
 
-        Responsive2 responsive = new Responsive2(mainContainer);
+        Responsive responsive = new Responsive(mainContainer);
         responsive.defaultHeightFlag(() -> {
             System.out.println("============ Default height ============");
         });
@@ -70,6 +70,10 @@ public class AnimationsController {
             raw string bottomBorder
             raw string leftBorder
             raw string borderWidth
+            raw string top
+            raw string right
+            raw string bottom
+            raw string left
          */
 
 

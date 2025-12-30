@@ -12,43 +12,39 @@ public class Responsive {
     private Pane pane;
     private double currPaneWidth;
     private double currPaneHeight;
-    private double higherWidthFlag;
     private double currentWidthFlag;
-    private double lowerWidthFlag;
-    private int lastWidthFlagIndex;
-    private double higherHeightFlag;
+    private int currWidthFlagIndex;
     private double currentHeightFlag;
-    private double lowerHeightFlag;
-    private int lastHeightFlagIndex;
+    private int currHeightFlagIndex;
     private double lastWidth;
     private double lastHeight;
     private boolean widthIncreasing;
+    private boolean widthWasIncreasing;
     private boolean heightIncreasing;
-    private boolean initializedWidthFlags;
-    private boolean initializedHeightFlags;
-    private boolean widthListenerNotified;
-    private boolean defaultWidthFlagNotified;
-    private boolean heightListenerNotified;
-    private boolean defaultHeightFlagNotified;
+    private boolean heightWasIncreasing;
+    private boolean initializedWidthFlag;
+    private boolean initializedHeightFlag;
+    private boolean defaultWidthListenerNotified;
+    private boolean defaultHeightListenerNotified;
     private Map<Double, SizeChangeFlag> widthFlags;
-    private SizeChangeFlag defaultWidthFlag;
     private List<Double> widthFlagsValues;
+    private SizeChangeFlag defaultWidthFlag;
     private Map<Double, SizeChangeFlag> heightFlags;
-    private SizeChangeFlag defaultHeightFlag;
     private List<Double> heightFlagsValues;
+    private SizeChangeFlag defaultHeightFlag;
 
-    public Responsive(Pane pane){
+    public Responsive (Pane pane){
         this.pane = pane;
         widthIncreasing = false;
+        widthWasIncreasing = false;
         heightIncreasing = false;
+        heightWasIncreasing = false;
         widthFlags = new HashMap<>();
         widthFlagsValues = new ArrayList<>();
         heightFlags = new HashMap<>();
         heightFlagsValues = new ArrayList<>();
-        initializedWidthFlags = false;
-        initializedHeightFlags = false;
-        widthListenerNotified = false;
-        heightListenerNotified = false;
+        initializedWidthFlag = false;
+        initializedHeightFlag = false;
         initWidthListener();
         initHeightListener();
     }
@@ -89,6 +85,7 @@ public class Responsive {
      * higher than the highest height flag.
      */
     public Responsive defaultHeightFlag(SizeChangeFlag sizeFlag){
+        defaultHeightFlag = sizeFlag;
         return this;
     }
 
@@ -96,12 +93,12 @@ public class Responsive {
         pane.prefWidthProperty().addListener((valType, oldVal, newVal) -> {
             setWidthResizeDirection((double) newVal);
             currPaneWidth = (double) newVal;
-            if(!initializedWidthFlags){
-                initCurrentWidthFlags();
-                initializedWidthFlags = true;
+            if(!initializedWidthFlag){
+                initCurrentWidthFlag();
+                initializedWidthFlag = true;
             }
             else{
-                setWidthFlags();
+                setWidthFlag();
             }
         });
     }
@@ -110,94 +107,154 @@ public class Responsive {
         pane.prefHeightProperty().addListener((valType, oldVal, newVal) -> {
             setHeightResizeDirection((double) newVal);
             currPaneHeight = (double) newVal;
+            if(!initializedHeightFlag){
+                initCurrentHeightFlag();
+                initializedHeightFlag = true;
+            }
+            else{
+                setHeightFlag();
+            }
         });
     }
 
-    private void initCurrentWidthFlags(){
-        for(int i = widthFlagsValues.size() - 1; i >= 1; i--){
-            if(currPaneWidth > widthFlagsValues.get(i)) {
-                if(i == widthFlagsValues.size() - 1){
-                    higherWidthFlag = -1;
-                    currentWidthFlag = widthFlagsValues.get(i);
-                    lowerWidthFlag = widthFlagsValues.get(i - 1);
-                    lastWidthFlagIndex = i;
-                    notifyDefaultWidthFlag();
-                    defaultWidthFlagNotified = true;
-                    break;
-                }
-                else{
-                    currentWidthFlag = widthFlagsValues.get(i + 1);
-                    lastWidthFlagIndex = i + 1;
-                }
-                if(i < widthFlagsValues.size() - 2){
-                    higherWidthFlag = widthFlagsValues.get(i + 2);
-                }
-                else{
-                    higherWidthFlag = -1;
-                }
-                lowerWidthFlag = widthFlagsValues.get(0);
+    private void initCurrentWidthFlag(){
+        for(int i = widthFlagsValues.size() - 1; i >= 0; i--){
+            if(currPaneWidth < widthFlagsValues.get(0)){
+                currentWidthFlag = widthFlagsValues.get(0);
+                currWidthFlagIndex = 0;
                 notifyWidthChangeFlag(currentWidthFlag);
-                widthListenerNotified = true;
+                widthWasIncreasing = true;
+                break;
+            }
+
+            double currFlag = widthFlagsValues.get(i);
+            if(currPaneWidth > currFlag){
+                currentWidthFlag = currFlag;
+                currWidthFlagIndex = i;
+                if(i == widthFlagsValues.size() - 1){
+                    notifyDefaultWidthFlag();
+                    currWidthFlagIndex = i;
+                    defaultWidthListenerNotified = true;
+                }
+                else{
+                    notifyWidthChangeFlag(widthFlagsValues.get(i + 1));
+                }
                 break;
             }
         }
-        if(currPaneWidth < widthFlagsValues.get(0)){
-            higherWidthFlag = widthFlagsValues.get(1);
-            currentWidthFlag = widthFlagsValues.get(0);
-            lowerWidthFlag = -1;
-            notifyWidthChangeFlag(widthFlagsValues.get(0));
-            widthListenerNotified = true;
-        }
     }
 
-    private void setWidthFlags(){
+    private void setWidthFlag(){
         if(!widthIncreasing){
-            if(currPaneWidth < lowerWidthFlag && lowerWidthFlag != -1){
-                if(higherWidthFlag == -1){
-                    lastWidthFlagIndex--;
+            if(widthWasIncreasing && currWidthFlagIndex > 0){
+                currWidthFlagIndex--;
+                currentWidthFlag = widthFlagsValues.get(currWidthFlagIndex);
+                widthWasIncreasing = false;
+            }
+            if(currPaneWidth < currentWidthFlag && currWidthFlagIndex >= 0){
+                if(!widthWasIncreasing){
+                    notifyWidthChangeFlag(currentWidthFlag);
                 }
-                higherWidthFlag = currentWidthFlag;
-                currentWidthFlag = lowerWidthFlag;
-                if(lastWidthFlagIndex > 0){
-                    lastWidthFlagIndex--;
-                    lowerWidthFlag = widthFlagsValues.get(lastWidthFlagIndex);
+                currWidthFlagIndex--;
+                if(currWidthFlagIndex >= 0){
+                    currentWidthFlag = widthFlagsValues.get(currWidthFlagIndex);
                 }
-                else{
-                    lowerWidthFlag = -1;
-                }
-                widthListenerNotified = false;
+                defaultWidthListenerNotified = false;
+                widthWasIncreasing = false;
             }
         }
-        else{
-            if(currPaneWidth > currentWidthFlag && higherWidthFlag != -1){
-                if(lowerWidthFlag == -1){
-                    lastWidthFlagIndex++;
-                }
-                lowerWidthFlag = currentWidthFlag;
-                currentWidthFlag = higherWidthFlag;
-                if(lastWidthFlagIndex < widthFlagsValues.size() - 1){
-                    lastWidthFlagIndex++;
-                    higherWidthFlag = widthFlagsValues.get(lastWidthFlagIndex);
-                }
-                else{
-                    higherWidthFlag = -1;
-                }
-                widthListenerNotified = false;
-                defaultWidthFlagNotified = false;
+        if(widthIncreasing){
+            if(!widthWasIncreasing && currWidthFlagIndex < widthFlagsValues.size() - 1){
+                currWidthFlagIndex++;
+                currentWidthFlag = widthFlagsValues.get(currWidthFlagIndex);
+                widthWasIncreasing = true;
             }
-            else if(currPaneWidth > widthFlagsValues.get(widthFlagsValues.size() - 1) && !defaultWidthFlagNotified){
-                notifyDefaultWidthFlag();
-                defaultWidthFlagNotified = true;
+            if(currPaneWidth > currentWidthFlag && currWidthFlagIndex < widthFlagsValues.size()){
+                if(currWidthFlagIndex < 0){
+                    currWidthFlagIndex = 0;
+                }
+                currWidthFlagIndex++;
+                if(currWidthFlagIndex < widthFlagsValues.size()){
+                    currentWidthFlag = widthFlagsValues.get(currWidthFlagIndex);
+                    notifyWidthChangeFlag(currentWidthFlag);
+                }
+                else if(!defaultWidthListenerNotified){
+                    notifyDefaultWidthFlag();
+                    defaultWidthListenerNotified = true;
+                }
+                widthWasIncreasing = true;
             }
-        }
-        if(!widthListenerNotified){
-             notifyWidthChangeFlag(currentWidthFlag);
-             widthListenerNotified = true;
         }
     }
 
-    private void setHeightFlags(){
+    private void initCurrentHeightFlag(){
+        for(int i = heightFlagsValues.size() - 1; i >= 0; i--){
+            if(currPaneHeight < heightFlagsValues.get(0)){
+                currentHeightFlag = heightFlagsValues.get(0);
+                currHeightFlagIndex = 0;
+                notifyHeightChangeFlag(currentHeightFlag);
+                heightWasIncreasing = true;
+                break;
+            }
 
+            double currFlag = heightFlagsValues.get(i);
+            if(currPaneHeight > currFlag){
+                currentHeightFlag = currFlag;
+                currHeightFlagIndex = i;
+                if(i == heightFlagsValues.size() - 1){
+                    notifyDefaultHeightFlag();
+                    currHeightFlagIndex = i;
+                    defaultHeightListenerNotified = true;
+                }
+                else{
+                    notifyHeightChangeFlag(heightFlagsValues.get(i + 1));
+                }
+                break;
+            }
+        }
+    }
+
+    private void setHeightFlag(){
+        if(!heightIncreasing){
+            if(heightWasIncreasing && currHeightFlagIndex > 0){
+                currHeightFlagIndex--;
+                currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                heightWasIncreasing = false;
+            }
+            if(currPaneHeight < currentHeightFlag && currHeightFlagIndex >= 0){
+                if(!heightWasIncreasing){
+                    notifyHeightChangeFlag(currentHeightFlag);
+                }
+                currHeightFlagIndex--;
+                if(currHeightFlagIndex >= 0){
+                    currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                }
+                defaultHeightListenerNotified = false;
+                heightWasIncreasing = false;
+            }
+        }
+        if(heightIncreasing){
+            if(!heightWasIncreasing && currHeightFlagIndex < heightFlagsValues.size() - 1){
+                currHeightFlagIndex++;
+                currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                heightWasIncreasing = true;
+            }
+            if(currPaneHeight > currentHeightFlag && currHeightFlagIndex < heightFlagsValues.size()){
+                if(currHeightFlagIndex < 0){
+                    currHeightFlagIndex = 0;
+                }
+                currHeightFlagIndex++;
+                if(currHeightFlagIndex < heightFlagsValues.size()){
+                    currentHeightFlag = heightFlagsValues.get(currHeightFlagIndex);
+                    notifyHeightChangeFlag(currentHeightFlag);
+                }
+                else if(!defaultHeightListenerNotified){
+                    notifyDefaultHeightFlag();
+                    defaultHeightListenerNotified = true;
+                }
+                heightWasIncreasing = true;
+            }
+        }
     }
 
     private void setWidthResizeDirection(double width){
