@@ -1,11 +1,12 @@
 package com.example.fastfx;
 
 import com.example.fastfx.src.fcomponents.FPane;
-import com.example.fastfx.src.responsiveness.Responsive;
+import com.example.fastfx.src.userinteraction.ElementResizer;
+import com.example.fastfx.src.userinteraction.ResizeMode;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
-import com.example.fastfx.src.utility.ui.UI;
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class AnimationsController {
 
@@ -19,60 +20,32 @@ public class AnimationsController {
     public void initialize() {
         BackgroundSetter.setBackgroundColor(mainContainer, "#2c4773");
 
+
         FPane fPane = new FPane();
         fPane.bgColor("#999999")
-                .width("100")
+                .width("200")
                 .height("100")
-                .x("300")
-                .y(100);
+                .x("200")
+                .y(100)
+                .topBorder("#004400 1s solid 5px")
+                .hover(() -> {
+                    fPane.topBorder("#551100 1s solid 15px");
+                });
 
-        addLine(mainContainer, 600);
-        addLine(mainContainer, 700);
-        addLine(mainContainer, 800);
-        addLine(mainContainer, 900);
 
-        Responsive responsive = new Responsive(mainContainer);
-        responsive.defaultHeightFlag(() -> {
-            System.out.println("============ Default height ============");
-        });
-        responsive.heightLowerThan(800, () -> {
-            System.out.println("============ Height lower than 800 ============");
-        });
-        responsive.heightLowerThan(700, () -> {
-            System.out.println("============ Height lower than 700 ============");
-        });
-        responsive.heightLowerThan(600, () -> {
-            System.out.println("============ Height lower than 600 ============");
-        });
-        responsive.heightLowerThan(500, () -> {
-            System.out.println("============ Height lower than 500 ============");
-        });
+        ElementResizer resizer = new ElementResizer(mainContainer);
+        resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
 
-        responsive.defaultWidthFlag(() -> {
-            System.out.println("============ Default width ============");
-        });
-        responsive.widthLowerThan(800, () -> {
-            System.out.println("============ Width lower than 800 ============");
-        });
-        responsive.widthLowerThan(700, () -> {
-            System.out.println("============ Width lower than 700 ============");
-        });
-        responsive.widthLowerThan(600, () -> {
-            System.out.println("============ Width lower than 600 ============");
-        });
 
 
         /* Properties remained to implement:
-            raw string margin
-            raw string border
-            raw string topBorder
-            raw string rightBorder
-            raw string bottomBorder
-            raw string leftBorder
-            raw string borderWidth
+            top
             raw string top
+            right
             raw string right
+            bottom
             raw string bottom
+            left
             raw string left
          */
 
@@ -241,10 +214,17 @@ public class AnimationsController {
 //        ColorPicker colorPicker = new ColorPicker();
     }
 
-    private void addLine(Pane parent, double x){
-        FPane line = new FPane();
-        line.bgColor("#000000").height(50).width(1).y(250).x(x);
-        UI.add(parent, line);
+    public static Border setBorder(String colorValue, String borderStyle, double radius, double width){
+        BorderStrokeStyle bs = BorderStrokeStyle.NONE;
+        if(borderStyle.equals("dashed")){
+            bs = BorderStrokeStyle.DASHED;
+        }
+        if(borderStyle.equals("solid")){
+            bs = BorderStrokeStyle.SOLID;
+        }
+        CornerRadii radii = new CornerRadii(radius, radius, radius, radius, false);
+        BorderWidths borderWidths = new BorderWidths(width, width, width, width);
+        BorderStroke borderStroke = new BorderStroke(Color.valueOf(colorValue), bs, radii, borderWidths);
+        return new Border(borderStroke);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.fastfx.src.fcomponents;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
+import com.example.fastfx.src.style.layouts.Margin;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.CornerRadii;
@@ -54,6 +55,7 @@ public interface FComponent {
     FComponent margin(double topBottom, double rightLeft);
     FComponent margin(double top, double right, double bottom, double left);
     FComponent margin(String rawValue);
+    Margin getMargin();
     String getRawMargin();
     // **********************************************************
     //                                                          *

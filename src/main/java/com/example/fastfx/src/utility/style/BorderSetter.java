@@ -3,7 +3,6 @@ package com.example.fastfx.src.utility.style;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class BorderSetter {
         if(element != null){
             Border border = element.getBorder();
             BorderStrokeStyle borderStrokeStyle = BORDER_STYLES.get(borderStyle);
-            if(border != null){
+            if(border != null && borderStrokeStyle != null){
                 BorderStroke borderStroke = border.getStrokes().get(0);
                 CornerRadii radii = borderStroke.getRadii();
                 BorderWidths borderWidths = borderStroke.getWidths();
@@ -74,6 +73,150 @@ public class BorderSetter {
             }
         }
    }
+
+   public static void setTopBorderStyle(Region element, String borderStyle){
+       if(element != null){
+           Border border = element.getBorder();
+           BorderStrokeStyle borderStrokeStyle = BORDER_STYLES.get(borderStyle);
+           if(border != null && borderStrokeStyle != null){
+               BorderStroke borderStroke = border.getStrokes().get(0);
+               CornerRadii radii = borderStroke.getRadii();
+               BorderWidths borderWidths = borderStroke.getWidths();
+               Insets insets = borderStroke.getInsets();
+
+               BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                       borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStrokeStyle, borderStroke.getRightStyle(),
+                       borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, borderWidths, insets);
+
+               element.setBorder(new Border(newBorderStroke));
+           }
+           else{
+               setBorder(element, "black", borderStyle, 0, 0);
+           }
+       }
+   }
+
+    public static void setRightBorderStyle(Region element, String borderStyle){
+        if(element != null){
+            Border border = element.getBorder();
+            BorderStrokeStyle borderStrokeStyle = BORDER_STYLES.get(borderStyle);
+            if(border != null && borderStrokeStyle != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStrokeStyle,
+                        borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", borderStyle, 0, 0);
+            }
+        }
+    }
+
+    public static void setBottomBorderStyle(Region element, String borderStyle){
+        if(element != null){
+            Border border = element.getBorder();
+            BorderStrokeStyle borderStrokeStyle = BORDER_STYLES.get(borderStyle);
+            if(border != null && borderStrokeStyle != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                        borderStrokeStyle, borderStroke.getLeftStyle(), radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", borderStyle, 0, 0);
+            }
+        }
+    }
+
+    public static void setLeftBorderStyle(Region element, String borderStyle){
+        if(element != null){
+            Border border = element.getBorder();
+            BorderStrokeStyle borderStrokeStyle = BORDER_STYLES.get(borderStyle);
+            if(border != null && borderStrokeStyle != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                        borderStroke.getBottomStyle(), borderStrokeStyle, radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", borderStyle, 0, 0);
+            }
+        }
+    }
+
+   public static String getTopBorderStyle(Region element){
+       if(element != null){
+           String borderStyle;
+           Border border = element.getBorder();
+           BorderStroke borderStroke;
+           if(border != null){
+               borderStroke = border.getStrokes().get(0);
+               borderStyle = borderStroke.getTopStyle().toString().substring(12).toLowerCase();
+               return borderStyle;
+           }
+       }
+       return null;
+   }
+
+    public static String getRightBorderStyle(Region element){
+        if(element != null){
+            String borderStyle;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                borderStyle = borderStroke.getRightStyle().toString().substring(12).toLowerCase();
+                return borderStyle;
+            }
+        }
+        return null;
+    }
+
+    public static String getBottomBorderStyle(Region element){
+        if(element != null){
+            String borderStyle;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                borderStyle = borderStroke.getBottomStyle().toString().substring(12).toLowerCase();
+                return borderStyle;
+            }
+        }
+        return null;
+    }
+
+    public static String getLeftBorderStyle(Region element){
+        if(element != null){
+            String borderStyle;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                borderStyle = borderStroke.getLeftStyle().toString().substring(12).toLowerCase();
+                return borderStyle;
+            }
+        }
+        return null;
+    }
 
     /**
      * Set the width for every side individually
@@ -108,6 +251,133 @@ public class BorderSetter {
        setBorderWidth(element, width, width, width, width);
    }
 
+   public static void setTopBorderWidth(Region element, double width){
+       if(element != null){
+           Border border = element.getBorder();
+           if(border != null){
+               BorderStroke borderStroke = border.getStrokes().get(0);
+               CornerRadii radii = borderStroke.getRadii();
+               BorderWidths widths = getBorderWidths(element);
+               BorderWidths newBorderWidths = new BorderWidths(width, widths.getRight() , widths.getBottom(), widths.getLeft());
+               Insets insets = borderStroke.getInsets();
+
+               BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                       borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                       borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, newBorderWidths, insets);
+
+               element.setBorder(new Border(newBorderStroke));
+           }
+           else{
+               setBorder(element, "black", "solid", 0, 0, 0, 0, width, width, width, width);
+           }
+       }
+   }
+
+   public static double getTopBorderWidth(Region element){
+       BorderWidths widths = getBorderWidths(element);
+       if(widths != null){
+           return widths.getTop();
+       }
+       return 0;
+   }
+
+    public static double getRightBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getRight();
+        }
+        return 0;
+    }
+
+    public static double getBottomBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getBottom();
+        }
+        return 0;
+    }
+
+    public static double getLeftBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getLeft();
+        }
+        return 0;
+    }
+
+    public static void setRightBorderWidth(Region element, double width){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths widths = getBorderWidths(element);
+                BorderWidths newBorderWidths = new BorderWidths(widths.getTop(), width , widths.getBottom(), widths.getLeft());
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                        borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, newBorderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", "solid", 0, 0, 0, 0, width, width, width, width);
+            }
+        }
+    }
+
+    public static void setBottomBorderWidth(Region element, double width){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths widths = getBorderWidths(element);
+                BorderWidths newBorderWidths = new BorderWidths(widths.getTop(), widths.getRight() , width, widths.getLeft());
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                        borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, newBorderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", "solid", 0, 0, 0, 0, width, width, width, width);
+            }
+        }
+    }
+
+    public static void setLeftBorderWidth(Region element, double width){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths widths = getBorderWidths(element);
+                BorderWidths newBorderWidths = new BorderWidths(widths.getTop(), widths.getRight() , widths.getBottom(), width);
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(),
+                        borderStroke.getBottomStroke(), borderStroke.getLeftStroke(), borderStroke.getTopStyle(), borderStroke.getRightStyle(),
+                        borderStroke.getBottomStyle(), borderStroke.getLeftStyle(), radii, newBorderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+            else{
+                setBorder(element, "black", "solid", 0, 0, 0, 0, width, width, width, width);
+            }
+        }
+    }
+
+   public static BorderWidths getBorderWidths (Region element){
+       if(element != null && element.getBorder() != null){
+           return element.getBorder().getStrokes().get(0).getWidths();
+       }
+       return null;
+   };
+
     /**
      * Set the border color
      */
@@ -136,36 +406,168 @@ public class BorderSetter {
      * Set the border color
      */
    public static void setBorderColor(Region element, String colorValue){
-       if(element != null){
-           Border border = element.getBorder();
-           if(border != null){
-               BorderStroke borderStroke = border.getStrokes().get(0);
-               CornerRadii radii = borderStroke.getRadii();
-               BorderWidths borderWidths = borderStroke.getWidths();
-               Insets insets = borderStroke.getInsets();
-               Paint color = Color.valueOf(colorValue);
-
-               BorderStroke newBorderStroke = new BorderStroke(color,color,color,color,borderStroke.getTopStyle(),
-                       borderStroke.getRightStyle(), borderStroke.getBottomStyle(), borderStroke.getLeftStyle(),
-                       radii,borderWidths, insets);
-
-               element.setBorder(new Border(newBorderStroke));
-           }
-           else{
-               setBorder(element, colorValue, "solid", 0, 0);
-           }
-       }
+       Color color = Color.valueOf(colorValue);
+       setBorderColor(element, color);
    }
 
-    public static String getBorderHexColor(Region element){
-        String hexColor = null;
-        Border border = element.getBorder();
-        BorderStroke borderStroke;
-        if(border != null){
-            borderStroke = border.getStrokes().get(0);
-            hexColor = borderStroke.getTopStroke().toString().substring(2);
+    public static void setTopBorderColor(Region element, Color color){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(color, borderStroke.getRightStroke(), borderStroke.getBottomStroke(), borderStroke.getLeftStroke(),
+                        borderStroke.getTopStyle(), borderStroke.getRightStyle(), borderStroke.getBottomStyle(), borderStroke.getLeftStyle(),
+                        radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
         }
-        return hexColor;
+    }
+
+    public static void setTopBorderColor(Region element, String colorValue){
+       Color color = Color.valueOf(colorValue);
+       setTopBorderColor(element, color);
+    }
+
+    public static void setRightBorderColor(Region element, Color color){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), color, borderStroke.getBottomStroke(), borderStroke.getLeftStroke(),
+                        borderStroke.getTopStyle(), borderStroke.getRightStyle(), borderStroke.getBottomStyle(), borderStroke.getLeftStyle(),
+                        radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+        }
+    }
+
+    public static void setRightBorderColor(Region element, String colorValue){
+        Color color = Color.valueOf(colorValue);
+        setRightBorderColor(element, color);
+    }
+
+    public static void setBottomBorderColor(Region element, Color color){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(), color, borderStroke.getLeftStroke(),
+                        borderStroke.getTopStyle(), borderStroke.getRightStyle(), borderStroke.getBottomStyle(), borderStroke.getLeftStyle(),
+                        radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+        }
+    }
+
+    public static void setBottomBorderColor(Region element, String colorValue){
+        Color color = Color.valueOf(colorValue);
+        setBottomBorderColor(element, color);
+    }
+
+    public static void setLeftBorderColor(Region element, Color color){
+        if(element != null){
+            Border border = element.getBorder();
+            if(border != null){
+                BorderStroke borderStroke = border.getStrokes().get(0);
+                CornerRadii radii = borderStroke.getRadii();
+                BorderWidths borderWidths = borderStroke.getWidths();
+                Insets insets = borderStroke.getInsets();
+
+                BorderStroke newBorderStroke = new BorderStroke(borderStroke.getTopStroke(), borderStroke.getRightStroke(), borderStroke.getBottomStroke(), color,
+                        borderStroke.getTopStyle(), borderStroke.getRightStyle(), borderStroke.getBottomStyle(), borderStroke.getLeftStyle(),
+                        radii, borderWidths, insets);
+
+                element.setBorder(new Border(newBorderStroke));
+            }
+        }
+    }
+
+    public static void setLeftBorderColor(Region element, String colorValue){
+        Color color = Color.valueOf(colorValue);
+        setLeftBorderColor(element, color);
+    }
+
+    public static String getBorderHexColor(Region element){
+       if(element != null){
+           String hexColor = null;
+           Border border = element.getBorder();
+           BorderStroke borderStroke;
+           if(border != null) {
+               borderStroke = border.getStrokes().get(0);
+               hexColor = borderStroke.getTopStroke().toString().substring(2);
+               return hexColor;
+           }
+       }
+       return null;
+    }
+
+    public static String getTopBorderColor(Region element){
+       if(element != null){
+           Border border = element.getBorder();
+           BorderStroke borderStroke;
+           if(border != null){
+               borderStroke = border.getStrokes().get(0);
+               return borderStroke.getTopStroke().toString().substring(2);
+           }
+       }
+       return null;
+    }
+
+    public static String getRightBorderColor(Region element){
+        if(element != null){
+            String hexColor = null;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                hexColor = borderStroke.getRightStroke().toString().substring(2);
+                return hexColor;
+            }
+        }
+        return null;
+    }
+
+    public static String getBottomBorderColor(Region element){
+        if(element != null){
+            String hexColor = null;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                hexColor = borderStroke.getBottomStroke().toString().substring(2);
+                return hexColor;
+            }
+        }
+        return null;
+    }
+
+    public static String getLeftBorderColor(Region element){
+        if(element != null){
+            String hexColor = null;
+            Border border = element.getBorder();
+            BorderStroke borderStroke;
+            if(border != null){
+                borderStroke = border.getStrokes().get(0);
+                hexColor = borderStroke.getLeftStroke().toString().substring(2);
+                return hexColor;
+            }
+        }
+        return null;
     }
 
     public static void setBorderOpacity(Region element, double opacity){

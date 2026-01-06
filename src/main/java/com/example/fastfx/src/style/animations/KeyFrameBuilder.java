@@ -45,8 +45,16 @@ public class KeyFrameBuilder {
 
     // Border properties
     private ObjectProperty<Color> brColorProperty;
+    private ObjectProperty<Color> brTopColorProperty;
+    private ObjectProperty<Color> brRightColorProperty;
+    private ObjectProperty<Color> brBottomColorProperty;
+    private ObjectProperty<Color> brLeftColorProperty;
     private DoubleProperty brOpacityProperty;
     private DoubleProperty brWidthProperty;
+    private DoubleProperty brTopWidthProperty;
+    private DoubleProperty brRightWidthProperty;
+    private DoubleProperty brBottomWidthProperty;
+    private DoubleProperty brLeftWidthProperty;
     private DoubleProperty brRadiusProperty;
     private DoubleProperty brTopLeftRadiusProperty;
     private DoubleProperty brTopRightRadiusProperty;
@@ -269,6 +277,42 @@ public class KeyFrameBuilder {
             });
             return new KeyValue(brWidthProperty, value, interpolator);
         }
+        if (animation.equals(FAnimations.BR_TOP_WIDTH)) {
+            if (brTopWidthProperty == null) {
+                brTopWidthProperty = new SimpleDoubleProperty();
+            }
+            brTopWidthProperty.addListener((prop, oldVal, newVal) -> {
+                BorderSetter.setTopBorderWidth(element, brTopWidthProperty.get());
+            });
+            return new KeyValue(brTopWidthProperty, value, interpolator);
+        }
+        if (animation.equals(FAnimations.BR_RIGHT_WIDTH)) {
+            if (brRightWidthProperty == null) {
+                brRightWidthProperty = new SimpleDoubleProperty();
+            }
+            brRightWidthProperty.addListener((prop, oldVal, newVal) -> {
+                BorderSetter.setRightBorderWidth(element, brRightWidthProperty.get());
+            });
+            return new KeyValue(brRightWidthProperty, value, interpolator);
+        }
+        if (animation.equals(FAnimations.BR_BOTTOM_WIDTH)) {
+            if (brBottomWidthProperty == null) {
+                brBottomWidthProperty = new SimpleDoubleProperty();
+            }
+            brBottomWidthProperty.addListener((prop, oldVal, newVal) -> {
+                BorderSetter.setBottomBorderWidth(element, brBottomWidthProperty.get());
+            });
+            return new KeyValue(brBottomWidthProperty, value, interpolator);
+        }
+        if (animation.equals(FAnimations.BR_LEFT_WIDTH)) {
+            if (brLeftWidthProperty == null) {
+                brLeftWidthProperty = new SimpleDoubleProperty();
+            }
+            brLeftWidthProperty.addListener((prop, oldVal, newVal) -> {
+                BorderSetter.setLeftBorderWidth(element, brLeftWidthProperty.get());
+            });
+            return new KeyValue(brLeftWidthProperty, value, interpolator);
+        }
         if (animation.equals(FAnimations.BR_RADIUS)) {
             if (brRadiusProperty == null) {
                 brRadiusProperty = new SimpleDoubleProperty();
@@ -367,6 +411,54 @@ public class KeyFrameBuilder {
                     BorderSetter.setBorderColor(element, newVal);
                 });
                 return new KeyValue(brColorProperty, color, interpolator);
+            }
+        }
+        if (animation.equals(FAnimations.BR_TOP_COLOR)) {
+            if (value.matches("#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{8})")) {
+                if (brTopColorProperty == null) {
+                    brTopColorProperty = new SimpleObjectProperty<>();
+                }
+                Color color = Color.valueOf(value);
+                brTopColorProperty.addListener((prop, oldVal, newVal) -> {
+                    BorderSetter.setTopBorderColor(element, newVal);
+                });
+                return new KeyValue(brTopColorProperty, color, interpolator);
+            }
+        }
+        if (animation.equals(FAnimations.BR_RIGHT_COLOR)) {
+            if (value.matches("#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{8})")) {
+                if (brRightColorProperty == null) {
+                    brRightColorProperty = new SimpleObjectProperty<>();
+                }
+                Color color = Color.valueOf(value);
+                brRightColorProperty.addListener((prop, oldVal, newVal) -> {
+                    BorderSetter.setRightBorderColor(element, newVal);
+                });
+                return new KeyValue(brRightColorProperty, color, interpolator);
+            }
+        }
+        if (animation.equals(FAnimations.BR_BOTTOM_COLOR)) {
+            if (value.matches("#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{8})")) {
+                if (brBottomColorProperty == null) {
+                    brBottomColorProperty = new SimpleObjectProperty<>();
+                }
+                Color color = Color.valueOf(value);
+                brBottomColorProperty.addListener((prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomBorderColor(element, newVal);
+                });
+                return new KeyValue(brBottomColorProperty, color, interpolator);
+            }
+        }
+        if (animation.equals(FAnimations.BR_LEFT_COLOR)) {
+            if (value.matches("#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{8})")) {
+                if (brLeftColorProperty == null) {
+                    brLeftColorProperty = new SimpleObjectProperty<>();
+                }
+                Color color = Color.valueOf(value);
+                brLeftColorProperty.addListener((prop, oldVal, newVal) -> {
+                    BorderSetter.setLeftBorderColor(element, newVal);
+                });
+                return new KeyValue(brLeftColorProperty, color, interpolator);
             }
         }
         return null;

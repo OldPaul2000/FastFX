@@ -129,6 +129,26 @@ public class FAnimations {
     public static final String BR_COLOR = "brColor";
 
     /**
+     * Animation name for <strong>border top color</strong>
+     */
+    public static final String BR_TOP_COLOR = "brTopColor";
+
+    /**
+     * Animation name for <strong>border right color</strong>
+     */
+    public static final String BR_RIGHT_COLOR = "brRightColor";
+
+    /**
+     * Animation name for <strong>border bottom color</strong>
+     */
+    public static final String BR_BOTTOM_COLOR = "brBottomColor";
+
+    /**
+     * Animation name for <strong>border left color</strong>
+     */
+    public static final String BR_LEFT_COLOR = "brLeftColor";
+
+    /**
      * Animation name for <strong>border opacity</strong>
      */
     public static final String BR_OPACITY = "brOpacity";
@@ -137,6 +157,26 @@ public class FAnimations {
      * Animation name for <strong>border width</strong>
      */
     public static final String BR_WIDTH = "brWidth";
+
+    /**
+     * Animation name for <strong>border top width</strong>
+     */
+    public static final String BR_TOP_WIDTH = "brTopWidth";
+
+    /**
+     * Animation name for <strong>border right width</strong>
+     */
+    public static final String BR_RIGHT_WIDTH = "brRightWidth";
+
+    /**
+     * Animation name for <strong>border bottom width</strong>
+     */
+    public static final String BR_BOTTOM_WIDTH = "brBottomWidth";
+
+    /**
+     * Animation name for <strong>border left width</strong>
+     */
+    public static final String BR_LEFT_WIDTH = "brLeftWidth";
 
     /**
      * Animation name for <strong>border radius</strong>
@@ -221,8 +261,16 @@ public class FAnimations {
                     BG_BR_RADIUS,
                     BG_BL_RADIUS,
                     BR_COLOR,
+                    BR_TOP_COLOR,
+                    BR_RIGHT_COLOR,
+                    BR_BOTTOM_COLOR,
+                    BR_LEFT_COLOR,
                     BR_OPACITY,
                     BR_WIDTH,
+                    BR_TOP_WIDTH,
+                    BR_RIGHT_WIDTH,
+                    BR_BOTTOM_WIDTH,
+                    BR_LEFT_WIDTH,
                     BR_RADIUS,
                     BR_TL_RADIUS,
                     BR_TR_RADIUS,

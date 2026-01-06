@@ -49,14 +49,13 @@ public class BackgroundSetter {
     }
 
     public static String getBackgroundHexColor(Region element){
-        String hexColor = null;
         Background background = element.getBackground();
         BackgroundFill backgroundFill;
         if(background != null){
             backgroundFill = background.getFills().get(0);
-            hexColor = backgroundFill.getFill().toString().substring(2);
+            return backgroundFill.getFill().toString().substring(2);
         }
-        return hexColor;
+        return null;
     }
 
     public static Color getBackgroundColor(Region element){

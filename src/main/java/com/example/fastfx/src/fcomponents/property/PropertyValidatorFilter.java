@@ -1,4 +1,4 @@
-package com.example.fastfx.src.fcomponents.propertyutil;
+package com.example.fastfx.src.fcomponents.property;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +31,14 @@ public class PropertyValidatorFilter {
     private static final String COLOR_PATTERN = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})";
     private static final String OPACITY_PATTERN = "\\d|\\d.\\d+";
     private static final String INSETS_DIMENSION_PATTERN = "(-?(\\d+|\\d+\\.\\d+))(px)?";
+    private static final String MARGIN_DIMENSION_PATTERN = "(-?(\\d+|\\d+\\.\\d+))(px)?";
     private static final String ROTATE_PATTERN = "-?(\\d+|\\d+\\.\\d+)";
+    private static final Set<String> BORDER_STYLES = new HashSet<>(
+            Set.of("solid", "dashed", "dotted")
+    );
+    private static final Set<String> TRANSITION_INTERPOLATORS = new HashSet<>(
+            Set.of("discrete", "ease_both", "ease_in", "ease_out", "linear")
+    );
 
     public static double getDoubleValue(String value){
         String numberValue;
@@ -127,6 +134,18 @@ public class PropertyValidatorFilter {
         return false;
     }
 
+    public static boolean validateMarginValues(String[] values){
+        if(values.length == 1 || values.length == 2 || values.length == 4){
+            for(int i = 0; i < values.length; i++){
+                if(!values[i].matches(MARGIN_DIMENSION_PATTERN)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public static boolean validateColorValue(String[] values){
         if(values.length == 1){
             return values[0].matches(COLOR_PATTERN);
@@ -160,19 +179,93 @@ public class PropertyValidatorFilter {
         return false;
     }
 
-    public static boolean validateBorderValue(String[] value){
-        boolean valid = true;
-        return valid;
+    public static boolean validateBorderValue(String[] values){
+        if(values.length == 2){
+            return values[0].matches(COLOR_PATTERN) && BORDER_STYLES.contains(values[1]);
+        }
+        return true;
     }
 
-    public static boolean validateOneSideBorderValue(String[] value){
-        boolean valid = true;
-        return valid;
+    public static String[] filterBorderValue(String[] values){
+        String[] filteredValues = null;
+        if(values.length == 2){
+            return values;
+        }
+        if(values.length >= 3){
+            filteredValues = new String[4];
+            String currValue = "";
+            boolean wasProperty = false;
+            int currIndex = 0;
+            for(int i = 0; i < values.length; i++){
+                String currEl = values[i].trim();
+                if(currEl.matches(DURATION_PATTERN)){
+                    if(wasProperty){
+                        currValue += currEl;
+                        filteredValues[currIndex] = currValue.trim();
+                        currIndex++;
+                        currValue = "";
+                    }
+                    wasProperty = false;
+                }
+                else{
+                    if(wasProperty){
+                        filteredValues[currIndex] = values[i - 1].trim();
+                        currIndex++;
+                    }
+                    currValue = currEl + " ";
+                    if(i == values.length - 1){
+                        filteredValues[currIndex] = currEl;
+                    }
+                    wasProperty = true;
+                }
+            }
+        }
+        return filteredValues;
     }
 
-    public static boolean validateBorderStyleValue(String[] value){
-        boolean valid = true;
-        return valid;
+    public static boolean validateOneSideBorderValue(String[] values){
+        if(values.length == 2){
+            return values[0].matches(COLOR_PATTERN) && BORDER_STYLES.contains(values[1]);
+        }
+        return true;
+    }
+
+    public static String[] filterOneSideBorderValue(String[] values){
+        String[] filteredValues = new String[3];
+        String currValue = "";
+        boolean wasProperty = false;
+        int currIndex = 0;
+        for(int i = 0; i < values.length; i++){
+            String currEl = values[i].trim();
+            if(currEl.matches(DURATION_PATTERN)){
+                if(wasProperty) {
+                    currValue += currEl;
+                    filteredValues[currIndex] = currValue.trim();
+                    currIndex++;
+                    currValue = "";
+                }
+                wasProperty = false;
+            }
+            else{
+                if(wasProperty){
+                    filteredValues[currIndex] = values[i - 1].trim();
+                    currIndex++;
+                }
+                if(i == 1 && (!BORDER_STYLES.contains(currEl))){
+                    currIndex++;
+                }
+                currValue = currEl + " ";
+                if(i == values.length - 1){
+                    filteredValues[currIndex] = currEl;
+                }
+                wasProperty = true;
+            }
+        }
+        if(!BORDER_STYLES.contains(filteredValues[1]) && filteredValues[2] == null){
+            filteredValues[2] = filteredValues[1];
+            filteredValues[1] = null;
+        }
+        return filteredValues;
     }
     // **********************************************************
     //                                                          *
