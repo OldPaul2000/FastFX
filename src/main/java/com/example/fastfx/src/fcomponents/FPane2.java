@@ -4,43 +4,53 @@ import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
 import com.example.fastfx.src.fcomponents.property.PropertyManager;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.layouts.Margin;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 
+import java.util.Set;
+
 public class FPane2 extends Pane implements FComponent{
 
     private PropertyManager propertyManager;
+    private ChangeListener<Number> resizeWidthListener;
+    private ChangeListener<Number> resizeHeightListener;
+    private Set<ResizeListener> resizeListeners;
 
     public FPane2(){
         propertyManager = new PropertyManager(this);
     }
 
-    public FComponent hover(PseudoClass hover){
+    public FPane2 hover(PseudoClass hover){
         propertyManager.hover(hover);
         return this;
     }
 
-    public FComponent click(PseudoClass click){
+    public FPane2 click(PseudoClass click){
         propertyManager.click(click);
         return this;
     }
-
+    // **********************************************************
+    //                                                          *
+    //                      Basic properties                    *
+    //                                                          *
+    // **********************************************************
     @Override
-    public FComponent x (double x) {
+    public FPane2 x (double x) {
         propertyManager.x(x);
         return this;
     }
 
     @Override
-    public FComponent x (double x, String unit) {
+    public FPane2 x (double x, String unit) {
         propertyManager.x(x, unit);
         return this;
     }
 
     @Override
-    public FComponent x (String rawValue) {
+    public FPane2 x (String rawValue) {
         propertyManager.x(rawValue);
         return this;
     }
@@ -56,19 +66,19 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent y (double y) {
+    public FPane2 y (double y) {
         propertyManager.y(y);
         return this;
     }
 
     @Override
-    public FComponent y (double y, String unit) {
+    public FPane2 y (double y, String unit) {
         propertyManager.y(y, unit);
         return this;
     }
 
     @Override
-    public FComponent y (String rawValue) {
+    public FPane2 y (String rawValue) {
         propertyManager.y(rawValue);
         return this;
     }
@@ -84,13 +94,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent width (double value) {
+    public FPane2 width (double value) {
         propertyManager.width(value);
         return this;
     }
 
     @Override
-    public FComponent width (String value) {
+    public FPane2 width (String value) {
         propertyManager.width(value);
         return this;
     }
@@ -101,13 +111,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent height (double value) {
+    public FPane2 height (double value) {
         propertyManager.height(value);
         return this;
     }
 
     @Override
-    public FComponent height (String value) {
+    public FPane2 height (String value) {
         propertyManager.height(value);
         return this;
     }
@@ -118,13 +128,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent scaleX (double value) {
+    public FPane2 scaleX (double value) {
         propertyManager.scaleX(value);
         return this;
     }
 
     @Override
-    public FComponent scaleX (String value) {
+    public FPane2 scaleX (String value) {
         propertyManager.scaleX(value);
         return this;
     }
@@ -135,13 +145,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent scaleY (double value) {
+    public FPane2 scaleY (double value) {
         propertyManager.scaleY(value);
         return this;
     }
 
     @Override
-    public FComponent scaleY (String value) {
+    public FPane2 scaleY (String value) {
         propertyManager.scaleY(value);
         return this;
     }
@@ -152,19 +162,19 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent translateX (double translateX) {
+    public FPane2 translateX (double translateX) {
         propertyManager.translateX(translateX);
         return this;
     }
 
     @Override
-    public FComponent translateX (double translateX, String unit) {
+    public FPane2 translateX (double translateX, String unit) {
         propertyManager.translateX(translateX, unit);
         return this;
     }
 
     @Override
-    public FComponent translateX (String rawValue) {
+    public FPane2 translateX (String rawValue) {
         propertyManager.translateX(rawValue);
         return this;
     }
@@ -175,19 +185,19 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent translateY (double translateY) {
+    public FPane2 translateY (double translateY) {
         propertyManager.translateY(translateY);
         return this;
     }
 
     @Override
-    public FComponent translateY (double translateY, String unit) {
+    public FPane2 translateY (double translateY, String unit) {
         propertyManager.translateY(translateY, unit);
         return this;
     }
 
     @Override
-    public FComponent translateY (String rawValue) {
+    public FPane2 translateY (String rawValue) {
         propertyManager.translateY(rawValue);
         return this;
     }
@@ -198,13 +208,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent rotate (double value) {
+    public FPane2 rotate (double value) {
         propertyManager.rotate(value);
         return this;
     }
 
     @Override
-    public FComponent rotate (String rawValue) {
+    public FPane2 rotate (String rawValue) {
         propertyManager.rotate(rawValue);
         return this;
     }
@@ -215,25 +225,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent padding (double padding) {
+    public FPane2 padding (double padding) {
         propertyManager.padding(padding);
         return this;
     }
 
     @Override
-    public FComponent padding (double topBottom, double rightLeft) {
+    public FPane2 padding (double topBottom, double rightLeft) {
         propertyManager.padding(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent padding (double top, double right, double bottom, double left) {
+    public FPane2 padding (double top, double right, double bottom, double left) {
         propertyManager.padding(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent padding (String rawValue) {
+    public FPane2 padding (String rawValue) {
         propertyManager.padding(rawValue);
         return this;
     }
@@ -244,25 +254,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent margin (double margin) {
+    public FPane2 margin (double margin) {
         propertyManager.margin(margin);
         return this;
     }
 
     @Override
-    public FComponent margin (double topBottom, double rightLeft) {
+    public FPane2 margin (double topBottom, double rightLeft) {
         propertyManager.margin(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent margin (double top, double right, double bottom, double left) {
+    public FPane2 margin (double top, double right, double bottom, double left) {
         propertyManager.margin(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent margin (String rawValue) {
+    public FPane2 margin (String rawValue) {
         propertyManager.margin(rawValue);
         return this;
     }
@@ -276,9 +286,22 @@ public class FPane2 extends Pane implements FComponent{
     public String getRawMargin () {
         return propertyManager.getRawMargin();
     }
-
+    // **********************************************************
+    //                                                          *
+    //                      Basic properties                    *
+    //                                                          *
+    // **********************************************************
+    // *********************************************************************************************
+    // **********************************************************
+    //                                                          *
+    //                      Custom properties                   *
+    //                                                          *
+    // **********************************************************
+    // ******************************************
+    //            Background properties         *
+    // ******************************************
     @Override
-    public FComponent bgColor (String color) {
+    public FPane2 bgColor (String color) {
         propertyManager.bgColor(color);
         return this;
     }
@@ -294,13 +317,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bgOpacity (double opacity) {
+    public FPane2 bgOpacity (double opacity) {
         propertyManager.bgOpacity(opacity);
         return this;
     }
 
     @Override
-    public FComponent bgOpacity (String value) {
+    public FPane2 bgOpacity (String value) {
         propertyManager.bgOpacity(value);
         return this;
     }
@@ -316,25 +339,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bgRadius (double radius) {
+    public FPane2 bgRadius (double radius) {
         propertyManager.bgRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent bgRadius (double topLeftBottomRight, double topRightBottomLeft) {
+    public FPane2 bgRadius (double topLeftBottomRight, double topRightBottomLeft) {
         propertyManager.bgRadius(topLeftBottomRight, topRightBottomLeft);
         return this;
     }
 
     @Override
-    public FComponent bgRadius (double topLeft, double topRight, double bottomRight, double bottomLeft) {
+    public FPane2 bgRadius (double topLeft, double topRight, double bottomRight, double bottomLeft) {
         propertyManager.bgRadius(topLeft, topRight, bottomRight, bottomLeft);
         return this;
     }
 
     @Override
-    public FComponent bgRadius (String value) {
+    public FPane2 bgRadius (String value) {
         propertyManager.bgRadius(value);
         return this;
     }
@@ -350,13 +373,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topLeftBgRadius (double radius) {
+    public FPane2 topLeftBgRadius (double radius) {
         propertyManager.topLeftBgRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent topLeftBgRadius (String value) {
+    public FPane2 topLeftBgRadius (String value) {
         propertyManager.topLeftBgRadius(value);
         return this;
     }
@@ -372,13 +395,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topRightBgRadius (double radius) {
+    public FPane2 topRightBgRadius (double radius) {
         propertyManager.topRightBgRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent topRightBgRadius (String value) {
+    public FPane2 topRightBgRadius (String value) {
         propertyManager.topRightBgRadius(value);
         return this;
     }
@@ -394,13 +417,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bottomRightBgRadius (double radius) {
+    public FPane2 bottomRightBgRadius (double radius) {
         propertyManager.bottomRightBgRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent bottomRightBgRadius (String value) {
+    public FPane2 bottomRightBgRadius (String value) {
         propertyManager.bottomRightBgRadius(value);
         return this;
     }
@@ -416,13 +439,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bottomLeftBgRadius (double radius) {
+    public FPane2 bottomLeftBgRadius (double radius) {
         propertyManager.bottomLeftBgRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent bottomLeftBgRadius (String value) {
+    public FPane2 bottomLeftBgRadius (String value) {
         propertyManager.bottomLeftBgRadius(value);
         return this;
     }
@@ -438,25 +461,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bgInsets (double insets) {
+    public FPane2 bgInsets (double insets) {
         propertyManager.bgInsets(insets);
         return this;
     }
 
     @Override
-    public FComponent bgInsets (double topBottom, double rightLeft) {
+    public FPane2 bgInsets (double topBottom, double rightLeft) {
         propertyManager.bgInsets(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent bgInsets (double top, double right, double bottom, double left) {
+    public FPane2 bgInsets (double top, double right, double bottom, double left) {
         propertyManager.bgInsets(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent bgInsets (String value) {
+    public FPane2 bgInsets (String value) {
         propertyManager.bgInsets(value);
         return this;
     }
@@ -472,63 +495,69 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topInset (double inset) {
-        propertyManager.topInset(inset);
+    public FPane2 topInset (double inset) {
+        propertyManager.topBgInset(inset);
         return this;
     }
 
     @Override
     public double getTopInset () {
-        return propertyManager.getTopInset();
+        return propertyManager.getTopBgInset();
     }
 
     @Override
-    public FComponent rightInset (double inset) {
-        propertyManager.rightInset(inset);
+    public FPane2 rightInset (double inset) {
+        propertyManager.rightBgInset(inset);
         return this;
     }
 
     @Override
     public double getRightInset () {
-        return propertyManager.getRightInset();
+        return propertyManager.getRightBgInset();
     }
 
     @Override
-    public FComponent bottomInset (double inset) {
-        propertyManager.bottomInset(inset);
+    public FPane2 bottomInset (double inset) {
+        propertyManager.bottomBgInset(inset);
         return this;
     }
 
     @Override
     public double getBottomInset () {
-        return propertyManager.getBottomInset();
+        return propertyManager.getBottomBgInset();
     }
 
     @Override
-    public FComponent leftInset (double inset) {
-        propertyManager.leftInset(inset);
+    public FPane2 leftInset (double inset) {
+        propertyManager.leftBgInset(inset);
         return this;
     }
 
     @Override
     public double getLeftInset () {
-        return propertyManager.getLeftInset();
+        return propertyManager.getLeftBgInset();
     }
-
+    // ******************************************
+    //            Background properties         *
+    // ******************************************
+    // *********************************************************************************************
+    // ******************************************
+    //              Border properties           *
+    // ******************************************
     @Override
-    public FComponent border (String colorValue, String borderStyle, double topLeftRadius, double topRightRadius, double bottomRightRadius, double bottomLeftRadius, double topWidth, double rightWidth, double bottomWidth, double leftWidth) {
+    public FPane2 border (String colorValue, String borderStyle, double topLeftRadius, double topRightRadius, double bottomRightRadius, double bottomLeftRadius, double topWidth, double rightWidth, double bottomWidth, double leftWidth) {
         propertyManager.border(colorValue, borderStyle, topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius, topWidth, rightWidth, bottomWidth, leftWidth);
         return this;
     }
 
     @Override
-    public FComponent border (String colorValue, String borderStyle, double radius, double borderWidth) {
+    public FPane2 border (String colorValue, String borderStyle, double radius, double borderWidth) {
         propertyManager.border(colorValue, borderStyle, radius, borderWidth);
         return this;
     }
 
     @Override
-    public FComponent border (String border) {
+    public FPane2 border (String border) {
         propertyManager.border(border);
         return this;
     }
@@ -539,13 +568,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topBorder (String colorValue, String borderStyle, double borderWidth) {
+    public FPane2 topBorder (String colorValue, String borderStyle, double borderWidth) {
         propertyManager.topBorder(colorValue, borderStyle, borderWidth);
         return this;
     }
 
     @Override
-    public FComponent topBorder (String topBorder) {
+    public FPane2 topBorder (String topBorder) {
         propertyManager.topBorder(topBorder);
         return this;
     }
@@ -556,13 +585,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent rightBorder (String colorValue, String borderStyle, double borderWidth) {
+    public FPane2 rightBorder (String colorValue, String borderStyle, double borderWidth) {
         propertyManager.rightBorder(colorValue, borderStyle, borderWidth);
         return this;
     }
 
     @Override
-    public FComponent rightBorder (String rightBorder) {
+    public FPane2 rightBorder (String rightBorder) {
         propertyManager.rightBorder(rightBorder);
         return this;
     }
@@ -573,13 +602,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bottomBorder (String colorValue, String borderStyle, double borderWidth) {
+    public FPane2 bottomBorder (String colorValue, String borderStyle, double borderWidth) {
         propertyManager.bottomBorder(colorValue, borderStyle, borderWidth);
         return this;
     }
 
     @Override
-    public FComponent bottomBorder (String bottomBorder) {
+    public FPane2 bottomBorder (String bottomBorder) {
         propertyManager.bottomBorder(bottomBorder);
         return this;
     }
@@ -590,13 +619,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent leftBorder (String colorValue, String borderStyle, double borderWidth) {
+    public FPane2 leftBorder (String colorValue, String borderStyle, double borderWidth) {
         propertyManager.leftBorder(colorValue, borderStyle, borderWidth);
         return this;
     }
 
     @Override
-    public FComponent leftBorder (String leftBorder) {
+    public FPane2 leftBorder (String leftBorder) {
         propertyManager.leftBorder(leftBorder);
         return this;
     }
@@ -607,7 +636,7 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderStyle (String borderStyle) {
+    public FPane2 borderStyle (String borderStyle) {
         propertyManager.borderStyle(borderStyle);
         return this;
     }
@@ -618,25 +647,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderWidth (double width) {
+    public FPane2 borderWidth (double width) {
         propertyManager.borderWidth(width);
         return this;
     }
 
     @Override
-    public FComponent borderWidth (double topBottom, double rightLeft) {
+    public FPane2 borderWidth (double topBottom, double rightLeft) {
         propertyManager.borderWidth(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent borderWidth (double top, double right, double bottom, double left) {
+    public FPane2 borderWidth (double top, double right, double bottom, double left) {
         propertyManager.borderWidth(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent borderWidth (String borderWidth) {
+    public FPane2 borderWidth (String borderWidth) {
         propertyManager.borderWidth(borderWidth);
         return this;
     }
@@ -647,7 +676,7 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderColor (String colorValue) {
+    public FPane2 borderColor (String colorValue) {
         propertyManager.borderColor(colorValue);
         return this;
     }
@@ -663,25 +692,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderOpacity (double opacity) {
+    public FPane2 borderOpacity (double opacity) {
         propertyManager.borderOpacity(opacity);
         return this;
     }
 
     @Override
-    public FComponent borderOpacity (double topBottom, double rightLeft) {
+    public FPane2 borderOpacity (double topBottom, double rightLeft) {
         propertyManager.borderOpacity(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent borderOpacity (double top, double right, double bottom, double left) {
+    public FPane2 borderOpacity (double top, double right, double bottom, double left) {
         propertyManager.borderOpacity(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent borderOpacity (String borderOpacity) {
+    public FPane2 borderOpacity (String borderOpacity) {
         propertyManager.borderOpacity(borderOpacity);
         return this;
     }
@@ -692,19 +721,19 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderRadius (double radius) {
+    public FPane2 borderRadius (double radius) {
         propertyManager.borderRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent borderRadius (double topLeft, double topRight, double bottomRight, double bottomLeft) {
+    public FPane2 borderRadius (double topLeft, double topRight, double bottomRight, double bottomLeft) {
         propertyManager.borderRadius(topLeft, topRight, bottomRight, bottomLeft);
         return this;
     }
 
     @Override
-    public FComponent borderRadius (String borderRadius) {
+    public FPane2 borderRadius (String borderRadius) {
         propertyManager.borderRadius(borderRadius);
         return this;
     }
@@ -720,13 +749,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topLeftBorderRadius (double radius) {
+    public FPane2 topLeftBorderRadius (double radius) {
         propertyManager.topLeftBorderRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent topLeftBorderRadius (String radius) {
+    public FPane2 topLeftBorderRadius (String radius) {
         propertyManager.topLeftBorderRadius(radius);
         return this;
     }
@@ -742,13 +771,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent topRightBorderRadius (double radius) {
+    public FPane2 topRightBorderRadius (double radius) {
         propertyManager.topRightBorderRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent topRightBorderRadius (String radius) {
+    public FPane2 topRightBorderRadius (String radius) {
         propertyManager.topRightBorderRadius(radius);
         return this;
     }
@@ -764,13 +793,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bottomRightBorderRadius (double radius) {
+    public FPane2 bottomRightBorderRadius (double radius) {
         propertyManager.bottomRightBorderRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent bottomRightBorderRadius (String radius) {
+    public FPane2 bottomRightBorderRadius (String radius) {
         propertyManager.bottomRightBorderRadius(radius);
         return this;
     }
@@ -786,13 +815,13 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent bottomLeftBorderRadius (double radius) {
+    public FPane2 bottomLeftBorderRadius (double radius) {
         propertyManager.bottomLeftBorderRadius(radius);
         return this;
     }
 
     @Override
-    public FComponent bottomLeftBorderRadius (String radius) {
+    public FPane2 bottomLeftBorderRadius (String radius) {
         propertyManager.bottomLeftBorderRadius(radius);
         return this;
     }
@@ -808,25 +837,25 @@ public class FPane2 extends Pane implements FComponent{
     }
 
     @Override
-    public FComponent borderInsets (double inset) {
+    public FPane2 borderInsets (double inset) {
         propertyManager.borderInsets(inset);
         return this;
     }
 
     @Override
-    public FComponent borderInsets (double topBottom, double rightLeft) {
+    public FPane2 borderInsets (double topBottom, double rightLeft) {
         propertyManager.borderInsets(topBottom, rightLeft);
         return this;
     }
 
     @Override
-    public FComponent borderInsets (double top, double right, double bottom, double left) {
+    public FPane2 borderInsets (double top, double right, double bottom, double left) {
         propertyManager.borderInsets(top, right, bottom, left);
         return this;
     }
 
     @Override
-    public FComponent borderInsets (String borderInsets) {
+    public FPane2 borderInsets (String borderInsets) {
         propertyManager.borderInsets(borderInsets);
         return this;
     }
@@ -865,19 +894,62 @@ public class FPane2 extends Pane implements FComponent{
     public void removeLeftBorder () {
         propertyManager.removeLeftBorder();
     }
-
-    @Override
+    // ******************************************
+    //              Border properties           *
+    // ******************************************
+    // *********************************************************************************************
+    // ******************************************
+    //                UI properties             *
+    // ******************************************
     public void add (Node node) {
-
+        getChildren().add(node);
     }
-
-    @Override
+    // ******************************************
+    //                UI properties             *
+    // ******************************************
+    // *********************************************************************************************
+    // ******************************************
+    //              Custom listeners            *
+    // ******************************************
     public void resizeListener (ResizeListener resizeListener) {
-
+        if (resizeWidthListener == null || resizeHeightListener == null) {
+            resizeWidthListener = (valType, oldVal, newVal) -> {
+                notifyResizeListeners((double) newVal, getPrefHeight());
+            };
+            resizeHeightListener = (valType, oldVal, newVal) -> {
+                notifyResizeListeners(getPrefWidth(), (double) newVal);
+            };
+            prefWidthProperty().addListener(resizeWidthListener);
+            prefHeightProperty().addListener(resizeHeightListener);
+        }
+        resizeListeners.add(resizeListener);
     }
 
-    @Override
     public void removeResizeListener (ResizeListener resizeListener) {
-
+        if (resizeListeners != null) {
+            resizeListeners.remove(resizeListener);
+        }
+        if (resizeListeners != null && resizeListeners.isEmpty()) {
+            prefWidthProperty().removeListener(resizeWidthListener);
+            prefHeightProperty().removeListener(resizeHeightListener);
+            resizeWidthListener = null;
+            resizeHeightListener = null;
+        }
     }
+
+    private void notifyResizeListeners (double width, double height) {
+        if (resizeListeners != null && !resizeListeners.isEmpty()) {
+            resizeListeners.forEach(resizeListener -> {
+                resizeListener.apply(width, height);
+            });
+        }
+    }
+    // ******************************************
+    //              Custom listeners            *
+    // ******************************************
+    // **********************************************************
+    //                                                          *
+    //                      Custom properties                   *
+    //                                                          *
+    // **********************************************************
 }

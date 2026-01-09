@@ -107,8 +107,6 @@ public class FPane extends Pane implements FComponent {
     private ChangeListener<Number> resizeWidthListener;
     private ChangeListener<Number> resizeHeightListener;
     private Set<ResizeListener> resizeListeners;
-    //    private Map<ResizeListener, ChangeListener<Number>> resizeWidthListeners;
-    //    private Map<ResizeListener, ChangeListener<Number>> resizeHeightListeners;
 
     public FPane () {
         this.initialValues = new HashMap<>();

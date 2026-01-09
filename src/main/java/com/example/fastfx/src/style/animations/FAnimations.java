@@ -207,9 +207,9 @@ public class FAnimations {
     //   Border   *
     //*************
     //**************************************************************************
-    //*****************
-    //   DropShadow   *
-    //*****************
+    //*************
+    //   Effects  *
+    //*************
 
     /**
      * Animation name for <strong>DropShadow</strong>
@@ -221,9 +221,9 @@ public class FAnimations {
      */
     public static final String BLUR = "blur";
 
-    //*****************
-    //   DropShadow   *
-    //*****************
+    //**************
+    //   Effects   *
+    //**************
     //*********************************************************
     //*                                                       *
     //*       Custom properties and effects                   *

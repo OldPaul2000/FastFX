@@ -1,12 +1,17 @@
 package com.example.fastfx;
 
 import com.example.fastfx.src.fcomponents.FPane;
-import com.example.fastfx.src.userinteraction.ElementResizer;
-import com.example.fastfx.src.userinteraction.ResizeMode;
+import com.example.fastfx.src.fcomponents.FPane2;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class AnimationsController {
 
@@ -21,20 +26,80 @@ public class AnimationsController {
         BackgroundSetter.setBackgroundColor(mainContainer, "#2c4773");
 
 
-        FPane fPane = new FPane();
+        FPane2 fPane = new FPane2();
         fPane.bgColor("#999999")
                 .width("200")
                 .height("100")
                 .x("200")
                 .y(100)
-                .topBorder("#004400 1s solid 5px")
-                .hover(() -> {
-                    fPane.topBorder("#551100 1s solid 15px");
+                .click(() -> {
+                    fPane.x(320);
+                })
+                .click(() -> {
+                    fPane.x("320 1s");
                 });
 
 
-        ElementResizer resizer = new ElementResizer(mainContainer);
-        resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
+        Button button = new Button("Play");
+        button.setPrefWidth(80);
+        button.setPrefHeight(30);
+        button.setLayoutX(100);
+        button.setLayoutY(40);
+        mainContainer.add(button);
+
+        Button button2 = new Button("Reverse");
+        button2.setPrefWidth(80);
+        button2.setPrefHeight(30);
+        button2.setLayoutX(100);
+        button2.setLayoutY(80);
+        mainContainer.add(button2);
+
+        Button button3 = new Button("Play fast");
+        button3.setPrefWidth(80);
+        button3.setPrefHeight(30);
+        button3.setLayoutX(100);
+        button3.setLayoutY(120);
+        mainContainer.add(button3);
+
+        Button button4 = new Button("Reverse fast");
+        button4.setPrefWidth(80);
+        button4.setPrefHeight(30);
+        button4.setLayoutX(100);
+        button4.setLayoutY(160);
+        mainContainer.add(button4);
+
+        Timeline timeline = new Timeline();
+        KeyValue kv = new KeyValue(fPane.prefWidthProperty(), 200);
+        KeyFrame kf = new KeyFrame(Duration.ZERO, kv);
+        KeyValue kv2 = new KeyValue(fPane.prefWidthProperty(), 220);
+        KeyFrame kf2 = new KeyFrame(Duration.millis(1000), kv2);
+        KeyFrame kf3 = new KeyFrame(Duration.millis(300), kv2);
+        timeline.getKeyFrames().addAll(kf, kf2);
+
+
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+            timeline.setRate(1);
+            timeline.getKeyFrames().add(kf3);
+            timeline.getKeyFrames().remove(kf2);
+            timeline.play();
+        });
+
+        button2.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+            timeline.setRate(-1);
+            timeline.getKeyFrames().add(kf2);
+            timeline.getKeyFrames().remove(kf3);
+            timeline.play();
+        });
+
+        button3.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+            timeline.stop();
+            fPane.width("220");
+        });
+
+        button4.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+            timeline.stop();
+            fPane.width("200");
+        });
 
 
 

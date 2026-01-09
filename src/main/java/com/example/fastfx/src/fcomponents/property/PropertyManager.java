@@ -5,6 +5,7 @@ import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;
 import com.example.fastfx.src.style.animations.StaticAnimation;
+import com.example.fastfx.src.style.animations.StaticAnimations;
 import com.example.fastfx.src.style.layouts.Margin;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import com.example.fastfx.src.utility.style.BorderSetter;
@@ -105,11 +106,9 @@ public class PropertyManager {
     private DoubleProperty blBrWidthProperty;
     private List<DoubleProperty> brWidthProperties;
 
-    private ChangeListener<Number> resizeWidthListener;
-    private ChangeListener<Number> resizeHeightListener;
+    private ChangeListener<Number> resizeWidthListeners;
+    private ChangeListener<Number> resizeHeightListeners;
     private Set<ResizeListener> resizeListeners;
-    //    private Map<ResizeListener, ChangeListener<Number>> resizeWidthListeners;
-    //    private Map<ResizeListener, ChangeListener<Number>> resizeHeightListeners;
 
     public PropertyManager (Region component) {
         this.component = component;
@@ -192,17 +191,28 @@ public class PropertyManager {
         component.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedEvent);
         component.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEvent);
     }
-
     // **********************************************************
     //                                                          *
     //                      Basic properties                    *
     //                                                          *
     // **********************************************************
-
-    
     public void x (double value) {
         initialValues.put("x", value + "");
-        component.setLayoutX(value);
+        if (setPropertiesOnHover){
+            if(hoverAnimation != null){
+                hoverAnimation.removeAnimation(FAnimations.LAYOUT_X);
+            }
+            staticHoverAnimation.addAnimation(StaticAnimations.LAYOUT_X, component.getLayoutX() + "", value + "");
+        }
+        if (setPropertiesOnClick){
+            if(clickAnimation != null){
+                clickAnimation.removeAnimation(FAnimations.LAYOUT_X);
+            }
+            staticClickAnimation.addAnimation(StaticAnimations.LAYOUT_X, component.getLayoutX() + "", value + "");
+        }
+        else{
+            component.setLayoutX(value);
+        }
     }
     
     public void x (double value, String unit) {
@@ -233,8 +243,12 @@ public class PropertyManager {
 
             }
             if (setPropertiesOnHover) {
+                staticHoverAnimation.removeAnimation(StaticAnimations.LAYOUT_X);
+                initialValues.remove("x");
                 PropertyUtil.setOneDimensionAnimation(component.getLayoutX(), initialValues, "x", hoverAnimation, FAnimations.LAYOUT_X, value, duration);
             } else if (setPropertiesOnClick) {
+                staticClickAnimation.removeAnimation(StaticAnimations.LAYOUT_X);
+                initialValues.remove("x");
                 PropertyUtil.setOneDimensionAnimation(component.getLayoutX(), initialValues, "x", clickAnimation, FAnimations.LAYOUT_X, value, duration);
             } else {
                 if (duration == 1) {
@@ -1104,35 +1118,35 @@ public class PropertyManager {
         return rawBgInsets;
     }
     
-    public void topInset (double inset) {
+    public void topBgInset (double inset) {
         BackgroundSetter.setTopInset(component, inset);
     }
     
-    public double getTopInset () {
+    public double getTopBgInset () {
         return 0;
     }
 
-    public void rightInset (double inset) {
+    public void rightBgInset (double inset) {
         BackgroundSetter.setRightInset(component, inset);
     }
     
-    public double getRightInset () {
+    public double getRightBgInset () {
         return 0;
     }
     
-    public void bottomInset (double inset) {
+    public void bottomBgInset (double inset) {
         BackgroundSetter.setBottomInset(component, inset);
     }
 
-    public double getBottomInset () {
+    public double getBottomBgInset () {
         return 0;
     }
     
-    public void leftInset (double inset) {
+    public void leftBgInset (double inset) {
         BackgroundSetter.setLeftInset(component, inset);
     }
 
-    public double getLeftInset () {
+    public double getLeftBgInset () {
         return 0;
     }
     // ******************************************
@@ -2064,15 +2078,15 @@ public class PropertyManager {
     //              Custom listeners            *
     // ******************************************
     public void resizeListener (ResizeListener resizeListener) {
-        if (resizeWidthListener == null || resizeHeightListener == null) {
-            resizeWidthListener = (valType, oldVal, newVal) -> {
+        if (resizeWidthListeners == null || resizeHeightListeners == null) {
+            resizeWidthListeners = (valType, oldVal, newVal) -> {
                 notifyResizeListeners((double) newVal, component.getPrefHeight());
             };
-            resizeHeightListener = (valType, oldVal, newVal) -> {
+            resizeHeightListeners = (valType, oldVal, newVal) -> {
                 notifyResizeListeners(component.getPrefWidth(), (double) newVal);
             };
-            component.prefWidthProperty().addListener(resizeWidthListener);
-            component.prefHeightProperty().addListener(resizeHeightListener);
+            component.prefWidthProperty().addListener(resizeWidthListeners);
+            component.prefHeightProperty().addListener(resizeHeightListeners);
         }
         resizeListeners.add(resizeListener);
     }
@@ -2082,10 +2096,10 @@ public class PropertyManager {
             resizeListeners.remove(resizeListener);
         }
         if (resizeListeners != null && resizeListeners.isEmpty()) {
-            component.prefWidthProperty().removeListener(resizeWidthListener);
-            component.prefHeightProperty().removeListener(resizeHeightListener);
-            resizeWidthListener = null;
-            resizeHeightListener = null;
+            component.prefWidthProperty().removeListener(resizeWidthListeners);
+            component.prefHeightProperty().removeListener(resizeHeightListeners);
+            resizeWidthListeners = null;
+            resizeHeightListeners = null;
         }
     }
 

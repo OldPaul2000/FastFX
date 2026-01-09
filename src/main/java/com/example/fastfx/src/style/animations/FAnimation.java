@@ -240,7 +240,7 @@ public class FAnimation {
      */
     public void removeAnimation(String fAnimation) {
         String animation = FAnimations.get(fAnimation);
-        if (animation != null) {
+        if (animation != null && currentAnimations.containsKey(animation)) {
             currentAnimations.get(animation).forEach(keyFrame -> {
                 timeline.getKeyFrames().remove(keyFrame);
             });
