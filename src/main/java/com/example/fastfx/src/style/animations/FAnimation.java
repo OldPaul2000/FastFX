@@ -228,11 +228,8 @@ public class FAnimation {
     private void addToCurrentAnimation(String animation, KeyFrame keyFrame) {
         if (!currentAnimations.containsKey(animation)) {
             currentAnimations.put(animation, new ArrayList<>());
-            currentAnimations.get(animation).add(keyFrame);
         }
-        else {
-            currentAnimations.get(animation).add(keyFrame);
-        }
+        currentAnimations.get(animation).add(keyFrame);
     }
 
     /**
@@ -320,7 +317,7 @@ public class FAnimation {
      * Plays the animation backwards to reach the initial point.
      */
     public void reverse() {
-        rate = -Math.abs(rate);
+        rate = -rate;
         timeline.setRate(rate);
         if (this.elementShadowEffect != null) {
             if (shadowRadiusValues.get(0) > shadowRadiusValues.get(1)) {

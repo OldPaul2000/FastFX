@@ -9,6 +9,8 @@ module com.example.fastfx {
     requires jdk.dynalink;
     requires java.net.http;
     requires jdk.xml.dom;
+    requires jdk.compiler;
+    requires jdk.unsupported;
 
 
     opens com.example.fastfx to javafx.fxml;

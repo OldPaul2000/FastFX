@@ -23,6 +23,9 @@ import javafx.scene.layout.Region;
 
 import java.util.*;
 
+/**
+ * For removal
+ */
 public class FPane extends Pane implements FComponent {
 
     private String rawX;
@@ -107,6 +110,10 @@ public class FPane extends Pane implements FComponent {
     private ChangeListener<Number> resizeWidthListener;
     private ChangeListener<Number> resizeHeightListener;
     private Set<ResizeListener> resizeListeners;
+
+    public void notifyAdded(Region c){
+
+    }
 
     public FPane () {
         this.initialValues = new HashMap<>();
@@ -726,6 +733,65 @@ public class FPane extends Pane implements FComponent {
         return rawMargin;
     }
 
+    @Override
+    public FComponent top (double value) {
+        return null;
+    }
+
+    @Override
+    public FComponent top (String rawValue) {
+        return null;
+    }
+
+    @Override
+    public double getTop(){
+        return 0;
+    }
+
+    @Override
+    public FComponent right (double value) {
+        return null;
+    }
+
+    @Override
+    public FComponent right (String rawValue) {
+        return null;
+    }
+
+    @Override
+    public double getRight(){
+        return 0;
+    }
+
+    @Override
+    public FComponent bottom (double value) {
+        return null;
+    }
+
+    @Override
+    public FComponent bottom (String rawValue) {
+        return null;
+    }
+
+    @Override
+    public double getBottom(){
+        return 0;
+    }
+
+    @Override
+    public FComponent left (double value) {
+        return null;
+    }
+
+    @Override
+    public FComponent left (String rawValue) {
+        return null;
+    }
+
+    @Override
+    public double getLeft(){
+        return 0;
+    }
     // **********************************************************
     //                                                          *
     //                      Basic properties                    *
@@ -2301,6 +2367,14 @@ public class FPane extends Pane implements FComponent {
     // ******************************************
     public void add (Node node) {
         this.getChildren().add(node);
+    }
+
+    public void add(FComponent fComponent){
+//        this.add(fComponent);
+    }
+
+    public void notifyParentWasSet(FComponent component){
+
     }
     // ******************************************
     //                UI properties             *

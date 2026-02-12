@@ -9,9 +9,6 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-    private static Stage fStage;
-    private static FXMLLoader fLoader;
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("animations-view.fxml"));
@@ -19,6 +16,7 @@ public class HelloApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+
         AnimationsController controller = fxmlLoader.getController();
         controller.getMainContainer().prefWidthProperty().bind(stage.widthProperty());
         controller.getMainContainer().prefHeightProperty().bind(stage.heightProperty());
@@ -27,5 +25,4 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

@@ -87,7 +87,6 @@ public class PropertyValidatorFilter {
                 valuesPattern += "V";
             }
             else if(values[i].matches(DURATION_PATTERN)){
-                System.out.println("Matches duration: " + values[i]);
                 valuesPattern += "D";
             }
             else{

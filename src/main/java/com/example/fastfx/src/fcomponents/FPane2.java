@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 
 import java.util.Set;
 
@@ -285,6 +286,70 @@ public class FPane2 extends Pane implements FComponent{
     @Override
     public String getRawMargin () {
         return propertyManager.getRawMargin();
+    }
+
+    @Override
+    public FPane2 top (double value) {
+        propertyManager.top(value);
+        return this;
+    }
+
+    @Override
+    public FComponent top (String rawValue) {
+        return this;
+    }
+
+    @Override
+    public double getTop(){
+        return 0;
+    }
+
+    @Override
+    public FComponent right (double value) {
+        propertyManager.right(value);
+        return this;
+    }
+
+    @Override
+    public FComponent right (String rawValue) {
+        return this;
+    }
+
+    @Override
+    public double getRight(){
+        return 0;
+    }
+
+    @Override
+    public FComponent bottom (double value) {
+        propertyManager.bottom(value);
+        return this;
+    }
+
+    @Override
+    public FComponent bottom (String rawValue) {
+        return this;
+    }
+
+    @Override
+    public double getBottom(){
+        return 0;
+    }
+
+    @Override
+    public FComponent left (double value) {
+        propertyManager.left(value);
+        return this;
+    }
+
+    @Override
+    public FComponent left (String rawValue) {
+        return this;
+    }
+
+    @Override
+    public double getLeft(){
+        return 0;
     }
     // **********************************************************
     //                                                          *
@@ -901,8 +966,18 @@ public class FPane2 extends Pane implements FComponent{
     // ******************************************
     //                UI properties             *
     // ******************************************
-    public void add (Node node) {
-        getChildren().add(node);
+//    public void add (Node node) {
+//        getChildren().add(node);
+//        propertyManager.notifyParentWasSet(this);
+//    }
+
+    public void add(FComponent component){
+        getChildren().add((Node) component);
+        component.notifyAdded(this);
+    }
+
+    public void notifyAdded(Region component){
+        propertyManager.notifyParentWasSet(component);
     }
     // ******************************************
     //                UI properties             *
