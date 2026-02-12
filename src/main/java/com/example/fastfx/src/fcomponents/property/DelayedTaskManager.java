@@ -34,7 +34,7 @@ public class DelayedTaskManager {
 
     public void executeAllTasks(){
         delayedTasks.forEach(task -> {
-            task.apply(parent);
+            task.execute(parent);
         });
     }
 
