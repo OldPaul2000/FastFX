@@ -2,8 +2,8 @@ package com.example.fastfx.src.fcomponents.property;
 
 import javafx.scene.layout.Region;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class' purpose is to set some properties only after<br>
@@ -18,24 +18,28 @@ import java.util.Set;
 public class DelayedTaskManager {
 
     private Region parent;
-    private Set<DelayedTask> delayedTasks;
+    private Map<String, DelayedTask> delayedTasks;
 
     public DelayedTaskManager () {
-        this.delayedTasks = new HashSet<>();
+        this.delayedTasks = new HashMap<>();
     }
 
     public void setParent(Region parent){
         this.parent = parent;
     }
 
-    public void addTask(DelayedTask delayedTask){
-        delayedTasks.add(delayedTask);
+    public void addTask(String id, DelayedTask delayedTask){
+        delayedTasks.put(id, delayedTask);
     }
 
     public void executeAllTasks(){
-        delayedTasks.forEach(task -> {
-            task.execute(parent);
+        delayedTasks.forEach((key, val) -> {
+            val.execute(parent);
         });
+    }
+
+    public void removeTaskById(String id){
+        delayedTasks.remove(id);
     }
 
     public void removeAllTasks(){

@@ -27,6 +27,7 @@ import java.util.*;
 public class PropertyManager {
     
     private Region component;
+    private Region parent;
     
     private String rawX;
     private String rawY;
@@ -120,6 +121,7 @@ public class PropertyManager {
 
     public PropertyManager (Region component) {
         this.component = component;
+        this.parent = (Region) component.getParent();
         this.initialValues = new HashMap<>();
         initBgRadiusProperties();
         initBrRadiusProperties();
@@ -226,20 +228,19 @@ public class PropertyManager {
     }
     
     public void x (double value, String unit) {
-        if (unit.equals("px") || unit.isEmpty()) {
+        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
             component.setLayoutX(value);
-        } else if (unit.equals("%")) {
-            Region parent = (Region) component.getParent();
+        } else if (unit.equals(FUnit.PERCENTAGE)) {
             if (parent == null) {
                 System.out.println("parent is null");
-                delayedTaskManager.addTask((p) -> {
+                delayedTaskManager.removeTaskById("x");
+                delayedTaskManager.addTask("x", (p) -> {
                     System.out.println(p.getPrefWidth());
                     component.setLayoutX(p.getPrefWidth() * (value / 100));
                     ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
                         component.setLayoutX((double)newVal * (value / 100));
                     };
                     addPropertyListener(p, "width", listener);
-                    p.prefWidthProperty().addListener(listener);
                 });
             } else {
                 component.setLayoutX(parent.getPrefWidth() * (value / 100));
@@ -265,8 +266,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
-                Region parent = (Region) component.getParent();
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 if(parent != null){
                     System.out.println("width: " + parent.getPrefWidth());
                     component.setLayoutX(parent.getPrefWidth() * (value / 100));
@@ -313,10 +313,9 @@ public class PropertyManager {
     }
 
     public void y (double value, String unit) {
-        if (unit.equals("px") || unit.isEmpty()) {
+        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
             component.setLayoutY(value);
-        } else if (unit.equals("%")) {
-            Region parent = (Region) component.getParent();
+        } else if (unit.equals(FUnit.PERCENTAGE)) {
             if (parent == null) {
 
             } else {
@@ -336,7 +335,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
 
             }
             if (setPropertiesOnHover) {
@@ -378,7 +377,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
 
             }
             if (setPropertiesOnHover) {
@@ -415,7 +414,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
 
             }
             if (setPropertiesOnHover) {
@@ -508,9 +507,9 @@ public class PropertyManager {
     }
     
     public void translateX (double value, String unit) {
-        if (unit.equals("px") || unit.isEmpty()) {
+        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
             component.setTranslateX(value);
-        } else if (unit.equals("%")) {
+        } else if (unit.equals(FUnit.PERCENTAGE)) {
             component.setTranslateX(component.getPrefWidth() * (value / 100));
         }
     }
@@ -526,7 +525,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 value = component.getPrefWidth() * (value / 100);
             }
             if (setPropertiesOnHover) {
@@ -552,9 +551,9 @@ public class PropertyManager {
     }
     
     public void translateY (double value, String unit) {
-        if (unit.equals("px") || unit.isEmpty()) {
+        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
             component.setTranslateY(value);
-        } else if (unit.equals("%")) {
+        } else if (unit.equals(FUnit.PERCENTAGE)) {
             translateY(component.getPrefHeight() * (value / 100));
         }
     }
@@ -570,7 +569,7 @@ public class PropertyManager {
             if (values.length == 2) {
                 duration = PropertyValidatorFilter.getDuration(values[1]);
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 value = component.getPrefHeight() * (value / 100);
             }
             if (setPropertiesOnHover) {
@@ -710,7 +709,6 @@ public class PropertyManager {
     }
 
     public void top(double value){
-        Region parent = (Region) component.getParent();
         if(parent != null){
             component.setLayoutY(value);
             parent.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
@@ -725,7 +723,6 @@ public class PropertyManager {
     public void top(String rawValue){}
 
     public void right(double value){
-        Region parent = (Region) component.getParent();
         if(parent != null){
             component.setLayoutX(parent.getPrefWidth() - component.getPrefWidth() - value);
             parent.prefWidthProperty().addListener((prop, oldVal, newVal) -> {
@@ -740,7 +737,6 @@ public class PropertyManager {
     public void right(String rawValue){}
 
     public void bottom(double value){
-        Region parent = (Region) component.getParent();
         if(parent != null){
             component.setLayoutY(parent.getPrefHeight() - component.getPrefHeight() - value);
             parent.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
@@ -755,7 +751,6 @@ public class PropertyManager {
     public void bottom(String rawValue){}
 
     public void left(double value){
-        Region parent = (Region) component.getParent();
         if(parent != null){
             component.setLayoutX(value);
             parent.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
@@ -890,7 +885,7 @@ public class PropertyManager {
                 if (currValue.length == 2) {
                     duration = PropertyValidatorFilter.getDuration(currValue[1]);
                 }
-                if (unit.equals("%")) {
+                if (unit.equals(FUnit.PERCENTAGE)) {
                     bgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                     bgRadiusProperty.addListener((valType, oldVal, newVal) -> {
                         BackgroundSetter.setBackgroundRadius(component, (double) newVal);
@@ -920,7 +915,7 @@ public class PropertyManager {
                     if (currValue.length == 2) {
                         duration = PropertyValidatorFilter.getDuration(currValue[1]);
                     }
-                    if (unit.equals("%")) {
+                    if (unit.equals(FUnit.PERCENTAGE)) {
                         bgRadiusProperties.get(i).bind(component.prefWidthProperty().multiply(value / 100));
                         if (i == 0) {
                             bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
@@ -999,7 +994,7 @@ public class PropertyManager {
             if (radii != null) {
                 tlBgRadius = radii.getTopLeftHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 tlBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 tlBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BackgroundSetter.setTopLeftBackgroundRadius(component, (double) newVal);
@@ -1048,7 +1043,7 @@ public class PropertyManager {
             if (radii != null) {
                 trBgRadius = radii.getTopRightHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 trBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 trBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BackgroundSetter.setTopRightBackgroundRadius(component, (double) newVal);
@@ -1097,7 +1092,7 @@ public class PropertyManager {
             if (radii != null) {
                 brBgRadius = radii.getBottomRightHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 brBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 brBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BackgroundSetter.setBottomRightBackgroundRadius(component, (double) newVal);
@@ -1146,7 +1141,7 @@ public class PropertyManager {
             if (radii != null) {
                 blBgRadius = radii.getBottomLeftHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 blBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 blBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BackgroundSetter.setBottomLeftBackgroundRadius(component, (double) newVal);
@@ -1277,11 +1272,11 @@ public class PropertyManager {
             String currentStyle = BorderSetter.getTopBorderStyle(component);
             double radius = 0;
             double currentRadius = 0;
-            String radiusUnit = "px";
+            String radiusUnit = FUnit.PIXELS;
             long radiusDuration = 1;
             double width = 0;
             double currentWidth = 0;
-            String widthUnit = "px";
+            String widthUnit = FUnit.PIXELS;
             long widthDuration = 1;
             if(currentColor != null){
                 currentColor = "#" + currentColor;
@@ -1317,14 +1312,14 @@ public class PropertyManager {
                     widthDuration = PropertyValidatorFilter.getDuration(filteredValues[3].split("\\s+")[1]);
                 }
             }
-            if(radiusUnit.equals("%")){
+            if(radiusUnit.equals(FUnit.PERCENTAGE)){
                 brRadiusProperty.bind(component.prefWidthProperty().multiply(radius / 100));
                 brRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setBorderRadius(component, (double) newVal);
                 });
                 radius = (radius / 100) * component.getPrefWidth();
             }
-            if(widthUnit.equals("%")){
+            if(widthUnit.equals(FUnit.PERCENTAGE)){
                 brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
                 brWidthProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setBorderWidth(component, (double) newVal);
@@ -1389,7 +1384,7 @@ public class PropertyManager {
             String currentStyle = BorderSetter.getTopBorderStyle(component);
             double width = 0;
             double currentWidth = BorderSetter.getTopBorderWidth(component);
-            String widthUnit = "px";
+            String widthUnit = FUnit.PIXELS;
             long widthDuration = 1;
             if(currentColor != null){
                 currentColor = color;
@@ -1416,7 +1411,7 @@ public class PropertyManager {
                     widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
                 }
             }
-            if(widthUnit.equals("%")){
+            if(widthUnit.equals(FUnit.PERCENTAGE)){
                 brWidthProperty.bind(component.prefHeightProperty().multiply(width / 100));
                 brWidthProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setTopBorderWidth(component, (double) newVal);
@@ -1467,7 +1462,7 @@ public class PropertyManager {
             String currentStyle = BorderSetter.getRightBorderStyle(component);
             double width = 0;
             double currentWidth = BorderSetter.getRightBorderWidth(component);
-            String widthUnit = "px";
+            String widthUnit = FUnit.PIXELS;
             long widthDuration = 1;
             if(currentColor != null){
                 currentColor = "#" + currentColor;
@@ -1494,7 +1489,7 @@ public class PropertyManager {
                     widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
                 }
             }
-            if(widthUnit.equals("%")){
+            if(widthUnit.equals(FUnit.PERCENTAGE)){
                 brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
                 brWidthProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setRightBorderWidth(component, (double) newVal);
@@ -1545,7 +1540,7 @@ public class PropertyManager {
             String currentStyle = BorderSetter.getBottomBorderStyle(component);
             double width = 0;
             double currentWidth = BorderSetter.getBottomBorderWidth(component);
-            String widthUnit = "px";
+            String widthUnit = FUnit.PIXELS;
             long widthDuration = 1;
             if(currentColor != null){
                 currentColor = "#" + currentColor;
@@ -1572,7 +1567,7 @@ public class PropertyManager {
                     widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
                 }
             }
-            if(widthUnit.equals("%")){
+            if(widthUnit.equals(FUnit.PERCENTAGE)){
                 brWidthProperty.bind(component.prefHeightProperty().multiply(width / 100));
                 brWidthProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setBottomBorderWidth(component, (double) newVal);
@@ -1623,7 +1618,7 @@ public class PropertyManager {
             String currentStyle = BorderSetter.getLeftBorderStyle(component);
             double width = 0;
             double currentWidth = BorderSetter.getLeftBorderWidth(component);
-            String widthUnit = "px";
+            String widthUnit = FUnit.PIXELS;
             long widthDuration = 1;
             if(currentColor != null){
                 currentColor = "#" + currentColor;
@@ -1650,7 +1645,7 @@ public class PropertyManager {
                     widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
                 }
             }
-            if(widthUnit.equals("%")){
+            if(widthUnit.equals(FUnit.PERCENTAGE)){
                 brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
                 brWidthProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setLeftBorderWidth(component, (double) newVal);
@@ -1817,7 +1812,7 @@ public class PropertyManager {
                 if (currValue.length == 2) {
                     duration = PropertyValidatorFilter.getDuration(currValue[1]);
                 }
-                if (unit.equals("%")) {
+                if (unit.equals(FUnit.PERCENTAGE)) {
                     brRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                     brRadiusProperty.addListener((valType, oldVal, newVal) -> {
                         BorderSetter.setBorderRadius(component, (double) newVal);
@@ -1847,7 +1842,7 @@ public class PropertyManager {
                     if (currValue.length == 2) {
                         duration = PropertyValidatorFilter.getDuration(currValue[1]);
                     }
-                    if (unit.equals("%")) {
+                    if (unit.equals(FUnit.PERCENTAGE)) {
                         brRadiusProperties.get(i).bind(component.prefWidthProperty().multiply(value / 100));
                         if (i == 0) {
                             brRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
@@ -1926,7 +1921,7 @@ public class PropertyManager {
             if (radii != null) {
                 tlBrRadius = radii.getTopLeftHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 tlBrRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 tlBrRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setTopLeftBorderRadius(component, (double) newVal);
@@ -1975,7 +1970,7 @@ public class PropertyManager {
             if (radii != null) {
                 trBrRadius = radii.getTopRightHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 trBrRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 trBrRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setTopRightBorderRadius(component, (double) newVal);
@@ -2024,7 +2019,7 @@ public class PropertyManager {
             if (radii != null) {
                 brBrRadius = radii.getBottomRightHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 brBrRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 brBrRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setBottomRightBorderRadius(component, (double) newVal);
@@ -2073,7 +2068,7 @@ public class PropertyManager {
             if (radii != null) {
                 blBrRadius = radii.getBottomLeftHorizontalRadius();
             }
-            if (unit.equals("%")) {
+            if (unit.equals(FUnit.PERCENTAGE)) {
                 blBrRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
                 blBrRadiusProperty.addListener((valType, oldVal, newVal) -> {
                     BorderSetter.setBottomLeftBorderRadius(component, (double) newVal);

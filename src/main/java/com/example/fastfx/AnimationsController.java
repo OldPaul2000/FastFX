@@ -24,20 +24,33 @@ public class AnimationsController {
         ElementResizer resizer = new ElementResizer(mainContainer);
 
         FPane2 fPane = new FPane2();
-        fPane.bgColor("#999999").width("200").height("100").x("200").y(100);
+        fPane.bgColor("#999999 1s").width("200").height("100").x("200").y(100);
 
         FPane2 fPane2 = new FPane2();
         fPane2
             .bgColor("#555555")
-            .width(40)
-            .height(40);
+            .width(70)
+            .height(30)
+                .bgRadius(3);
+
+        fPane2.x(20).y(30);
+        fPane2.border("#111111", "solid", 3, 2);
+        fPane2.borderInsets(-4);
+        mainContainer.add(fPane2);
+
 
         resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
+        resizer.setResizeEdgeLimit(fPane, 5);
 
         mainContainer.add(fPane);
-        fPane2.x(10, "%");
-        fPane.add(fPane2);
 
+        /**
+         * Color
+         * 1 Dimension
+         * 2 Dimensions
+         * 4 Dimensions
+         * Border
+         */
 
 
 
@@ -47,20 +60,6 @@ public class AnimationsController {
          * that specific property will be bind again then the
          * configuration from PropertyManager will have no effect anymore
          * !!!WARNING!!!
-         */
-
-
-
-
-        /* Properties remained to implement:
-            top
-            raw string top
-            right
-            raw string right
-            bottom
-            raw string bottom
-            left
-            raw string left
          */
 
 

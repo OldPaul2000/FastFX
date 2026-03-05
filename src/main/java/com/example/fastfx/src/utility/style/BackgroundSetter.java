@@ -417,5 +417,4 @@ public class BackgroundSetter {
         }
         return null;
     }
-
 }

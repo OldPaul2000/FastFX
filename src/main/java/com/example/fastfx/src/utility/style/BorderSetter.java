@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class BorderSetter {
 
-    private static final Map<String, BorderStrokeStyle> BORDER_STYLES = new HashMap<>(
+    public static final Map<String, BorderStrokeStyle> BORDER_STYLES = new HashMap<>(
             Map.ofEntries(
                     Map.entry("solid", BorderStrokeStyle.SOLID),
                     Map.entry("dashed", BorderStrokeStyle.DASHED),
@@ -273,38 +273,6 @@ public class BorderSetter {
        }
    }
 
-   public static double getTopBorderWidth(Region element){
-       BorderWidths widths = getBorderWidths(element);
-       if(widths != null){
-           return widths.getTop();
-       }
-       return 0;
-   }
-
-    public static double getRightBorderWidth(Region element){
-        BorderWidths widths = getBorderWidths(element);
-        if(widths != null){
-            return widths.getRight();
-        }
-        return 0;
-    }
-
-    public static double getBottomBorderWidth(Region element){
-        BorderWidths widths = getBorderWidths(element);
-        if(widths != null){
-            return widths.getBottom();
-        }
-        return 0;
-    }
-
-    public static double getLeftBorderWidth(Region element){
-        BorderWidths widths = getBorderWidths(element);
-        if(widths != null){
-            return widths.getLeft();
-        }
-        return 0;
-    }
-
     public static void setRightBorderWidth(Region element, double width){
         if(element != null){
             Border border = element.getBorder();
@@ -377,6 +345,38 @@ public class BorderSetter {
        }
        return null;
    };
+
+    public static double getTopBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getTop();
+        }
+        return 0;
+    }
+
+    public static double getRightBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getRight();
+        }
+        return 0;
+    }
+
+    public static double getBottomBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getBottom();
+        }
+        return 0;
+    }
+
+    public static double getLeftBorderWidth(Region element){
+        BorderWidths widths = getBorderWidths(element);
+        if(widths != null){
+            return widths.getLeft();
+        }
+        return 0;
+    }
 
     /**
      * Set the border color

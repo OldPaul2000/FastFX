@@ -970,7 +970,6 @@ public class FPane2 extends Pane implements FComponent{
 //        getChildren().add(node);
 //        propertyManager.notifyParentWasSet(this);
 //    }
-
     public void add(FComponent component){
         getChildren().add((Node) component);
         component.notifyAdded(this);
