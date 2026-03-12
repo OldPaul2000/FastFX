@@ -21,28 +21,33 @@ public class AnimationsController {
     public void initialize() {
         BackgroundSetter.setBackgroundColor(mainContainer, "#2c4773");
 
-        ElementResizer resizer = new ElementResizer(mainContainer);
-
         FPane2 fPane = new FPane2();
-        fPane.bgColor("#999999 1s").width("200").height("100").x("200").y(100);
+        fPane.bgColor("#999999")
+             .width("200")
+             .height("100")
+             .x("200")
+             .y(100);
+
+
+        ElementResizer resizer = new ElementResizer(mainContainer);
+        resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
+
+        mainContainer.add(fPane);
 
         FPane2 fPane2 = new FPane2();
         fPane2
-            .bgColor("#555555")
-            .width(70)
-            .height(30)
-                .bgRadius(3);
+                .bgColor("#333333")
+                .width(40)
+                .height(40)
+                .x("20 0.4s")
+                .y(20)
+                .hover(() -> {
+                    System.out.println();
+                    fPane2.x(30).x("30 0.3s");
+                });
 
-        fPane2.x(20).y(30);
-        fPane2.border("#111111", "solid", 3, 2);
-        fPane2.borderInsets(-4);
-        mainContainer.add(fPane2);
+        fPane.add(fPane2);
 
-
-        resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
-        resizer.setResizeEdgeLimit(fPane, 5);
-
-        mainContainer.add(fPane);
 
         /**
          * Color

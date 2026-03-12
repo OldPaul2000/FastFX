@@ -66,6 +66,7 @@ public class StaticAnimation {
     public void removeAnimation(String animation){
         if(StaticAnimations.get(animation) != null){
             stringValues.remove(animation);
+            doubleValues.remove(animation);
         }
     }
 

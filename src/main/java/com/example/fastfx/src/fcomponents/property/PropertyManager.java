@@ -117,7 +117,7 @@ public class PropertyManager {
 
     private Map<String, InvalidationListener> doublePropertiesListeners;
     private DelayedTaskManager delayedTaskManager;
-
+    private PropertyParser parser;
 
     public PropertyManager (Region component) {
         this.component = component;
@@ -129,6 +129,7 @@ public class PropertyManager {
         resizeListeners = new HashSet<>();
         doublePropertiesListeners = new HashMap<>();
         delayedTaskManager = new DelayedTaskManager();
+        parser = new PropertyParser();
     }
 
     private void initBgRadiusProperties () {

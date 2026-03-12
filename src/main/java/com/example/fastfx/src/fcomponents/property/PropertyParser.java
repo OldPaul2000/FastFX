@@ -20,22 +20,28 @@ public class PropertyParser {
     public static final String NUMBER_PROPERTY = "numberProperty";
 
     private static final String COLOR_REGEX = "#[a-fA-F0-9]{6}|#[a-fA-F0-9]{8}|[a-zA-Z]+";
+    private static final String HEX_COLOR_REGEX = "#[a-fA-F0-9]{6}|#[a-fA-F0-9]{8}";
     private static final String SIZE_REGEX = "(-?(\\d+|\\d+\\.\\d+))(%?(px)?)?";
     private static final String ONLY_NUMBER_REGEX = "-?(\\d+|\\d+\\.\\d+)";
     private static final String DURATION_REGEX = "(\\d+|\\d+\\.\\d+)(s)";
-    private static final String INTERPOLATOR_REGEX = "linear|ease-in|ease-out|ease-both";
+    private static final String INTERPOLATOR_REGEX = "linear|ease-in|ease-out|ease-both|discrete";
     public static final String CYCLE_COUNT_REGEX = "\\d+c|inf";
 
     private boolean valid;
     private int parametersCount;
 
     private String[] colorValues;
+    private double[] bgOpacityValues;
     private String[] borderStyles;
     private double[] doubleValues;
     private String[] units;
-    private double[] durations;
+    private long[] durations;
     private String[] interpolators;
     private int[] cyclesCount;
+
+    private long borderColorDuration;
+    private String borderColorInterpolator;
+    private int borderColorCyclesCount;
 
     /**
      * Parses the input value.<br>
@@ -50,13 +56,13 @@ public class PropertyParser {
         if (property.equals(COLOR_PROPERTY)) {
             parseColorProperty(values);
         }
-        if (property.equals(BORDER_PROPERTY)) {
+        else if (property.equals(BORDER_PROPERTY)) {
             parseBorderProperty(values);
         }
-        if (property.equals(SIZE_PROPERTY)) {
+        else if (property.equals(SIZE_PROPERTY)) {
             parseSizeProperty(values);
         }
-        if (property.equals(NUMBER_PROPERTY)) {
+        else if (property.equals(NUMBER_PROPERTY)) {
             parseNumberProperty(values);
         }
     }
@@ -73,6 +79,7 @@ public class PropertyParser {
                 interpolatorFound = false;
                 parametersCount++;
                 setColor(parametersCount, currEl);
+                setBgOpacity(parametersCount, currEl);
             } else {
                 if (currEl.matches(DURATION_REGEX) && indexAfterColorProp == 0) {
                     durationFound = true;
@@ -103,26 +110,55 @@ public class PropertyParser {
 
     private void parseBorderProperty (String[] values) {
         int startCountingIndex = 0;
+        int indexAfterProperty = 0;
+        boolean durationFound = false;
+        boolean interpolatorFound = false;
         if (values[0].matches(COLOR_REGEX)) {
             setColor(1, values[0]);
             startCountingIndex++;
+            for (int i = 1; i < values.length; i++) {
+                String currEl = values[i];
+                if (currEl.matches(DURATION_REGEX)) {
+                    durationFound = true;
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    setBorderColorDuration(currEl);
+                } else if (currEl.matches(INTERPOLATOR_REGEX) && durationFound && indexAfterProperty == 1) {
+                    interpolatorFound = true;
+                    durationFound = false;
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    setBorderColorInterpolator(currEl);
+                } else if (currEl.matches(CYCLE_COUNT_REGEX) && (durationFound || interpolatorFound)) {
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    durationFound = false;
+                    interpolatorFound = false;
+                    setBorderColorCyclesCount(currEl);
+                } else if (BorderSetter.BORDER_STYLES.containsKey(currEl.toLowerCase()) || currEl.matches(SIZE_REGEX)) {
+                    break;
+                } else {
+                    valid = false;
+                    break;
+                }
+            }
         } else {
             valid = false;
         }
-        if (BorderSetter.BORDER_STYLES.containsKey(values[1].toLowerCase())) {
-            setBorderStyle(1, values[1].toLowerCase());
+        if (BorderSetter.BORDER_STYLES.containsKey(values[startCountingIndex].toLowerCase())) {
+            setBorderStyle(1, values[startCountingIndex].toLowerCase());
             startCountingIndex++;
         } else {
-            setBorderStyle(0, "linear");
+            setBorderStyle(1, "solid");
         }
         if (valid) {
-            int indexAfterSizeProp = 0;
-            boolean durationFound = false;
-            boolean interpolatorFound = false;
+            indexAfterProperty = 0;
+            durationFound = false;
+            interpolatorFound = false;
             for (int i = startCountingIndex; i < values.length; i++) {
                 String currEl = values[i];
                 if (currEl.matches(SIZE_REGEX)) {
-                    indexAfterSizeProp = 0;
+                    indexAfterProperty = 0;
                     durationFound = false;
                     interpolatorFound = false;
                     parametersCount++;
@@ -131,25 +167,25 @@ public class PropertyParser {
                     }
                     setDoubleValue(parametersCount, currEl);
                     setUnit(parametersCount, currEl);
-                } else {
-                    if (currEl.matches(DURATION_REGEX) && indexAfterSizeProp == 0) {
+                } else if (parametersCount > 0) {
+                    if (currEl.matches(DURATION_REGEX) && indexAfterProperty == 0) {
                         durationFound = true;
-                        indexAfterSizeProp++;
+                        indexAfterProperty++;
                         setDuration(parametersCount, currEl);
-                    } else if (currEl.matches(INTERPOLATOR_REGEX) && durationFound && indexAfterSizeProp == 1) {
+                    } else if (currEl.matches(INTERPOLATOR_REGEX) && durationFound && indexAfterProperty == 1) {
                         interpolatorFound = true;
                         durationFound = false;
-                        indexAfterSizeProp++;
+                        indexAfterProperty++;
                         setInterpolator(parametersCount, currEl);
                     } else if (currEl.matches(CYCLE_COUNT_REGEX) && (durationFound || interpolatorFound)) {
-                        indexAfterSizeProp++;
+                        indexAfterProperty++;
                         setCycleCount(parametersCount, currEl);
                     } else {
                         valid = false;
                         break;
                     }
                 }
-                if (indexAfterSizeProp > 3) {
+                if (indexAfterProperty > 3) {
                     valid = false;
                     break;
                 }
@@ -242,6 +278,27 @@ public class PropertyParser {
     }
 
     /**
+     * This method spreads the values inside the <strong>doubleValues array</strong>.<br>
+     * If the <strong>parametersCount</strong> == 1 and the doubleValues[0] == 2<br>
+     * then all values in the array will be 2.
+     * If the <strong>parametersCount</strong> == 2 and the doubleValues[0] == 2 and doubleValues[1] == 3<br>
+     * then doubleValues[2] will be 2 and doubleValues[3] will be 3.<br>
+     * This method is helpful to avoid if checks when setting properties where there are multiple sides to style.<br>
+     * For example for border insets.
+     */
+    public void spreadDoubleValues () {
+        if (parametersCount == 1) {
+            doubleValues[1] = doubleValues[0];
+            doubleValues[2] = doubleValues[1];
+            doubleValues[3] = doubleValues[2];
+        }
+        if (parametersCount == 2) {
+            doubleValues[2] = doubleValues[0];
+            doubleValues[3] = doubleValues[1];
+        }
+    }
+
+    /**
      * Returns true if the property is valid, else returns false
      */
     public boolean isValid () {
@@ -255,6 +312,10 @@ public class PropertyParser {
     // Color values
     public String getColorValue (int index) {
         return colorValues[index];
+    }
+
+    public double getBgOpacity(int index){
+        return bgOpacityValues[index];
     }
 
     // Border style
@@ -273,7 +334,7 @@ public class PropertyParser {
     }
 
     // Duration
-    public double getDuration (int index) {
+    public long getDuration (int index) {
         return durations[index];
     }
 
@@ -287,8 +348,35 @@ public class PropertyParser {
         return cyclesCount[index];
     }
 
+    public long getBorderColorDuration () {
+        return borderColorDuration;
+    }
+
+    public String getBorderColorInterpolator () {
+        return borderColorInterpolator;
+    }
+
+    public int getBorderColorCyclesCount () {
+        return borderColorCyclesCount;
+    }
+
     private void setColor (int index, String value) {
         colorValues[index - 1] = value;
+    }
+
+    private void setBgOpacity(int index, String color){
+        if(color.matches(HEX_COLOR_REGEX)){
+            color = color.replace("#", "");
+            if(color.length() == 6){
+                bgOpacityValues[index - 1] = 1;
+            }
+            else{
+                String hex = color.substring(6);
+                double val = Integer.parseInt(hex, 16);
+                val = val / 255;
+                bgOpacityValues[index - 1] = val;
+            }
+        }
     }
 
     private void setBorderStyle (int index, String borderStyle) {
@@ -310,7 +398,7 @@ public class PropertyParser {
     }
 
     private void setDuration (int index, String value) {
-        durations[index - 1] = Double.parseDouble(value.replace("s", ""));
+        durations[index - 1] = (long) (Double.parseDouble(value.replace("s", "")) * 1000);
     }
 
     private void setInterpolator (int index, String value) {
@@ -326,23 +414,44 @@ public class PropertyParser {
         cyclesCount[index - 1] = Integer.parseInt(value);
     }
 
+    private void setBorderColorDuration (String value) {
+        borderColorDuration = (long) (Double.parseDouble(value.replace("s", "")) * 1000);
+    }
+
+    private void setBorderColorInterpolator (String value) {
+        borderColorInterpolator = value;
+    }
+
+    private void setBorderColorCyclesCount (String value) {
+        if (value.equals("inf")) {
+            value = "-1";
+        } else {
+            value = value.replace("c", "");
+        }
+        borderColorCyclesCount = Integer.parseInt(value);
+    }
+
     private void initProperties (String property) {
         this.valid = true;
         this.parametersCount = 0;
         this.colorValues = new String[4];
+        this.bgOpacityValues = new double[4];
         this.borderStyles = new String[4];
         if (property.equals(BORDER_PROPERTY)) {
             this.doubleValues = new double[8];
             this.units = new String[8];
-            this.durations = new double[8];
+            this.durations = new long[8];
             this.interpolators = new String[]{FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR};
-            this.cyclesCount = new int[8];
+            this.cyclesCount = new int[]{1, 1, 1, 1, 1, 1, 1, 1};
         } else {
             this.doubleValues = new double[4];
             this.units = new String[4];
-            this.durations = new double[4];
+            this.durations = new long[4];
             this.interpolators = new String[]{FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR, FInterpolator.LINEAR};
-            this.cyclesCount = new int[4];
+            this.cyclesCount = new int[]{1, 1, 1, 1};
         }
+        this.borderColorDuration = 0;
+        this.borderColorInterpolator = "linear";
+        this.borderColorCyclesCount = 0;
     }
 }

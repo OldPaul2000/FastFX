@@ -1,21 +1,16 @@
 package com.example.fastfx.src.style.animations;
 
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class will be used for adding and removing every type of animation.
+ *
  * @see FAnimations
  */
 public class FAnimation {
@@ -41,7 +36,7 @@ public class FAnimation {
 
     List<Double> shadowRadiusValues;
 
-    public FAnimation(Region element) {
+    public FAnimation (Region element) {
         this.element = element;
         this.rate = 1;
         this.startListeners = new ArrayList<>();
@@ -51,7 +46,7 @@ public class FAnimation {
         this.currentAnimations = new HashMap<>();
     }
 
-    public void destroyOnFinished(){
+    public void destroyOnFinished () {
         timeline.setOnFinished((e) -> {
             startListeners = null;
             endListeners = null;
@@ -70,7 +65,7 @@ public class FAnimation {
     /**
      * Set the element which the animation will be applied to.
      */
-    public void setElement(Region element) {
+    public void setElement (Region element) {
         this.element = element;
     }
 
@@ -78,18 +73,17 @@ public class FAnimation {
      * Set the rate of the animation. The rate represents the speed of animation playing.
      * For example if the rate is set to 2 the animation will run 2 times faster(1s -> 0.5s)
      */
-    public void setRate(double rate) {
+    public void setRate (double rate) {
         this.rate = Math.abs(rate);
     }
 
     /**
      * Specifies if this animation will run infinitely
      */
-    public void setInfinite(boolean infinite) {
+    public void setInfinite (boolean infinite) {
         if (infinite) {
             timeline.setCycleCount(Animation.INDEFINITE);
-        }
-        else {
+        } else {
             timeline.setCycleCount(1);
         }
         setAutoReverse(infinite);
@@ -99,7 +93,7 @@ public class FAnimation {
      * Specifies if this animation will play back to starting point,
      * or it will jump straight to the starting point.
      */
-    public void setAutoReverse(boolean autoReverse) {
+    public void setAutoReverse (boolean autoReverse) {
         timeline.setAutoReverse(autoReverse);
     }
 
@@ -112,28 +106,21 @@ public class FAnimation {
      * @Class <strong>FAnimation</strong>
      * for all supported animations.
      */
-    public void add(String fAnimation, String value, Duration duration) {
+    public void add (String fAnimation, String value, Duration duration) {
         add(fAnimation, value, duration, "linear");
     }
 
-    public void add(String fAnimation, String value, Duration duration, String fInterpolator) {
+    public void add (String fAnimation, String value, Duration duration, String fInterpolator) {
         String animation = FAnimations.get(fAnimation);
         Interpolator interpolator = FInterpolator.get(fInterpolator);
         if (animation != null) {
-            KeyFrame keyFrame = keyFrameBuilder
-                    .setElement(element)
-                    .setAnimation(animation)
-                    .setStringValue(value)
-                    .setDuration(duration)
-                    .setInterpolator(interpolator)
-                    .setOnFinishedListener((e) -> {
-                        if (rate > 0) {
-                            KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
-                            int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
-                            notifyEndListeners(animation, currAnimationDuration);
-                        }
-                    })
-                    .buildFromStrVal();
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setStringValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
+                if (rate > 0) {
+                    KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
+                    int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
+                    notifyEndListeners(animation, currAnimationDuration);
+                }
+            }).buildFromStrVal();
             timeline.getKeyFrames().add(keyFrame);
             addToCurrentAnimation(animation, keyFrame);
         }
@@ -148,7 +135,7 @@ public class FAnimation {
      * @Class <strong>FAnimation</strong>
      * for all supported animations.
      */
-    public void add(String fAnimation, double value, Duration duration) {
+    public void add (String fAnimation, double value, Duration duration) {
         add(fAnimation, value, duration, "linear");
     }
 
@@ -162,7 +149,7 @@ public class FAnimation {
      * @Class <strong>FAnimation</strong>
      * for all supported animations.
      */
-    public void add(String fAnimation, double value, Duration duration, String fInterpolator) {
+    public void add (String fAnimation, double value, Duration duration, String fInterpolator) {
         String animation = FAnimations.get(fAnimation);
         Interpolator interpolator = FInterpolator.get(fInterpolator);
         Effect effect = element.getEffect();
@@ -174,21 +161,13 @@ public class FAnimation {
                 }
                 shadowRadiusValues.add(value);
             }
-            KeyFrame keyFrame = keyFrameBuilder
-                    .setElement(element)
-                    .setAnimation(animation)
-                    .setDoubleValue(value)
-                    .setDuration(duration)
-                    .setEffect(element.getEffect())
-                    .setInterpolator(interpolator)
-                    .setOnFinishedListener((e) -> {
-                        if (rate > 0) {
-                            KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
-                            int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
-                            notifyEndListeners(animation, currAnimationDuration);
-                        }
-                    })
-                    .buildFromDoubleVal();
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setEffect(element.getEffect()).setInterpolator(interpolator).setOnFinishedListener((e) -> {
+                if (rate > 0) {
+                    KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
+                    int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
+                    notifyEndListeners(animation, currAnimationDuration);
+                }
+            }).buildFromDoubleVal();
             timeline.getKeyFrames().add(keyFrame);
             addToCurrentAnimation(animation, keyFrame);
 
@@ -201,22 +180,14 @@ public class FAnimation {
                     }
                 }
             });
-        }
-        else if (animation != null && !animation.equals(FAnimations.BG_COLOR) && !animation.equals(FAnimations.BR_COLOR)) {
-            KeyFrame keyFrame = keyFrameBuilder
-                    .setElement(element)
-                    .setAnimation(animation)
-                    .setDoubleValue(value)
-                    .setDuration(duration)
-                    .setInterpolator(interpolator)
-                    .setOnFinishedListener((e) -> {
-                        if (rate > 0) {
-                            KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
-                            int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
-                            notifyEndListeners(animation, currAnimationDuration);
-                        }
-                    })
-                    .buildFromDoubleVal();
+        } else if (animation != null && !animation.equals(FAnimations.BG_COLOR) && !animation.equals(FAnimations.BR_COLOR)) {
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
+                if (rate > 0) {
+                    KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
+                    int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
+                    notifyEndListeners(animation, currAnimationDuration);
+                }
+            }).buildFromDoubleVal();
             timeline.getKeyFrames().add(keyFrame);
             addToCurrentAnimation(animation, keyFrame);
         }
@@ -225,7 +196,7 @@ public class FAnimation {
     /**
      * Adds a created keyframe in currentAnimations for the specific animation.
      */
-    private void addToCurrentAnimation(String animation, KeyFrame keyFrame) {
+    private void addToCurrentAnimation (String animation, KeyFrame keyFrame) {
         if (!currentAnimations.containsKey(animation)) {
             currentAnimations.put(animation, new ArrayList<>());
         }
@@ -233,9 +204,227 @@ public class FAnimation {
     }
 
     /**
+     * Updates the start value for an existing animation
+     */
+    public void updateStartValue(String fAnimation, double newValue){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double startValue = 0;
+            double endValue = 0;
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (double)kv.getEndValue();
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (double)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                endValue = startValue;
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, newValue, Duration.ZERO, interpolator);
+            add(fAnimation, endValue, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the end value for an existing animation
+     */
+    public void updateEndValue(String fAnimation, double newValue){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double startValue = 0;
+            double endValue = 0;
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (double)kv.getEndValue();
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (double)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                startValue = endValue;
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, startValue, Duration.ZERO, interpolator);
+            add(fAnimation, newValue, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the duration for an existing animation
+     */
+    public void updateDuration(String fAnimation, long newDuration){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double startValue = 0;
+            double endValue = 0;
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (double)kv.getEndValue();
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (double)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                double tempValue = endValue;
+                endValue = startValue;
+                startValue = tempValue;
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, startValue, Duration.ZERO, interpolator);
+            add(fAnimation, endValue, Duration.millis(newDuration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the interpolator of an existing animation
+     */
+    public void updateInterpolator(String fAnimation, String newInterpolator){
+        if(currentAnimations.containsKey(fAnimation) && FInterpolator.contains(newInterpolator)){
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double startValue = 0;
+            double endValue = 0;
+            double duration = kf2.getTime().toMillis();
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (double)kv.getEndValue();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (double)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                double tempValue = endValue;
+                endValue = startValue;
+                startValue = tempValue;
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, startValue, Duration.ZERO, newInterpolator);
+            add(fAnimation, endValue, Duration.millis(duration), newInterpolator);
+        }
+    }
+
+    /**
+     * Returns the start value as an Object for an existing animation
+     */
+    public Object getStartValue(String fAnimation){
+        if(currentAnimations.containsKey(fAnimation)){
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            if(kf1.getTime().toMillis() < kf2.getTime().toMillis()){
+                Set<KeyValue> keyValues = kf1.getValues();
+                for(KeyValue kv : keyValues){
+                    return kv.getEndValue();
+                }
+            }
+            else{
+                Set<KeyValue> keyValues = kf2.getValues();
+                for(KeyValue kv : keyValues){
+                    return kv.getEndValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the end value as an Object for an existing animation
+     */
+    public Object getEndValue(String fAnimation){
+        if(currentAnimations.containsKey(fAnimation)){
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                Set<KeyValue> keyValues = kf1.getValues();
+                for(KeyValue kv : keyValues){
+                    return kv.getEndValue();
+                }
+            }
+            else{
+                Set<KeyValue> keyValues = kf2.getValues();
+                for(KeyValue kv : keyValues){
+                    return kv.getEndValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the duration in milliseconds for an existing animation
+     */
+    public long getDuration(String fAnimation){
+        if(currentAnimations.containsKey(fAnimation)){
+            double duration1 = currentAnimations.get(fAnimation).get(0).getTime().toMillis();
+            double duration2 = currentAnimations.get(fAnimation).get(1).getTime().toMillis();
+            if(duration1 > 0){
+                return (long) duration1;
+            }
+            return (long) duration2;
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the interpolator for an existing animation
+     */
+    public String getInterpolator(String fAnimation){
+        if(currentAnimations.containsKey(fAnimation)) {
+            Set<KeyValue> keyValues = currentAnimations.get(fAnimation).get(0).getValues();
+            for(KeyValue kv : keyValues){
+                return kv.getInterpolator()
+                         .toString()
+                         .substring(13)
+                         .replace("_", "-")
+                         .toLowerCase();
+            }
+        }
+        return FInterpolator.LINEAR;
+    }
+
+    /**
      * Removes the transition for the specified fAnimation.
      */
-    public void removeAnimation(String fAnimation) {
+    public void removeAnimation (String fAnimation) {
         String animation = FAnimations.get(fAnimation);
         if (animation != null && currentAnimations.containsKey(animation)) {
             currentAnimations.get(animation).forEach(keyFrame -> {
@@ -255,7 +444,7 @@ public class FAnimation {
     /**
      * Notifies the added listeners when the animation has been started.
      */
-    private void notifyStartListeners() {
+    private void notifyStartListeners () {
         for (int i = 0; i < startListeners.size(); i++) {
             startListeners.get(i).apply();
         }
@@ -264,7 +453,7 @@ public class FAnimation {
     /**
      * Notifies the added listeners when the animation ends.
      */
-    private void notifyEndListeners(String currEndedAnimation, int currDuration) {
+    private void notifyEndListeners (String currEndedAnimation, int currDuration) {
         for (int i = 0; i < endListeners.size(); i++) {
             endListeners.get(i).apply(currEndedAnimation, currDuration);
         }
@@ -273,35 +462,35 @@ public class FAnimation {
     /**
      * Add a listener which gets notified on animation start.
      */
-    public void addStartListener(StartAnimationListener listener) {
+    public void addStartListener (StartAnimationListener listener) {
         startListeners.add(listener);
     }
 
     /**
      * Add a listener which gets notified on animation end.
      */
-    public void addEndListener(EndAnimationListener listener) {
+    public void addEndListener (EndAnimationListener listener) {
         endListeners.add(listener);
     }
 
     /**
      * Removes an animation listener.
      */
-    public void removeListener(StartAnimationListener listener) {
+    public void removeListener (StartAnimationListener listener) {
         startListeners.remove(listener);
     }
 
     /**
      * Removes an animation listener.
      */
-    public void removeListener(EndAnimationListener listener) {
+    public void removeListener (EndAnimationListener listener) {
         endListeners.add(listener);
     }
 
     /**
      * Plays the animation.
      */
-    public void play() {
+    public void play () {
         rate = Math.abs(rate);
         timeline.setRate(rate);
         notifyStartListeners();
@@ -316,7 +505,7 @@ public class FAnimation {
     /**
      * Plays the animation backwards to reach the initial point.
      */
-    public void reverse() {
+    public void reverse () {
         rate = -rate;
         timeline.setRate(rate);
         if (this.elementShadowEffect != null) {
@@ -330,7 +519,7 @@ public class FAnimation {
     /**
      * Stops the animation
      */
-    public void stop() {
+    public void stop () {
         timeline.stop();
     }
 }

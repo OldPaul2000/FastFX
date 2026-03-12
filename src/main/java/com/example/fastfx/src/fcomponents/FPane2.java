@@ -1,7 +1,7 @@
 package com.example.fastfx.src.fcomponents;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
-import com.example.fastfx.src.fcomponents.property.PropertyManager;
+import com.example.fastfx.src.fcomponents.property.PropertyManager2;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.layouts.Margin;
 import javafx.beans.value.ChangeListener;
@@ -15,13 +15,13 @@ import java.util.Set;
 
 public class FPane2 extends Pane implements FComponent{
 
-    private PropertyManager propertyManager;
+    private PropertyManager2 propertyManager;
     private ChangeListener<Number> resizeWidthListener;
     private ChangeListener<Number> resizeHeightListener;
     private Set<ResizeListener> resizeListeners;
 
     public FPane2(){
-        propertyManager = new PropertyManager(this);
+        propertyManager = new PropertyManager2(this);
     }
 
     public FPane2 hover(PseudoClass hover){
