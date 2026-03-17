@@ -1,4 +1,7 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager.constants;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Constant properties names used for storing current values in PropertyManager
@@ -51,4 +54,55 @@ public class MainProps {
     public static final String BR_RIGHT_WIDTH = "brRightWidth";
     public static final String BR_BOTTOM_WIDTH = "brBottomWidth";
     public static final String BR_LEFT_WIDTH = "brLeftWidth";
+
+
+    public static boolean contains(String property){
+        return MAIN_PROPERTIES.contains(property);
+    }
+
+    private static final Set<String> MAIN_PROPERTIES = new HashSet(
+            Set.of(
+                    X,
+                    Y,
+                    WIDTH,
+                    HEIGHT,
+                    SCALE_X,
+                    SCALE_Y,
+                    TRANSLATE_X,
+                    TRANSLATE_Y,
+                    ROTATE,
+                    TOP,
+                    RIGHT,
+                    BOTTOM,
+                    LEFT,
+                    BG_COLOR,
+                    BG_OPACITY,
+                    BG_RADIUS,
+                    BG_TL_RADIUS,
+                    BG_TR_RADIUS,
+                    BG_BR_RADIUS,
+                    BG_BL_RADIUS,
+                    BR_COLOR,
+                    BR_OPACITY,
+                    BR_STYLE,
+                    BR_RADIUS,
+                    BR_TL_RADIUS,
+                    BR_TR_RADIUS,
+                    BR_BR_RADIUS,
+                    BR_BL_RADIUS,
+                    BR_WIDTH,
+                    BR_TOP_COLOR,
+                    BR_RIGHT_COLOR,
+                    BR_BOTTOM_COLOR,
+                    BR_LEFT_COLOR,
+                    BR_TOP_STYLE,
+                    BR_RIGHT_STYLE,
+                    BR_BOTTOM_STYLE,
+                    BR_LEFT_STYLE,
+                    BR_TOP_WIDTH,
+                    BR_RIGHT_WIDTH,
+                    BR_BOTTOM_WIDTH,
+                    BR_LEFT_WIDTH
+                  )
+    );
 }

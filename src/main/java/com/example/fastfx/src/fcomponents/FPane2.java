@@ -1,7 +1,7 @@
 package com.example.fastfx.src.fcomponents;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
-import com.example.fastfx.src.fcomponents.property.PropertyManager2;
+import com.example.fastfx.src.fcomponents.propertymanager.PropertyManager2;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.layouts.Margin;
 import javafx.beans.value.ChangeListener;

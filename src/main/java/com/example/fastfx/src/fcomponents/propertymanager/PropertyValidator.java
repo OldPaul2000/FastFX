@@ -1,4 +1,4 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager;
 
 import java.util.HashSet;
 import java.util.Set;

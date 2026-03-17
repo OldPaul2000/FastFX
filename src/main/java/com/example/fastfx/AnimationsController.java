@@ -22,31 +22,42 @@ public class AnimationsController {
         BackgroundSetter.setBackgroundColor(mainContainer, "#2c4773");
 
         FPane2 fPane = new FPane2();
-        fPane.bgColor("#999999")
-             .width("200")
-             .height("100")
-             .x("200")
-             .y(100);
+        fPane.bgColor("#999999");
+        fPane.width("200");
+        fPane.height("100");
+        fPane.x(200);
+        fPane.y(100);
+        mainContainer.add(fPane);
+
+        FPane2 fPane2 = new FPane2();
+        fPane2.bgColor("#333333");
+        fPane2.x("30%");
+        fPane2.y(30);
+        fPane2.width("30%");
+        fPane2.height(40);
+        fPane.add(fPane2);
+
+        fPane2.x("30px");
+        fPane2.width("30px");
+
+//        long start = System.currentTimeMillis();
+//        for(int i = 0; i < 1_000_000; i++){
+//            fPane2.x(30);
+//        }
+//        double end = ((double) System.currentTimeMillis() - start) / 1000;
+//        System.out.println("Exec time in seconds: " + end);
+
+        // fPane2.setLayoutX(20) 1 million times -> 0.005 seconds
+        // fPane2.x(20) 1 million times -> 0.057 seconds
+        // fPane2.x(20, "px") 1 million times -> 0.08 seconds
+        // fPane2.x("20px") 1 million times -> 1.36 seconds
+
+
+
 
 
         ElementResizer resizer = new ElementResizer(mainContainer);
         resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
-
-        mainContainer.add(fPane);
-
-        FPane2 fPane2 = new FPane2();
-        fPane2
-                .bgColor("#333333")
-                .width(40)
-                .height(40)
-                .x("20 0.4s")
-                .y(20)
-                .hover(() -> {
-                    System.out.println();
-                    fPane2.x(30).x("30 0.3s");
-                });
-
-        fPane.add(fPane2);
 
 
         /**

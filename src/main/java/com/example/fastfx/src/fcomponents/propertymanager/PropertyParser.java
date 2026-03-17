@@ -1,4 +1,4 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager;
 
 import com.example.fastfx.src.style.animations.FInterpolator;
 import com.example.fastfx.src.utility.style.BorderSetter;

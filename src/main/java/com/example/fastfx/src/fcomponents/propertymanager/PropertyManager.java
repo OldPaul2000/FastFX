@@ -1,6 +1,9 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.FUnit;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.MainProps;
+import com.example.fastfx.src.fcomponents.propertymanager.delayedtask.DelayedTaskManager;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;

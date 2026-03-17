@@ -1,8 +1,8 @@
 package com.example.fastfx.src.fcomponents;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
-import com.example.fastfx.src.fcomponents.property.PropertyUtil;
-import com.example.fastfx.src.fcomponents.property.PropertyValidatorFilter;
+import com.example.fastfx.src.fcomponents.propertymanager.PropertyUtil;
+import com.example.fastfx.src.fcomponents.propertymanager.PropertyValidatorFilter;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;

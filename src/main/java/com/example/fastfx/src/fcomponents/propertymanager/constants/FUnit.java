@@ -1,4 +1,4 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager.constants;
 
 /**
  * This class stores the dimensions units.

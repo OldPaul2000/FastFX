@@ -1,4 +1,4 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager.delayedtask;
 
 import javafx.scene.layout.Region;
 
@@ -16,7 +16,6 @@ import java.util.Map;
  * and it will be executed only after the child was added in a parent.
  */
 public class DelayedTaskManager {
-
     private Region parent;
     private Map<String, DelayedTask> delayedTasks;
 
@@ -24,25 +23,25 @@ public class DelayedTaskManager {
         this.delayedTasks = new HashMap<>();
     }
 
-    public void setParent(Region parent){
+    public void setParent (Region parent) {
         this.parent = parent;
     }
 
-    public void addTask(String id, DelayedTask delayedTask){
+    public void addTask (String id, DelayedTask delayedTask) {
         delayedTasks.put(id, delayedTask);
     }
 
-    public void executeAllTasks(){
-        delayedTasks.forEach((key, val) -> {
-            val.execute(parent);
+    public void executeAllTasks () {
+        delayedTasks.forEach((taskId, delayedTask) -> {
+            delayedTask.execute(parent);
         });
     }
 
-    public void removeTaskById(String id){
+    public void removeTaskById (String id) {
         delayedTasks.remove(id);
     }
 
-    public void removeAllTasks(){
+    public void removeAllTasks () {
         delayedTasks.clear();
     }
 }

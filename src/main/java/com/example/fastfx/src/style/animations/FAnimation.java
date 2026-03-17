@@ -46,6 +46,9 @@ public class FAnimation {
         this.currentAnimations = new HashMap<>();
     }
 
+    /**
+     * Used for temp animations to release the memory after completing its execution
+     */
     public void destroyOnFinished () {
         timeline.setOnFinished((e) -> {
             startListeners = null;
@@ -272,6 +275,34 @@ public class FAnimation {
             removeAnimation(fAnimation);
             add(fAnimation, startValue, Duration.ZERO, interpolator);
             add(fAnimation, newValue, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the start value and the end value for an existing animation
+     */
+    public void updateValues(String fAnimation, double startValue, double endValue){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, startValue, Duration.ZERO, interpolator);
+            add(fAnimation, endValue, Duration.millis(duration), interpolator);
         }
     }
 
@@ -520,6 +551,8 @@ public class FAnimation {
      * Stops the animation
      */
     public void stop () {
-        timeline.stop();
+        if(timeline != null){
+            timeline.stop();
+        }
     }
 }

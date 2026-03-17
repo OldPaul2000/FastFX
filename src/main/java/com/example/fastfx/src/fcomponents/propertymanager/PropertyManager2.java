@@ -1,6 +1,9 @@
-package com.example.fastfx.src.fcomponents.property;
+package com.example.fastfx.src.fcomponents.propertymanager;
 
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.FUnit;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.MainProps;
+import com.example.fastfx.src.fcomponents.propertymanager.delayedtask.DelayedTaskManager;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;
@@ -9,7 +12,6 @@ import com.example.fastfx.src.style.animations.StaticAnimations;
 import com.example.fastfx.src.style.layouts.Margin;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import com.example.fastfx.src.utility.style.BorderSetter;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -67,6 +69,7 @@ public class PropertyManager2 {
     private String rawBottomLeftBorderRadius;
     private String rawBorderInsets;
 
+    // For removal
     private Map<String, String> initialValues;
 
     private FAnimation hoverAnimation;
@@ -112,10 +115,11 @@ public class PropertyManager2 {
     private ChangeListener<Number> resizeHeightListeners;
     private Set<ResizeListener> resizeListeners;
 
-    private Map<String, InvalidationListener> doublePropertiesListeners;
     private DelayedTaskManager delayedTaskManager;
     private PropertyParser parser;
     private PropertyAnimationHelper propertyAnimationHelper;
+    private ValuesManager valuesManager;
+    private ListenersManager listenersManager;
 
     public PropertyManager2 (Region component) {
         this.component = component;
@@ -124,11 +128,12 @@ public class PropertyManager2 {
         initBgRadiusProperties();
         initBrRadiusProperties();
         initBrWidthProperties();
-        resizeListeners = new HashSet<>();
-        doublePropertiesListeners = new HashMap<>();
-        delayedTaskManager = new DelayedTaskManager();
-        parser = new PropertyParser();
-        propertyAnimationHelper = new PropertyAnimationHelper(component, initialValues);
+        this.resizeListeners = new HashSet<>();
+        this.delayedTaskManager = new DelayedTaskManager();
+        this.parser = new PropertyParser();
+        this.valuesManager = new ValuesManager();
+        this.propertyAnimationHelper = new PropertyAnimationHelper(component, valuesManager);
+        this.listenersManager = new ListenersManager();
     }
 
     private void initBgRadiusProperties () {
@@ -208,76 +213,127 @@ public class PropertyManager2 {
     //                      Basic properties                    *
     //                                                          *
     // **********************************************************
+
+    /**
+     * Sets the layoutX represented in pixels.
+     */
     public void x (double value) {
+        propertyAnimationHelper.setProperty(MainProps.X);
+        propertyAnimationHelper.setStaticAnimationType(StaticAnimations.LAYOUT_X);
+        propertyAnimationHelper.setValues(component.getLayoutX(), value);
         if (setPropertiesOnHover){
-            propertyAnimationHelper.setProperty(MainProps.X);
-            propertyAnimationHelper.setAnimationsTypes(FAnimations.LAYOUT_X, StaticAnimations.LAYOUT_X);
-            propertyAnimationHelper.setAnimations(hoverAnimation, staticHoverAnimation);
-            propertyAnimationHelper.setValues(component.getLayoutX(), value);
+            propertyAnimationHelper.setStaticAnimation(staticHoverAnimation);
             propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
         }
-        if (setPropertiesOnClick){
-            propertyAnimationHelper.setProperty(MainProps.X);
-            propertyAnimationHelper.setAnimationsTypes(FAnimations.LAYOUT_X, StaticAnimations.LAYOUT_X);
-            propertyAnimationHelper.setAnimations(clickAnimation, staticClickAnimation);
-            propertyAnimationHelper.setAnimationsTypes(FAnimations.LAYOUT_X, StaticAnimations.LAYOUT_X);
-            propertyAnimationHelper.setValues(component.getLayoutX(), value);
+        else if (setPropertiesOnClick){
+            propertyAnimationHelper.setStaticAnimation(staticClickAnimation);
             propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
         }
         else{
+            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+            delayedTaskManager.removeTaskById(MainProps.WIDTH + "(X)");
+            listenersManager.remove("(X)");
+            valuesManager.set(MainProps.X, value);
             component.setLayoutX(value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.LAYOUT_X, clickAnimation, value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.LAYOUT_X, hoverAnimation, value);
         }
     }
 
+    /**
+     * Sets the layoutX based on the introduced unit(pixels or percentage).
+     */
     public void x (double value, String unit) {
-        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
-            component.setLayoutX(value);
-        } else if (unit.equals(FUnit.PERCENTAGE)) {
-            if (parent == null) {
-                System.out.println("parent is null");
-                delayedTaskManager.removeTaskById("x");
-                delayedTaskManager.addTask("x", (p) -> {
-                    System.out.println(p.getPrefWidth());
-                    component.setLayoutX(p.getPrefWidth() * (value / 100));
-                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                        component.setLayoutX((double)newVal * (value / 100));
-                    };
-                    addPropertyListener(p, "width", listener);
-                });
-            } else {
+        if (unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+            if (parent != null) {
+                listenersManager.remove("(X)");
                 component.setLayoutX(parent.getPrefWidth() * (value / 100));
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     component.setLayoutX((double)newVal * (value / 100));
                 };
-                addPropertyListener(parent, "width", listener);
-                parent.prefWidthProperty().addListener(listener);
+                listenersManager.add(parent, "(X)", MainProps.WIDTH, listener);
+            } else {
+                delayedTaskManager.removeTaskById(MainProps.WIDTH + "(X)");
+                delayedTaskManager.addTask(MainProps.WIDTH + "(X)", (p) -> {
+                    component.setLayoutX(p.getPrefWidth() * (value / 100));
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+                        component.setLayoutX((double)newVal * (value / 100));
+                    };
+                    listenersManager.add(p, "(X)", MainProps.WIDTH, listener);
+                });
             }
+        }
+        else if(unit.equals(FUnit.PIXELS)){
+            x(value);
         }
     }
 
+    /**
+     * Sets the layoutX based on the string input. The unit can be chosen,<br>
+     * the duration if we want to animate the property, the interpolator and also<br>
+     * if we want the animation to run infinitely or a specified number of cycles.<br>
+     * Input example:<br>
+     * 5px 1s or<br>
+     * 5% 1s or<br>
+     * 5px 0.5s ease-in etc.
+     */
     public void x (String rawValue) {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawX = rawValue;
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
+            if (parser.getUnit(0).equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
                 if(parent != null){
-                    System.out.println("width: " + parent.getPrefWidth());
-                    component.setLayoutX(parent.getPrefWidth() * (parser.getDoubleValue(0) / 100));
+                    listenersManager.remove("(X)");
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+                    double layoutXValue = parent.getPrefWidth() * (parser.getDoubleValue(0) / 100);
+                    if(parser.getDuration(0) > 0) {
+                        propertyAnimationHelper.setAnimationType(FAnimations.LAYOUT_X);
+                        propertyAnimationHelper.setValues(component.getLayoutX(), layoutXValue);
+                        propertyAnimationHelper.setDuration(parser.getDuration(0));
+                        propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                        propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_X, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        component.setLayoutX(layoutXValue);
+                    }
                     ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                        System.out.println("newVal: " + newVal);
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                         component.setLayoutX((double)newVal * (parser.getDoubleValue(0) / 100));
                     };
-                    addPropertyListener(parent, "width", listener);
-                    parent.prefWidthProperty().addListener(listener);
+                    listenersManager.add(parent, "(X)", MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.X, layoutXValue);
                 }
                 else{
-
+                    delayedTaskManager.removeTaskById(MainProps.WIDTH + "(X)");
+                    delayedTaskManager.addTask(MainProps.WIDTH + "(X)", (p) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+                        double layoutXValue = p.getPrefWidth() * (parser.getDoubleValue(0) / 100);
+                        if(parser.getDuration(0) > 0) {
+                            propertyAnimationHelper.setAnimationType(FAnimations.LAYOUT_X);
+                            propertyAnimationHelper.setValues(component.getLayoutX(), layoutXValue);
+                            propertyAnimationHelper.setDuration(parser.getDuration(0));
+                            propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                            propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_X, PropertyAnimationHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            component.setLayoutX(layoutXValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+                            component.setLayoutX((double)newVal * (parser.getDoubleValue(0) / 100));
+                        };
+                        listenersManager.add(p, "(X)", MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.X, layoutXValue);
+                    });
                 }
             }
             else{
                 propertyAnimationHelper.setProperty(MainProps.X);
                 propertyAnimationHelper.setAnimationsTypes(FAnimations.LAYOUT_X, StaticAnimations.LAYOUT_X);
-                propertyAnimationHelper.setValues(component.getLayoutX(), parser.getDoubleValue(0));
+                propertyAnimationHelper.setValues(valuesManager.getDouble(MainProps.X), parser.getDoubleValue(0));
                 propertyAnimationHelper.setDuration(parser.getDuration(0));
                 propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
                 if (setPropertiesOnHover) {
@@ -287,50 +343,19 @@ public class PropertyManager2 {
                     propertyAnimationHelper.setAnimations(clickAnimation, staticClickAnimation);
                     propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
                 } else {
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_X);
+                    delayedTaskManager.removeTaskById(MainProps.WIDTH + "(X)");
+                    listenersManager.remove("(X)");
                     if (parser.getDuration(0) == 0) {
                         component.setLayoutX(parser.getDoubleValue(0));
                     } else {
-                        propertyAnimationHelper.addTempAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+                        propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_X, PropertyAnimationHelper.NUMBER_ANIMATION);
                     }
+                    valuesManager.set(MainProps.X, parser.getDoubleValue(0));
                 }
             }
         }
     }
-
-
-    // Original
-//    public void x (String rawValue) {
-//        parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
-//        if (parser.isValid() && parser.getParametersCount() == 1) {
-//            this.rawX = rawValue;
-//            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-//                if(parent != null){
-//                    System.out.println("width: " + parent.getPrefWidth());
-//                    component.setLayoutX(parent.getPrefWidth() * (parser.getDoubleValue(0) / 100));
-//                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-//                        System.out.println("newVal: " + newVal);
-//                        component.setLayoutX((double)newVal * (parser.getDoubleValue(0) / 100));
-//                    };
-//                    addPropertyListener(parent, "width", listener);
-//                    parent.prefWidthProperty().addListener(listener);
-//                }
-//                else{
-//
-//                }
-//            }
-//            if (setPropertiesOnHover) {
-//                PropertyUtil.setOneDimensionAnimation2(component.getLayoutX(), initialValues, MainProps.X, hoverAnimation, FAnimations.LAYOUT_X, staticHoverAnimation, StaticAnimations.LAYOUT_X,  parser.getDoubleValue(0), parser.getDuration(0));
-//            } else if (setPropertiesOnClick) {
-//                PropertyUtil.setOneDimensionAnimation2(component.getLayoutX(), initialValues, MainProps.X, clickAnimation, FAnimations.LAYOUT_X, staticClickAnimation, StaticAnimations.LAYOUT_X, parser.getDoubleValue(0), parser.getDuration(0));
-//            } else {
-//                if (parser.getDuration(0) == 0) {
-//                    component.setLayoutX(parser.getDoubleValue(0));
-//                } else {
-//                    PropertyUtil.setTempAnimation(component, component.getLayoutX(), initialValues, MainProps.X, FAnimations.LAYOUT_X, parser.getDoubleValue(0), parser.getDuration(0));
-//                }
-//            }
-//        }
-//    }
 
     public double getX () {
         return component.getLayoutX();
@@ -340,39 +365,144 @@ public class PropertyManager2 {
         return rawX;
     }
 
+    /**
+     * Sets the layoutY represented in pixels.
+     */
     public void y (double value) {
-        initialValues.put(MainProps.Y, value + "");
-        component.setLayoutY(value);
-    }
-
-    public void y (double value, String unit) {
-        if (unit.equals(FUnit.PIXELS) || unit.isEmpty()) {
+        propertyAnimationHelper.setProperty(MainProps.Y);
+        propertyAnimationHelper.setStaticAnimationType(StaticAnimations.LAYOUT_Y);
+        propertyAnimationHelper.setValues(component.getLayoutY(), value);
+        if (setPropertiesOnHover){
+            propertyAnimationHelper.setStaticAnimation(staticHoverAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else if (setPropertiesOnClick){
+            propertyAnimationHelper.setStaticAnimation(staticClickAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else{
+            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+            delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(Y)");
+            listenersManager.remove("(Y)");
+            valuesManager.set(MainProps.Y, value);
             component.setLayoutY(value);
-        } else if (unit.equals(FUnit.PERCENTAGE)) {
-            if (parent == null) {
-
-            } else {
-                component.layoutYProperty().bind(parent.prefHeightProperty().multiply(value / 100));
-            }
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.LAYOUT_Y, clickAnimation, value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.LAYOUT_Y, hoverAnimation, value);
         }
     }
 
+    /**
+     * Sets the layoutY based on the introduced unit(pixels or percentage).
+     */
+    public void y (double value, String unit) {
+        if (unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+            if (parent != null) {
+                listenersManager.remove("(Y)");
+                component.setLayoutY(parent.getPrefHeight() * (value / 100));
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                    component.setLayoutY((double)newVal * (value / 100));
+                };
+                listenersManager.add(parent, "(Y)", MainProps.HEIGHT, listener);
+            } else {
+                delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(Y)");
+                delayedTaskManager.addTask(MainProps.HEIGHT + "(Y)", (p) -> {
+                    component.setLayoutY(p.getPrefHeight() * (value / 100));
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                        component.setLayoutY((double)newVal * (value / 100));
+                    };
+                    listenersManager.add(p, "(Y)", MainProps.HEIGHT, listener);
+                });
+            }
+        }
+        else if(unit.equals(FUnit.PIXELS)){
+            y(value);
+        }
+    }
+
+    /**
+     * Sets the layoutY based on the string input. The unit can be chosen,<br>
+     * the duration if we want to animate the property, the interpolator and also<br>
+     * if we want the animation to run infinitely or a specified number of cycles.<br>
+     * Input example:<br>
+     * 5px 1s or<br>
+     * 5% 1s or<br>
+     * 5px 0.5s ease-in etc.
+     */
     public void y (String rawValue) {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
-        if (parser.isValid() & parser.getParametersCount() == 1) {
+        if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawY = rawValue;
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-
+            if (parser.getUnit(0).equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+                if(parent != null){
+                    listenersManager.remove("(Y)");
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                    double layoutYValue = parent.getPrefHeight() * (parser.getDoubleValue(0) / 100);
+                    if(parser.getDuration(0) > 0) {
+                        propertyAnimationHelper.setAnimationType(FAnimations.LAYOUT_Y);
+                        propertyAnimationHelper.setValues(component.getLayoutY(), layoutYValue);
+                        propertyAnimationHelper.setDuration(parser.getDuration(0));
+                        propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                        propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_Y, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        component.setLayoutY(layoutYValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                        component.setLayoutY((double)newVal * (parser.getDoubleValue(0) / 100));
+                    };
+                    listenersManager.add(parent, "(Y)", MainProps.HEIGHT, listener);
+                    valuesManager.set(MainProps.Y, layoutYValue);
+                }
+                else{
+                    delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(Y)");
+                    delayedTaskManager.addTask(MainProps.HEIGHT + "(Y)", (p) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                        double layoutYValue = p.getPrefHeight() * (parser.getDoubleValue(0) / 100);
+                        if(parser.getDuration(0) > 0) {
+                            propertyAnimationHelper.setAnimationType(FAnimations.LAYOUT_Y);
+                            propertyAnimationHelper.setValues(component.getLayoutY(), layoutYValue);
+                            propertyAnimationHelper.setDuration(parser.getDuration(0));
+                            propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                            propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_Y, PropertyAnimationHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            component.setLayoutY(layoutYValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                            component.setLayoutY((double)newVal * (parser.getDoubleValue(0) / 100));
+                        };
+                        listenersManager.add(p, "(Y)", MainProps.HEIGHT, listener);
+                        valuesManager.set(MainProps.Y, layoutYValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation2(component.getLayoutY(), initialValues, MainProps.Y, hoverAnimation, FAnimations.LAYOUT_Y, staticHoverAnimation, StaticAnimations.LAYOUT_Y, parser.getDoubleValue(0), parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation2(component.getLayoutY(), initialValues, MainProps.Y, clickAnimation, FAnimations.LAYOUT_Y, staticClickAnimation, StaticAnimations.LAYOUT_Y, parser.getDoubleValue(0), parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    component.setLayoutY(parser.getDoubleValue(0));
+            else{
+                propertyAnimationHelper.setProperty(MainProps.Y);
+                propertyAnimationHelper.setAnimationsTypes(FAnimations.LAYOUT_Y, StaticAnimations.LAYOUT_Y);
+                propertyAnimationHelper.setValues(valuesManager.getDouble(MainProps.Y), parser.getDoubleValue(0));
+                propertyAnimationHelper.setDuration(parser.getDuration(0));
+                propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                if (setPropertiesOnHover) {
+                    propertyAnimationHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyAnimationHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, component.getLayoutY(), initialValues, MainProps.Y, FAnimations.LAYOUT_Y, parser.getDoubleValue(0), parser.getDuration(0));
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+                    delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(Y)");
+                    listenersManager.remove("(Y)");
+                    if (parser.getDuration(0) == 0) {
+                        component.setLayoutY(parser.getDoubleValue(0));
+                    } else {
+                        propertyAnimationHelper.addTempAnimation(FAnimations.LAYOUT_Y, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    valuesManager.set(MainProps.Y, parser.getDoubleValue(0));
                 }
             }
         }
@@ -386,32 +516,144 @@ public class PropertyManager2 {
         return rawY;
     }
 
-
+    /**
+     * Sets the width represented in pixels.
+     */
     public void width (double value) {
-        initialValues.put(MainProps.WIDTH, value + "");
-        component.setPrefWidth(value);
+        propertyAnimationHelper.setProperty(MainProps.WIDTH);
+        propertyAnimationHelper.setStaticAnimationType(StaticAnimations.WIDTH);
+        propertyAnimationHelper.setValues(component.getPrefWidth(), value);
+        if (setPropertiesOnHover){
+            propertyAnimationHelper.setStaticAnimation(staticHoverAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else if (setPropertiesOnClick){
+            propertyAnimationHelper.setStaticAnimation(staticClickAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else{
+            propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+            delayedTaskManager.removeTaskById(MainProps.WIDTH + "(WIDTH)");
+            listenersManager.remove("(WIDTH)");
+            valuesManager.set(MainProps.WIDTH, value);
+            component.setPrefWidth(value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.WIDTH, clickAnimation, value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.WIDTH, hoverAnimation, value);
+        }
     }
 
+    /**
+     * Sets the width based on the introduced unit(pixels or percentage).
+     */
+    public void width(double value, String unit){
+        if (unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+            propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+            if (parent != null) {
+                listenersManager.remove("(WIDTH)");
+                component.setPrefWidth(parent.getPrefWidth() * (value / 100));
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                    component.setPrefWidth((double)newVal * (value / 100));
+                };
+                listenersManager.add(parent, "(WIDTH)", MainProps.WIDTH, listener);
+            } else {
+                delayedTaskManager.removeTaskById(MainProps.WIDTH + "(WIDTH)");
+                delayedTaskManager.addTask(MainProps.WIDTH + "(WIDTH)", (p) -> {
+                    component.setPrefWidth(p.getPrefWidth() * (value / 100));
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                        component.setPrefWidth((double)newVal * (value / 100));
+                    };
+                    listenersManager.add(p, "(WIDTH)", MainProps.WIDTH, listener);
+                });
+            }
+        }
+        else if(unit.equals(FUnit.PIXELS)){
+            width(value);
+        }
+    }
+
+    /**
+     * Sets the prefWidth based on the string input. The unit can be chosen,<br>
+     * the duration if we want to animate the property, the interpolator and also<br>
+     * if we want the animation to run infinitely or a specified number of cycles.<br>
+     * Input example:<br>
+     * 5px 1s or<br>
+     * 5% 1s or<br>
+     * 5px 0.5s ease-in etc.
+     */
     public void width (String rawValue) {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawWidth = rawValue;
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-
+            if (parser.getUnit(0).equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+                if(parent != null){
+                    listenersManager.remove("(WIDTH)");
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                    double widthValue = parent.getPrefWidth() * (parser.getDoubleValue(0) / 100);
+                    if(parser.getDuration(0) > 0) {
+                        propertyAnimationHelper.setAnimationType(FAnimations.WIDTH);
+                        propertyAnimationHelper.setValues(component.getPrefWidth(), widthValue);
+                        propertyAnimationHelper.setDuration(parser.getDuration(0));
+                        propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                        propertyAnimationHelper.addTempAnimation(FAnimations.WIDTH, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        component.setPrefWidth(widthValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                        component.setPrefWidth((double)newVal * (parser.getDoubleValue(0) / 100));
+                    };
+                    listenersManager.add(parent, "(WIDTH)", MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.WIDTH, widthValue);
+                }
+                else{
+                    delayedTaskManager.removeTaskById(MainProps.WIDTH + "(WIDTH)");
+                    delayedTaskManager.addTask(MainProps.WIDTH + "(WIDTH)", (p) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                        double widthValue = p.getPrefWidth() * (parser.getDoubleValue(0) / 100);
+                        if(parser.getDuration(0) > 0) {
+                            propertyAnimationHelper.setAnimationType(FAnimations.WIDTH);
+                            propertyAnimationHelper.setValues(component.getPrefWidth(), widthValue);
+                            propertyAnimationHelper.setDuration(parser.getDuration(0));
+                            propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                            propertyAnimationHelper.addTempAnimation(FAnimations.WIDTH, PropertyAnimationHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            component.setPrefWidth(widthValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                            component.setPrefWidth((double)newVal * (parser.getDoubleValue(0) / 100));
+                        };
+                        listenersManager.add(p, "(WIDTH)", MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.WIDTH, widthValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                hoverAnimation.removeAnimation(FAnimations.WIDTH);
-                staticHoverAnimation.removeAnimation(StaticAnimations.WIDTH);
-                PropertyUtil.setOneDimensionAnimation(component.getPrefWidth(), initialValues, MainProps.WIDTH, hoverAnimation, FAnimations.WIDTH, parser.getDoubleValue(0), parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                clickAnimation.removeAnimation(FAnimations.WIDTH);
-                staticClickAnimation.removeAnimation(StaticAnimations.WIDTH);
-                PropertyUtil.setOneDimensionAnimation(component.getLayoutY(), initialValues, MainProps.WIDTH, clickAnimation, FAnimations.WIDTH, parser.getDoubleValue(0), parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    component.setPrefWidth(parser.getDoubleValue(0));
+            else{
+                propertyAnimationHelper.setProperty(MainProps.WIDTH);
+                propertyAnimationHelper.setAnimationsTypes(FAnimations.WIDTH, StaticAnimations.WIDTH);
+                propertyAnimationHelper.setValues(valuesManager.getDouble(MainProps.WIDTH), parser.getDoubleValue(0));
+                propertyAnimationHelper.setDuration(parser.getDuration(0));
+                propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                if (setPropertiesOnHover) {
+                    propertyAnimationHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyAnimationHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, component.getPrefWidth(), initialValues, MainProps.WIDTH, FAnimations.WIDTH, parser.getDoubleValue(0), parser.getDuration(0));
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.WIDTH);
+                    delayedTaskManager.removeTaskById(MainProps.WIDTH + "(WIDTH)");
+                    listenersManager.remove("(WIDTH)");
+                    if (parser.getDuration(0) == 0) {
+                        component.setPrefWidth(parser.getDoubleValue(0));
+                    } else {
+                        propertyAnimationHelper.addTempAnimation(FAnimations.WIDTH, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    valuesManager.set(MainProps.WIDTH, parser.getDoubleValue(0));
                 }
             }
         }
@@ -421,31 +663,144 @@ public class PropertyManager2 {
         return rawWidth;
     }
 
+    /**
+     * Sets the prefHeight represented in pixels.
+     */
     public void height (double value) {
-        initialValues.put(MainProps.HEIGHT, value + "");
-        component.setPrefHeight(value);
+        propertyAnimationHelper.setProperty(MainProps.HEIGHT);
+        propertyAnimationHelper.setStaticAnimationType(StaticAnimations.HEIGHT);
+        propertyAnimationHelper.setValues(component.getPrefHeight(), value);
+        if (setPropertiesOnHover){
+            propertyAnimationHelper.setStaticAnimation(staticHoverAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else if (setPropertiesOnClick){
+            propertyAnimationHelper.setStaticAnimation(staticClickAnimation);
+            propertyAnimationHelper.addStaticAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+        }
+        else{
+            propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+            delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(HEIGHT)");
+            listenersManager.remove("(HEIGHT)");
+            valuesManager.set(MainProps.HEIGHT, value);
+            component.setPrefHeight(value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.HEIGHT, clickAnimation, value);
+            propertyAnimationHelper.updateAnimationStartValue(FAnimations.HEIGHT, hoverAnimation, value);
+        }
     }
 
+    /**
+     * Sets the prefHeight based on the introduced unit(pixels or percentage).
+     */
+    public void height(double value, String unit){
+        if (unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+            propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+            if (parent != null) {
+                listenersManager.remove("(HEIGHT)");
+                component.setPrefHeight(parent.getPrefHeight() * (value / 100));
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                    component.setPrefHeight((double)newVal * (value / 100));
+                };
+                listenersManager.add(parent, "(HEIGHT)", MainProps.HEIGHT, listener);
+            } else {
+                delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(HEIGHT)");
+                delayedTaskManager.addTask(MainProps.HEIGHT + "(HEIGHT)", (p) -> {
+                    component.setPrefHeight(p.getPrefHeight() * (value / 100));
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                        component.setPrefHeight((double)newVal * (value / 100));
+                    };
+                    listenersManager.add(p, "(HEIGHT)", MainProps.HEIGHT, listener);
+                });
+            }
+        }
+        else if(unit.equals(FUnit.PIXELS)){
+            height(value);
+        }
+    }
+
+    /**
+     * Sets the prefHeight based on the string input. The unit can be chosen,<br>
+     * the duration if we want to animate the property, the interpolator and also<br>
+     * if we want the animation to run infinitely or a specified number of cycles.<br>
+     * Input example:<br>
+     * 5px 1s or<br>
+     * 5% 1s or<br>
+     * 5px 0.5s ease-in etc.
+     */
     public void height (String rawValue) {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawHeight = rawValue;
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-
+            if (parser.getUnit(0).equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick) {
+                if(parent != null){
+                    listenersManager.remove("(HEIGHT)");
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                    double heightValue = parent.getPrefHeight() * (parser.getDoubleValue(0) / 100);
+                    if(parser.getDuration(0) > 0) {
+                        propertyAnimationHelper.setAnimationType(FAnimations.HEIGHT);
+                        propertyAnimationHelper.setValues(component.getPrefHeight(), heightValue);
+                        propertyAnimationHelper.setDuration(parser.getDuration(0));
+                        propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                        propertyAnimationHelper.addTempAnimation(FAnimations.HEIGHT, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        component.setPrefHeight(heightValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                        component.setPrefHeight((double)newVal * (parser.getDoubleValue(0) / 100));
+                    };
+                    listenersManager.add(parent, "(HEIGHT)", MainProps.HEIGHT, listener);
+                    valuesManager.set(MainProps.HEIGHT, heightValue);
+                }
+                else{
+                    delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(HEIGHT)");
+                    delayedTaskManager.addTask(MainProps.HEIGHT + "(HEIGHT)", (p) -> {
+                        propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                        double heightValue = p.getPrefHeight() * (parser.getDoubleValue(0) / 100);
+                        if(parser.getDuration(0) > 0) {
+                            propertyAnimationHelper.setAnimationType(FAnimations.HEIGHT);
+                            propertyAnimationHelper.setValues(component.getPrefHeight(), heightValue);
+                            propertyAnimationHelper.setDuration(parser.getDuration(0));
+                            propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                            propertyAnimationHelper.addTempAnimation(FAnimations.HEIGHT, PropertyAnimationHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            component.setPrefHeight(heightValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                            component.setPrefHeight((double)newVal * (parser.getDoubleValue(0) / 100));
+                        };
+                        listenersManager.add(p, "(HEIGHT)", MainProps.HEIGHT, listener);
+                        valuesManager.set(MainProps.HEIGHT, heightValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                hoverAnimation.removeAnimation(FAnimations.HEIGHT);
-                staticHoverAnimation.removeAnimation(StaticAnimations.HEIGHT);
-                PropertyUtil.setOneDimensionAnimation(component.getPrefHeight(), initialValues, MainProps.HEIGHT, hoverAnimation, FAnimations.HEIGHT, parser.getDoubleValue(0), parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                clickAnimation.removeAnimation(FAnimations.HEIGHT);
-                staticClickAnimation.removeAnimation(StaticAnimations.HEIGHT);
-                PropertyUtil.setOneDimensionAnimation(component.getPrefHeight(), initialValues, MainProps.HEIGHT, clickAnimation, FAnimations.HEIGHT, parser.getDoubleValue(0), parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    component.setPrefHeight(parser.getDoubleValue(0));
+            else{
+                propertyAnimationHelper.setProperty(MainProps.HEIGHT);
+                propertyAnimationHelper.setAnimationsTypes(FAnimations.HEIGHT, StaticAnimations.HEIGHT);
+                propertyAnimationHelper.setValues(valuesManager.getDouble(MainProps.HEIGHT), parser.getDoubleValue(0));
+                propertyAnimationHelper.setDuration(parser.getDuration(0));
+                propertyAnimationHelper.setInterpolator(parser.getInterpolator(0));
+                if (setPropertiesOnHover) {
+                    propertyAnimationHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyAnimationHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyAnimationHelper.addAnimation(PropertyAnimationHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, component.getPrefHeight(), initialValues, MainProps.HEIGHT, FAnimations.HEIGHT, parser.getDoubleValue(0), parser.getDuration(0));
+                    propertyAnimationHelper.stopTempAnimation(FAnimations.HEIGHT);
+                    delayedTaskManager.removeTaskById(MainProps.HEIGHT + "(HEIGHT)");
+                    listenersManager.remove("(HEIGHT)");
+                    if (parser.getDuration(0) == 0) {
+                        component.setPrefHeight(parser.getDoubleValue(0));
+                    } else {
+                        propertyAnimationHelper.addTempAnimation(FAnimations.HEIGHT, PropertyAnimationHelper.NUMBER_ANIMATION);
+                    }
+                    valuesManager.set(MainProps.HEIGHT, parser.getDoubleValue(0));
                 }
             }
         }
@@ -2152,30 +2507,8 @@ public class PropertyManager2 {
     //                      Custom properties                   *
     //                                                          *
     // **********************************************************
-
-    private void removePropertyListener(Region component, String propertyName){
-        InvalidationListener listener = doublePropertiesListeners.get(propertyName);
-        if(listener != null){
-            if(propertyName.equals("width")){
-                component.prefWidthProperty().removeListener(listener);
-            }
-            if(propertyName.equals("height")){
-                component.prefHeightProperty().removeListener(listener);
-            }
-        }
-        doublePropertiesListeners.remove(propertyName);
-    }
-
-    private void addPropertyListener(Region component, String propertyName, ChangeListener<Number> listener){
-        if(propertyName.equals("width")){
-            component.prefWidthProperty().addListener(listener);
-        }
-        if(propertyName.equals("height")){
-            component.prefHeightProperty().addListener(listener);
-        }
-    }
-
     public void notifyParentWasSet(Region parent){
+        this.parent = parent;
         delayedTaskManager.setParent(parent);
         delayedTaskManager.executeAllTasks();
         delayedTaskManager.removeAllTasks();
