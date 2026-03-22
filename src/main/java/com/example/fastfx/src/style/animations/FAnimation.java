@@ -1,9 +1,12 @@
 package com.example.fastfx.src.style.animations;
 
 import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -22,6 +25,8 @@ public class FAnimation {
     private Timeline timeline;
     private KeyFrameBuilder keyFrameBuilder;
     private Map<String, List<KeyFrame>> currentAnimations;
+    private Map<String, DoubleProperty> doubleProperties;
+    private Map<String, ObjectProperty<Color>> colorProperties;
 
     private DropShadow elementShadowEffect;
     /**
@@ -44,6 +49,8 @@ public class FAnimation {
         this.timeline = new Timeline();
         this.keyFrameBuilder = new KeyFrameBuilder();
         this.currentAnimations = new HashMap<>();
+        this.doubleProperties = new HashMap<>();
+        this.colorProperties = new HashMap<>();
     }
 
     /**
@@ -117,7 +124,7 @@ public class FAnimation {
         String animation = FAnimations.get(fAnimation);
         Interpolator interpolator = FInterpolator.get(fInterpolator);
         if (animation != null) {
-            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setStringValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setStringValue(value).setDuration(duration).setInterpolator(interpolator).setColorProperties(colorProperties).setOnFinishedListener((e) -> {
                 if (rate > 0) {
                     KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
                     int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
@@ -184,7 +191,7 @@ public class FAnimation {
                 }
             });
         } else if (animation != null && !animation.equals(FAnimations.BG_COLOR) && !animation.equals(FAnimations.BR_COLOR)) {
-            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setInterpolator(interpolator).setDoubleProperties(doubleProperties).setOnFinishedListener((e) -> {
                 if (rate > 0) {
                     KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
                     int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
@@ -450,6 +457,25 @@ public class FAnimation {
             }
         }
         return FInterpolator.LINEAR;
+    }
+
+    public DoubleProperty getDoubleProperty(String fAnimation){
+        return doubleProperties.get(fAnimation);
+    }
+
+    public ObjectProperty<Color> getColorProperty(String fAnimation){
+        return colorProperties.get(fAnimation);
+    }
+
+    /**
+     * Removes the property from <strong>doubleProperties</strong> or <strong>colorProperties</strong>.<br>
+     * The reason why <strong>doubleProperties</strong> and also <strong>colorProperties</strong><br>
+     * are mentioned in the method is to prevent if checks to check if the animation type represents a DoubleProperty<br>
+     * or and ObjectProperty<Color> and the existing property will be removed from its containing HashMap.
+     */
+    private void removeProperty(String animation){
+        doubleProperties.remove(animation);
+        colorProperties.remove(animation);
     }
 
     /**

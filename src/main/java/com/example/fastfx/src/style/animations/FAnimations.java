@@ -65,6 +65,31 @@ public class FAnimations {
      */
     public static final String OPACITY = "opacity";
 
+    /**
+     * Animation name for <strong>padding</strong> property
+     */
+    public static final String PADDING = "padding";
+
+    /**
+     * Animation name for <strong>top padding</strong> property
+     */
+    public static final String TOP_PADDING = "topPadding";
+
+    /**
+     * Animation name for <strong>right padding</strong> property
+     */
+    public static final String RIGHT_PADDING = "rightPadding";
+
+    /**
+     * Animation name for <strong>bottom padding</strong> property
+     */
+    public static final String BOTTOM_PADDING = "bottomPadding";
+
+    /**
+     * Animation name for <strong>left padding</strong> property
+     */
+    public static final String LEFT_PADDING = "leftPadding";
+
     //*********************************************************
     //*                                                       *
     //*       Basic properties from Node class                *
@@ -124,34 +149,34 @@ public class FAnimations {
     //*************
 
     /**
-     * Animation name for <strong>border color</strong>
-     */
-    public static final String BR_COLOR = "brColor";
-
-    /**
-     * Animation name for <strong>border top color</strong>
-     */
-    public static final String BR_TOP_COLOR = "brTopColor";
-
-    /**
-     * Animation name for <strong>border right color</strong>
-     */
-    public static final String BR_RIGHT_COLOR = "brRightColor";
-
-    /**
-     * Animation name for <strong>border bottom color</strong>
-     */
-    public static final String BR_BOTTOM_COLOR = "brBottomColor";
-
-    /**
-     * Animation name for <strong>border left color</strong>
-     */
-    public static final String BR_LEFT_COLOR = "brLeftColor";
-
-    /**
      * Animation name for <strong>border opacity</strong>
      */
     public static final String BR_OPACITY = "brOpacity";
+
+    /**
+     * Animation name for <strong>border radius</strong>
+     */
+    public static final String BR_RADIUS = "brRadius";
+
+    /**
+     * Animation name for <strong>border top left radius</strong>
+     */
+    public static final String BR_TL_RADIUS = "brTLRadius";
+
+    /**
+     * Animation name for <strong>border top right radius</strong>
+     */
+    public static final String BR_TR_RADIUS = "brTRRadius";
+
+    /**
+     * Animation name for <strong>border bottom right radius</strong>
+     */
+    public static final String BR_BR_RADIUS = "brBRRadius";
+
+    /**
+     * Animation name for <strong>border bottom left radius</strong>
+     */
+    public static final String BR_BL_RADIUS = "brBLRadius";
 
     /**
      * Animation name for <strong>border width</strong>
@@ -179,29 +204,54 @@ public class FAnimations {
     public static final String BR_LEFT_WIDTH = "brLeftWidth";
 
     /**
-     * Animation name for <strong>border radius</strong>
+     * Animation name for <strong>border insets</strong> property
      */
-    public static final String BR_RADIUS = "brRadius";
+    public static final String BR_INSETS = "brInsets";
 
     /**
-     * Animation name for <strong>border top left radius</strong>
+     * Animation name for <strong>top border inset</strong> property
      */
-    public static final String BR_TL_RADIUS = "brTLRadius";
+    public static final String BR_TOP_INSET = "brTopInset";
 
     /**
-     * Animation name for <strong>border top right radius</strong>
+     * Animation name for <strong>right border inset</strong> property
      */
-    public static final String BR_TR_RADIUS = "brTRRadius";
+    public static final String BR_RIGHT_INSET = "brRightInset";
 
     /**
-     * Animation name for <strong>border bottom right radius</strong>
+     * Animation name for <strong>bottom border inset</strong> property
      */
-    public static final String BR_BR_RADIUS = "brBRRadius";
+    public static final String BR_BOTTOM_INSET = "brBottomInset";
 
     /**
-     * Animation name for <strong>border bottom left radius</strong>
+     * Animation name for <strong>left border inset</strong> property
      */
-    public static final String BR_BL_RADIUS = "brBLRadius";
+    public static final String BR_LEFT_INSET = "brLeftInset";
+
+    /**
+     * Animation name for <strong>border color</strong>
+     */
+    public static final String BR_COLOR = "brColor";
+
+    /**
+     * Animation name for <strong>border top color</strong>
+     */
+    public static final String BR_TOP_COLOR = "brTopColor";
+
+    /**
+     * Animation name for <strong>border right color</strong>
+     */
+    public static final String BR_RIGHT_COLOR = "brRightColor";
+
+    /**
+     * Animation name for <strong>border bottom color</strong>
+     */
+    public static final String BR_BOTTOM_COLOR = "brBottomColor";
+
+    /**
+     * Animation name for <strong>border left color</strong>
+     */
+    public static final String BR_LEFT_COLOR = "brLeftColor";
 
     //*************
     //   Border   *
@@ -253,6 +303,11 @@ public class FAnimations {
                     TRANSLATE_X,
                     TRANSLATE_Y,
                     OPACITY,
+                    PADDING,
+                    TOP_PADDING,
+                    RIGHT_PADDING,
+                    BOTTOM_PADDING,
+                    LEFT_PADDING,
                     BG_COLOR,
                     BG_OPACITY,
                     BG_RADIUS,
@@ -260,22 +315,27 @@ public class FAnimations {
                     BG_TR_RADIUS,
                     BG_BR_RADIUS,
                     BG_BL_RADIUS,
-                    BR_COLOR,
-                    BR_TOP_COLOR,
-                    BR_RIGHT_COLOR,
-                    BR_BOTTOM_COLOR,
-                    BR_LEFT_COLOR,
                     BR_OPACITY,
-                    BR_WIDTH,
-                    BR_TOP_WIDTH,
-                    BR_RIGHT_WIDTH,
-                    BR_BOTTOM_WIDTH,
-                    BR_LEFT_WIDTH,
                     BR_RADIUS,
                     BR_TL_RADIUS,
                     BR_TR_RADIUS,
                     BR_BR_RADIUS,
                     BR_BL_RADIUS,
+                    BR_WIDTH,
+                    BR_TOP_WIDTH,
+                    BR_RIGHT_WIDTH,
+                    BR_BOTTOM_WIDTH,
+                    BR_LEFT_WIDTH,
+                    BR_INSETS,
+                    BR_TOP_INSET,
+                    BR_RIGHT_INSET,
+                    BR_BOTTOM_INSET,
+                    BR_LEFT_INSET,
+                    BR_COLOR,
+                    BR_TOP_COLOR,
+                    BR_RIGHT_COLOR,
+                    BR_BOTTOM_COLOR,
+                    BR_LEFT_COLOR,
                     SHADOW,
                     BLUR
             )

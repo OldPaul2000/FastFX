@@ -1,12 +1,21 @@
 package com.example.fastfx;
 
 import com.example.fastfx.src.fcomponents.FPane2;
+import com.example.fastfx.src.style.animations.FAnimation;
+import com.example.fastfx.src.style.animations.FAnimations;
 import com.example.fastfx.src.userinteraction.ElementResizer;
 import com.example.fastfx.src.userinteraction.ResizeMode;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
+import com.example.fastfx.src.utility.ui.UI;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class AnimationsController {
 
@@ -31,14 +40,59 @@ public class AnimationsController {
 
         FPane2 fPane2 = new FPane2();
         fPane2.bgColor("#333333");
-        fPane2.x("30%");
         fPane2.y(30);
-        fPane2.width("30%");
+        fPane2.width(40);
         fPane2.height(40);
+
+        fPane2.x(10);
+
+
         fPane.add(fPane2);
 
-        fPane2.x("30px");
-        fPane2.width("30px");
+        Label label = new Label("Label");
+        label.setFont(Font.font(10));
+        label.setLayoutX(50);
+        label.setLayoutY(50);
+        label.setPrefHeight(30);
+        label.setPrefWidth(100);
+        BackgroundSetter.setBackgroundColor(label, "red");
+        label.setPadding(new Insets(30,0,0,10));
+        label.setAlignment(Pos.BASELINE_LEFT);
+
+        mainContainer.getChildren().add(label);
+
+
+        AnchorPane ap = new AnchorPane();
+        ap.setPrefWidth(200);
+        ap.setPrefHeight(100);
+        ap.setLayoutX(200);
+        ap.setLayoutY(250);
+        BackgroundSetter.setBackgroundColor(ap, "green");
+
+        AnchorPane ap2 = new AnchorPane();
+        ap2.setPrefWidth(50);
+        ap2.setPrefHeight(50);
+        ap2.setLayoutX(10);
+        ap2.setLayoutY(25);
+        BackgroundSetter.setBackgroundColor(ap2, "red");
+        UI.add(ap, ap2);
+
+        UI.add(mainContainer, ap);
+
+        FAnimation fa = new FAnimation(ap);
+        fa.add(FAnimations.PADDING, 0, Duration.ZERO);
+        fa.add(FAnimations.PADDING, 100, Duration.millis(1000));
+
+        ap.addEventHandler(MouseEvent.MOUSE_PRESSED, (event -> {
+            fa.play();
+        }));
+
+        ap.addEventHandler(MouseEvent.MOUSE_RELEASED, (event -> {
+            fa.reverse();
+        }));
+
+
+
 
 //        long start = System.currentTimeMillis();
 //        for(int i = 0; i < 1_000_000; i++){
@@ -53,22 +107,8 @@ public class AnimationsController {
         // fPane2.x("20px") 1 million times -> 1.36 seconds
 
 
-
-
-
         ElementResizer resizer = new ElementResizer(mainContainer);
         resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
-
-
-        /**
-         * Color
-         * 1 Dimension
-         * 2 Dimensions
-         * 4 Dimensions
-         * Border
-         */
-
-
 
         /*
          * !!!WARNING!!!
