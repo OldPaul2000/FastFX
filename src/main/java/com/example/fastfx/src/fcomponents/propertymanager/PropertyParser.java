@@ -286,6 +286,8 @@ public class PropertyParser {
      * This method is helpful to avoid if checks when setting properties where there are multiple sides to style.<br>
      * For example for border insets.
      */
+
+    // For removal
     public void spreadDoubleValues () {
         if (parametersCount == 1) {
             doubleValues[1] = doubleValues[0];

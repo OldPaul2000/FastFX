@@ -1,0 +1,750 @@
+package com.example.fastfx.src.fcomponents.propertymanager;
+
+import com.example.fastfx.src.fcomponents.propertymanager.constants.FUnit;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.ListenerID;
+import com.example.fastfx.src.fcomponents.propertymanager.constants.MainProps;
+import com.example.fastfx.src.fcomponents.propertymanager.pendingtask.PendingTaskManager;
+import com.example.fastfx.src.style.animations.FAnimation;
+import com.example.fastfx.src.style.animations.FAnimations;
+import com.example.fastfx.src.style.animations.StaticAnimation;
+import com.example.fastfx.src.utility.style.PaddingUtil;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.layout.Region;
+import javafx.util.Duration;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Helps manage the animations and makes the PropertyManager class cleaner.
+ */
+public class PropertyHelper {
+    public static final String NUMBER_ANIMATION = "number";
+    public static final String COLOR_ANIMATION = "color";
+
+    private Region component;
+    private ValuesManager valuesManager;
+    private PropertyParser parser;
+    private ListenersManager listenersManager;
+    private PendingTaskManager pendingTaskManager;
+    private FAnimation fAnimation;
+    private Map<String, FAnimation> tempAnimations;
+    private Map<FAnimation, Boolean> tempAnimationHasBeenStopped;
+    private boolean paddingAnimationsStopped = false;
+    private StaticAnimation staticAnimation;
+    private String animationType;
+    private String staticAnimationType;
+    private String property;
+    private String startColor;
+    private String endColor;
+    private double startValue;
+    private double endValue;
+    private long duration;
+    private String interpolator;
+    private String[] properties;
+    private String[] startColors;
+    private String[] endColors;
+    private double[] startValues;
+    private double[] endValues;
+    private long[] durations;
+    private String[] interpolators;
+    private Map<String, String[]> multipleSidesAnimations;
+    private Map<String, String[]> multipleSidesProps;
+
+    public PropertyHelper (Region component, PropertyParser parser, ValuesManager valuesManager, ListenersManager listenersManager, PendingTaskManager pendingTaskManager) {
+        this.tempAnimations = new HashMap<>();
+        this.tempAnimationHasBeenStopped = new HashMap<>();
+        this.parser = parser;
+        this.valuesManager = valuesManager;
+        this.listenersManager = listenersManager;
+        this.pendingTaskManager = pendingTaskManager;
+        this.component = component;
+        initMultipleSidesAnimations();
+        initMultipleSidesProps();
+    }
+
+    private void initMultipleSidesAnimations(){
+        multipleSidesAnimations = new HashMap<>();
+        String[] paddings = new String[]{FAnimations.TOP_PADDING, FAnimations.RIGHT_PADDING, FAnimations.BOTTOM_PADDING, FAnimations.LEFT_PADDING};
+        multipleSidesAnimations.put(FAnimations.PADDING, paddings);
+        String[] bgRadius = new String[]{FAnimations.BG_TL_RADIUS, FAnimations.BG_TR_RADIUS, FAnimations.BG_BR_RADIUS, FAnimations.BG_BL_RADIUS};
+        multipleSidesAnimations.put(FAnimations.BG_RADIUS, bgRadius);
+        String[] brRadius = new String[]{FAnimations.BR_TL_RADIUS, FAnimations.BR_TR_RADIUS, FAnimations.BR_BR_RADIUS, FAnimations.BR_BL_RADIUS};
+        multipleSidesAnimations.put(FAnimations.BR_RADIUS, brRadius);
+        String[] brInsets = new String[]{FAnimations.BR_TOP_INSET, FAnimations.BR_RIGHT_INSET, FAnimations.BR_BOTTOM_INSET, FAnimations.BR_LEFT_INSET};
+        multipleSidesAnimations.put(FAnimations.BR_INSETS, brInsets);
+    }
+
+    private void initMultipleSidesProps(){
+        multipleSidesProps = new HashMap<>();
+        String[] paddings = new String[]{MainProps.TOP_PADDING, MainProps.RIGHT_PADDING, MainProps.BOTTOM_PADDING, MainProps.LEFT_PADDING};
+        multipleSidesProps.put(MainProps.PADDING, paddings);
+        String[] bgRadius = new String[]{MainProps.BG_TL_RADIUS, MainProps.BG_TR_RADIUS, MainProps.BG_BR_RADIUS, MainProps.BG_BL_RADIUS};
+        multipleSidesProps.put(MainProps.BG_RADIUS, bgRadius);
+        String[] brRadius = new String[]{MainProps.BR_TL_RADIUS, MainProps.BR_TR_RADIUS, MainProps.BR_BR_RADIUS, MainProps.BR_BL_RADIUS};
+        multipleSidesProps.put(MainProps.BR_RADIUS, brRadius);
+        String[] brInsets = new String[]{MainProps.BR_TOP_INSET, MainProps.BR_RIGHT_INSET, MainProps.BR_BOTTOM_INSET, MainProps.BR_LEFT_INSET};
+        multipleSidesProps.put(MainProps.BR_INSETS, brInsets);
+    }
+
+    /**
+     * Sets the FAnimation and the StaticAnimation which will be configured.
+     *
+     * @param fAnimation the FAnimation animation
+     * @param staticAnimation the StaticAnimation animation
+     */
+    public void setAnimations (FAnimation fAnimation, StaticAnimation staticAnimation) {
+        this.fAnimation = fAnimation;
+        this.staticAnimation = staticAnimation;
+    }
+
+    /**
+     * Sets the FAnimation which will be configured.
+     *
+     * @param fAnimation the FAnimation animation
+     */
+    public void setAnimation(FAnimation fAnimation){
+        this.fAnimation = fAnimation;
+    }
+
+    /**
+     * Sets the StaticAnimation which will be configured.
+     *
+     * @param staticAnimation the StaticAnimation animation
+     */
+    public void setStaticAnimation (StaticAnimation staticAnimation) {
+        this.staticAnimation = staticAnimation;
+    }
+
+    /**
+     * Sets the animations types for FAnimation and StaticAnimation.<br>
+     * (e.g. FAnimations.LAYOUT_X, StaticAnimations.LAYOUT_X)
+     *
+     * @param fAnimationType the animation type for FAnimation animation
+     * @param staticAnimationType the animation type for StaticAnimation animation
+     */
+    public void setAnimationsTypes (String fAnimationType, String staticAnimationType) {
+        this.animationType = fAnimationType;
+        this.staticAnimationType = staticAnimationType;
+    }
+
+    /**
+     * Sets the animation type for FAnimation.<br>
+     * (e.g. FAnimations.LAYOUT_X)
+     *
+     * @param fAnimationType the animation type for FAnimation animation
+     */
+    public void setAnimationType(String fAnimationType){
+        this.animationType = fAnimationType;
+    }
+
+    /**
+     * Sets the animation type for FAnimation.<br>
+     * (e.g. StaticAnimations.LAYOUT_X)
+     *
+     * @param animationType the animation type for StaticAnimation animation
+     */
+    public void setStaticAnimationType(String animationType){
+        this.staticAnimationType = animationType;
+    }
+
+    /**
+     * Sets the property which will be initialized or modified in ValuesManager.<br>
+     * (e.g. MainProps.X)
+     *
+     * @param property property which will be used to extract its initial value from <strong>valuesManager</strong>
+     *                 and also to be updated with the new value(e.g. MainProps.WIDTH)
+     */
+    public void setProperty (String property) {
+        System.out.println("Set prop: " + property);
+        this.property = property;
+    }
+
+    /**
+     * Sets the start color and the end color for color based animations.
+     *
+     * @param startColor the color the animation will start from
+     * @param endColor the color the animation will end to
+     */
+    public void setColors (String startColor, String endColor) {
+        this.startColor = startColor;
+        this.endColor = endColor;
+    }
+
+    /**
+     * Sets the start value and the end value for number based animations.
+     *
+     * @param startValue the value the animation will start from
+     * @param endValue the value the animation will end to
+     */
+    public void setValues (double startValue, double endValue) {
+        System.out.println("Set values: " + startValue + " --- " + endValue);
+        this.startValue = startValue;
+        this.endValue = endValue;
+    }
+
+    /**
+     * Sets the duration of the animation in milliseconds.
+     *
+     * @param duration the duration of the animation in milliseconds
+     */
+    public void setDuration (long duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * Sets the interpolator for the animation.
+     *
+     * @param interpolator the interpolator of the animation
+     */
+    public void setInterpolator (String interpolator) {
+        this.interpolator = interpolator;
+    }
+
+    public void setProperties(String prop1, String prop2){
+        this.properties = new String[]{prop1, prop2};
+    }
+
+    public void setProperties(String prop1, String prop2, String prop3, String prop4){
+        this.properties = new String[]{prop1, prop2, prop3, prop4};
+    }
+
+    public void setStartColors(String color1, String color2){
+        this.startColors = new String[]{color1, color2};
+    }
+
+    public void setStartColors(String color1, String color2, String color3, String color4){
+        this.startColors = new String[]{color1, color2, color3, color4};
+    }
+
+    public void setEndColors(String color1, String color2){
+        this.endColors = new String[]{color1, color2};
+    }
+
+    public void setEndColors(String color1, String color2, String color3, String color4){
+        this.endColors = new String[]{color1, color2, color3, color4};
+    }
+
+    public void setStartValues(double value1, double value2){
+        this.startValues = new double[]{value1, value2};
+    }
+
+    public void setStartValues(double value1, double value2, double value3, double value4){
+        this.startValues = new double[]{value1, value2, value3, value4};
+    }
+
+    public void setEndValues(double value1, double value2){
+        this.endValues = new double[]{value1, value2};
+    }
+
+    public void setEndValues(double value1, double value2, double value3, double value4){
+        this.endValues = new double[]{value1, value2, value3, value4};
+    }
+    
+    public void setDurations(long duration1, long duration2){
+        this.durations = new long[]{duration1, duration2};
+    }
+
+    public void setDurations(long duration1, long duration2, long duration3, long duration4){
+        this.durations = new long[]{duration1, duration2, duration3, duration4};
+    }
+
+    public void setInterpolators(String interpolator1, String interpolator2){
+        this.interpolators = new String[]{interpolator1, interpolator2};
+    }
+
+    public void setInterpolators(String interpolator1, String interpolator2, String interpolator3, String interpolator4){
+        this.interpolators = new String[]{interpolator1, interpolator2, interpolator3, interpolator4};
+    }
+    
+    /**
+     * Adds a new property to animate to the FAnimation which was set in setAnimations method<br>
+     * or setAnimation method.
+     *
+     * @param type specifies if the animation is a number based animation(layoutX, translateX etc.)
+     *             or a color based animation(for animating the background color for example)
+     */
+    public void addAnimation (String type) {
+//        if (valuesManager.contains(property)) {
+            if (type.equals(NUMBER_ANIMATION)) {
+                startValue = valuesManager.getDouble(property);
+            } else if (type.equals(COLOR_ANIMATION)) {
+                startColor = valuesManager.getString(property);
+            }
+//        }
+        if (type.equals(NUMBER_ANIMATION)) {
+            fAnimation.removeAnimation(animationType);
+            if (duration == 0) {
+                staticAnimation.addAnimation(staticAnimationType, startValue, endValue);
+            } else {
+                staticAnimation.removeAnimation(staticAnimationType);
+                fAnimation.add(animationType, startValue, Duration.ZERO, interpolator);
+                fAnimation.add(animationType, endValue, Duration.millis(duration), interpolator);
+            }
+        } else if (type.equals(COLOR_ANIMATION)) {
+            fAnimation.removeAnimation(animationType);
+            if (duration == 0) {
+                staticAnimation.addAnimation(staticAnimationType, startColor, endColor);
+            } else {
+                staticAnimation.removeAnimation(staticAnimationType);
+                fAnimation.add(animationType, startColor, Duration.ZERO, interpolator);
+                fAnimation.add(animationType, endColor, Duration.millis(duration), interpolator);
+            }
+        }
+    }
+
+    /**
+     * Creates a temporary animation and plays it right after.
+     *
+     * @param animationId the animation id
+     * @param type specifies if the animation is a number based animation(layoutX, translateX etc.)
+     *             or a color based animation(for animating the background color for example)
+     */
+    public void addTempAnimation (String animationId, String type) {
+//        if (valuesManager.contains(property)) {
+            if (type.equals(NUMBER_ANIMATION)) {
+                startValue = valuesManager.getDouble(property);
+            } else if (type.equals(COLOR_ANIMATION)) {
+                startColor = valuesManager.getString(property);
+            }
+//        }
+        FAnimation tempAnimation = new FAnimation(component);
+        tempAnimations.put(animationId, tempAnimation);
+        if (type.equals(NUMBER_ANIMATION)) {
+            tempAnimation.add(animationType, startValue, Duration.ZERO, interpolator);
+            tempAnimation.add(animationType, endValue, Duration.millis(duration), interpolator);
+            valuesManager.set(property, endValue);
+        } else if (type.equals(COLOR_ANIMATION)) {
+            tempAnimation.add(animationType, startColor, Duration.ZERO, interpolator);
+            tempAnimation.add(animationType, endColor, Duration.millis(duration), interpolator);
+            valuesManager.set(property, endColor);
+        }
+        tempAnimation.destroyOnFinished();
+        tempAnimation.play();
+        tempAnimationHasBeenStopped.put(tempAnimation, false);
+    }
+    
+    public void addMultipleSidesSizeAnimation(String fAnimationType, String prop){
+        if(multipleSidesAnimations.containsKey(fAnimationType)){
+            String[] animations = multipleSidesAnimations.get(fAnimationType);
+            String[] props = multipleSidesProps.get(prop);
+            int parametersCount = parser.getParametersCount();
+            double startValue1 = valuesManager.getDouble(props[0]);
+            double startValue2 = valuesManager.getDouble(props[1]);
+            double startValue3 = valuesManager.getDouble(props[2]);
+            double startValue4 = valuesManager.getDouble(props[3]);
+            double endValue1 = parser.getDoubleValue(0);
+            double endValue2 = parser.getDoubleValue(1);
+            double endValue3 = parser.getDoubleValue(2);
+            double endValue4 = parser.getDoubleValue(3);
+            long duration1 = parser.getDuration(0);
+            long duration2 = parser.getDuration(1);
+            long duration3 = parser.getDuration(2);
+            long duration4 = parser.getDuration(3);
+            String interpolator1 = parser.getInterpolator(0);
+            String interpolator2 = parser.getInterpolator(1);
+            String interpolator3 = parser.getInterpolator(2);
+            String interpolator4 = parser.getInterpolator(3);
+            if(parametersCount == 1){
+                if(parser.getUnit(0).equals(FUnit.PIXELS)){
+                    if(duration1 == 0){
+                        staticAnimation.addAnimation(staticAnimationType, startValue1, endValue1);
+                    }
+                    else{
+                        fAnimation.add(fAnimationType, startValue1, Duration.ZERO, interpolator1);
+                        fAnimation.add(fAnimationType, endValue1, Duration.millis(duration1), interpolator1);
+                    }
+                    valuesManager.set(prop, parser.getDoubleValue(0));
+                }
+            }
+            else if(parametersCount == 2){
+                if(parser.getUnit(0).equals(FUnit.PIXELS) && parser.getUnit(1).equals(FUnit.PIXELS)){
+                    if(duration1 == 0){
+                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
+                        staticAnimation.addAnimation(animations[2], startValue1, endValue1);
+                    }
+                    else{
+                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
+                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
+                        fAnimation.add(animations[2], startValue2, Duration.ZERO, interpolator2);
+                        fAnimation.add(animations[2], endValue2, Duration.millis(duration2), interpolator2);
+                    }
+                    if(duration2 == 0){
+                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
+                        staticAnimation.addAnimation(animations[3], startValue2, endValue2);
+                    }
+                    else{
+                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
+                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
+                        fAnimation.add(animations[3], startValue2, Duration.ZERO, interpolator2);
+                        fAnimation.add(animations[3], endValue2, Duration.millis(duration2), interpolator2);
+                    }
+                    valuesManager.set(props[0], parser.getDoubleValue(0));
+                    valuesManager.set(props[1], parser.getDoubleValue(1));
+                    valuesManager.set(props[2], parser.getDoubleValue(0));
+                    valuesManager.set(props[3], parser.getDoubleValue(1));
+                }
+            }
+            else if(parametersCount == 4){
+                if(parser.getUnit(0).equals(FUnit.PIXELS)
+                        && parser.getUnit(1).equals(FUnit.PIXELS)
+                        && parser.getUnit(2).equals(FUnit.PIXELS)
+                        && parser.getUnit(3).equals(FUnit.PIXELS)){
+                    if(duration1 == 0){
+                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
+                    }
+                    else{
+                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
+                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
+                    }
+                    if(duration2 == 0){
+                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
+                    }
+                    else{
+                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
+                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
+                    }
+                    if(duration3 == 0){
+                        staticAnimation.addAnimation(animations[2], startValue3, endValue3);
+                    }
+                    else{
+                        fAnimation.add(animations[2], startValue3, Duration.ZERO, interpolator3);
+                        fAnimation.add(animations[2], endValue3, Duration.millis(duration3), interpolator3);
+                    }
+                    if(duration4 == 0){
+                        staticAnimation.addAnimation(animations[3], startValue4, endValue4);
+                    }
+                    else{
+                        fAnimation.add(animations[3], startValue4, Duration.ZERO, interpolator4);
+                        fAnimation.add(animations[3], endValue4, Duration.millis(duration4), interpolator4);
+                    }
+                    valuesManager.set(props[0], parser.getDoubleValue(0));
+                    valuesManager.set(props[1], parser.getDoubleValue(1));
+                    valuesManager.set(props[2], parser.getDoubleValue(2));
+                    valuesManager.set(props[3], parser.getDoubleValue(3));
+                }
+            }
+        }
+    }
+
+    public void addPaddingProperty (boolean parentIsNull){
+        int parametersCount = parser.getParametersCount();
+        double startValue1 = valuesManager.getDouble(MainProps.TOP_PADDING);
+        double startValue2 = valuesManager.getDouble(MainProps.RIGHT_PADDING);
+        double startValue3 = valuesManager.getDouble(MainProps.BOTTOM_PADDING);
+        double startValue4 = valuesManager.getDouble(MainProps.LEFT_PADDING);
+        double endValue1 = 0;
+        double endValue2 = 0;
+        double endValue3 = 0;
+        double endValue4 = 0;
+        double doubleValue1 = parser.getDoubleValue(0);
+        double doubleValue2 = parser.getDoubleValue(1);
+        double doubleValue3 = parser.getDoubleValue(2);
+        double doubleValue4 = parser.getDoubleValue(3);
+        String unit1 = parser.getUnit(0);
+        String unit2 = parser.getUnit(1);
+        String unit3 = parser.getUnit(2);
+        String unit4 = parser.getUnit(3);
+        long duration1 = parser.getDuration(0);
+        long duration2 = parser.getDuration(1);
+        long duration3 = parser.getDuration(2);
+        long duration4 = parser.getDuration(3);
+        String interpolator1 = parser.getInterpolator(0);
+        String interpolator2 = parser.getInterpolator(1);
+        String interpolator3 = parser.getInterpolator(2);
+        String interpolator4 = parser.getInterpolator(3);
+        if(!parentIsNull){
+            listenersManager.remove(ListenerID.WIDTH_HORIZONTAL_PADDING);
+            listenersManager.remove(ListenerID.HEIGHT_VERTICAL_PADDING);
+            listenersManager.remove(ListenerID.HEIGHT_TOP_PADDING);
+            listenersManager.remove(ListenerID.WIDTH_RIGHT_PADDING);
+            listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PADDING);
+            listenersManager.remove(ListenerID.WIDTH_LEFT_PADDING);
+            stopTempPaddingAnimations();
+            if(parametersCount == 1){
+                duration2 = duration1;
+                duration3 = duration1;
+                duration4 = duration1;
+                interpolator2 = interpolator1;
+                interpolator3 = interpolator1;
+                interpolator4 = interpolator1;
+                if(unit1.equals(FUnit.PERCENTAGE)){
+                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+                    endValue2 = component.getPrefWidth() * (doubleValue1 / 100);
+                    endValue3 = endValue1;
+                    endValue4 = endValue2;
+                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
+                    };
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+                }
+                else if(unit1.equals(FUnit.PIXELS)){
+                    endValue1 = doubleValue1;
+                    endValue2 = endValue1;
+                    endValue3 = endValue1;
+                    endValue4 = endValue1;
+                }
+            }
+            else if(parametersCount == 2){
+                duration3 = duration1;
+                duration4 = duration2;
+                interpolator3 = interpolator1;
+                interpolator4 = interpolator2;
+                if(unit1.equals(FUnit.PERCENTAGE)){
+                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+                    endValue3 = endValue1;
+                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+                }
+                else if(unit1.equals(FUnit.PIXELS)){
+                    endValue1 = doubleValue1;
+                    endValue3 = endValue1;
+                }
+                if(unit2.equals(FUnit.PERCENTAGE)){
+                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+                    endValue4 = endValue2;
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue2 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+                }
+                else if(unit1.equals(FUnit.PIXELS)){
+                    endValue2 = doubleValue2;
+                    endValue4 = endValue2;
+                }
+            }
+            else if(parametersCount == 4){
+                if(unit1.equals(FUnit.PERCENTAGE) && unit3.equals(FUnit.PERCENTAGE)){
+                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
+                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
+                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+                }
+                if(unit2.equals(FUnit.PERCENTAGE) && unit4.equals(FUnit.PERCENTAGE)){
+                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
+                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+                }
+                if(unit1.equals(FUnit.PERCENTAGE)){
+                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_TOP_PADDING, MainProps.HEIGHT, heightListener);
+                }
+                else if(unit1.equals(FUnit.PIXELS)){
+                    endValue1 = doubleValue1;
+                }
+                if(unit2.equals(FUnit.PERCENTAGE)){
+                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_RIGHT_PADDING, MainProps.WIDTH, widthListener);
+                }
+                else if(unit2.equals(FUnit.PIXELS)){
+                    endValue2 = doubleValue2;
+                }
+                if(unit3.equals(FUnit.PERCENTAGE)){
+                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
+                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+                }
+                else if(unit3.equals(FUnit.PIXELS)){
+                    endValue3 = doubleValue3;
+                }
+                if(unit4.equals(FUnit.PERCENTAGE)){
+                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempPaddingAnimations();
+                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_LEFT_PADDING, MainProps.WIDTH, widthListener);
+                }
+                else if(unit4.equals(FUnit.PIXELS)){
+                    endValue4 = doubleValue4;
+                }
+            }
+            if(duration1 > 0){
+                FAnimation tempAnimation1 = new FAnimation(component);
+                tempAnimations.put(FAnimations.TOP_PADDING, tempAnimation1);
+                tempAnimation1.add(FAnimations.TOP_PADDING, startValue1, Duration.ZERO, interpolator1);
+                tempAnimation1.add(FAnimations.TOP_PADDING, endValue1, Duration.millis(duration1), interpolator1);
+                valuesManager.set(MainProps.TOP_PADDING, doubleValue1);
+                tempAnimation1.destroyOnFinished();
+                tempAnimation1.play();
+                tempAnimationHasBeenStopped.put(tempAnimation1, false);
+            }
+            else{
+                PaddingUtil.setTopPadding(component, endValue1);
+            }
+            if(duration2 > 0){
+                FAnimation tempAnimation2 = new FAnimation(component);
+                tempAnimations.put(FAnimations.RIGHT_PADDING, tempAnimation2);
+                tempAnimation2.add(FAnimations.RIGHT_PADDING, startValue2, Duration.ZERO, interpolator2);
+                tempAnimation2.add(FAnimations.RIGHT_PADDING, endValue2, Duration.millis(duration2), interpolator2);
+                valuesManager.set(MainProps.RIGHT_PADDING, doubleValue2);
+                tempAnimation2.destroyOnFinished();
+                tempAnimation2.play();
+                tempAnimationHasBeenStopped.put(tempAnimation2, false);
+            }
+            else{
+                PaddingUtil.setRightPadding(component, endValue2);
+            }
+            if(duration3 > 0){
+                FAnimation tempAnimation3 = new FAnimation(component);
+                tempAnimations.put(FAnimations.BOTTOM_PADDING, tempAnimation3);
+                tempAnimation3.add(FAnimations.BOTTOM_PADDING, startValue3, Duration.ZERO, interpolator3);
+                tempAnimation3.add(FAnimations.BOTTOM_PADDING, endValue3, Duration.millis(duration3), interpolator3);
+                valuesManager.set(MainProps.BOTTOM_PADDING, doubleValue3);
+                tempAnimation3.destroyOnFinished();
+                tempAnimation3.play();
+                tempAnimationHasBeenStopped.put(tempAnimation3, false);
+            }
+            else{
+                PaddingUtil.setBottomPadding(component, endValue3);
+            }
+            if(duration4 > 0){
+                FAnimation tempAnimation4 = new FAnimation(component);
+                tempAnimations.put(FAnimations.LEFT_PADDING, tempAnimation4);
+                tempAnimation4.add(FAnimations.LEFT_PADDING, startValue4, Duration.ZERO, interpolator4);
+                tempAnimation4.add(FAnimations.LEFT_PADDING, endValue4, Duration.millis(duration4), interpolator4);
+                valuesManager.set(MainProps.LEFT_PADDING, doubleValue4);
+                tempAnimation4.destroyOnFinished();
+                tempAnimation4.play();
+                tempAnimationHasBeenStopped.put(tempAnimation4, false);
+            }
+            else{
+                PaddingUtil.setLeftPadding(component, endValue4);
+            }
+            setFourSidesSizeValuesInValuesManager(MainProps.PADDING, endValue1, endValue2, endValue3, endValue4);
+        }
+        else{
+
+        }
+    }
+
+    private void setFourSidesSizeValuesInValuesManager (String mainProp, double value1, double value2, double value3, double value4){
+        String[] props = multipleSidesProps.get(mainProp);
+        valuesManager.set(props[0], value1);
+        valuesManager.set(props[1], value2);
+        valuesManager.set(props[2], value3);
+        valuesManager.set(props[3], value4);
+    }
+
+    /**
+     * Stops the temporary animation. It's used when setting the same property again(e.g. width)<br>
+     * or when the property was initially set in percentage and was also animated and the listener<br>
+     * from the parent was notified.<br>
+     * e.g. x("30% 1s")<br>
+     * The layoutX of the component will be set to 30% of the parent width with a 1-second transition.<br>
+     * It will be stopped when x method will be called again before the animation ended or when the<br>
+     * parent width is changed hence the component layoutX will be changed accordingly and the animation<br>
+     * will be stopped.
+     *
+     * @param animationId the animation id
+     */
+    public void stopTempAnimation(String animationId){
+        System.out.println("animation id: " + animationId);
+        System.out.println("animations: " + tempAnimations.get(animationId));
+        System.out.println("has been stopped: " + tempAnimationHasBeenStopped);
+        System.out.println();
+        FAnimation tempAnimation = tempAnimations.get(animationId);
+        if(tempAnimation != null){
+            if(tempAnimationHasBeenStopped.containsKey(tempAnimation) && !tempAnimationHasBeenStopped.get(tempAnimation)){
+                tempAnimation.stop();
+                tempAnimationHasBeenStopped.put(tempAnimation, true);
+                tempAnimations.remove(animationId);
+            }
+        }
+    }
+
+    private void stopTempPaddingAnimations(){
+        if(!paddingAnimationsStopped){
+            stopTempAnimation(FAnimations.TOP_PADDING);
+            stopTempAnimation(FAnimations.RIGHT_PADDING);
+            stopTempAnimation(FAnimations.BOTTOM_PADDING);
+            stopTempAnimation(FAnimations.LEFT_PADDING);
+            paddingAnimationsStopped = true;
+        }
+    }
+
+    /**
+     * Adds a new property to animate to the StaticAnimation which was set in setAnimations method<br>
+     * or setStaticAnimation method.
+     *
+     * @param type specifies if the animation is a number based animation(layoutX, translateX etc.)
+     *             or a color based animation(for animating the background color for example)
+     */
+    public void addStaticAnimation (String type) {
+        if(fAnimation != null){
+            fAnimation.removeAnimation(animationType);
+        }
+        if (valuesManager.contains(property)) {
+            if (type.equals(NUMBER_ANIMATION)) {
+                staticAnimation.addAnimation(staticAnimationType, valuesManager.getDouble(property), endValue);
+            } else if (type.equals(COLOR_ANIMATION)) {
+                staticAnimation.addAnimation(staticAnimationType, valuesManager.getString(property), endColor);
+            }
+        }
+    }
+
+    /**
+     * Updates an existing FAnimation start value.
+     *
+     * @param fAnimation the <strong>FAnimation</strong> to be updated
+     * @param animation the animation type the value will be updated for(e.g. FAnimations.LAYOUT_X)
+     * @param newStartValue the new value the animation will start from
+     */
+    public void updateAnimationStartValue (String fAnimation, FAnimation animation, double newStartValue) {
+        if(animation != null){
+            animation.updateStartValue(fAnimation, newStartValue);
+        }
+    }
+
+    public void removeMultipleSidesAnimation(String fAnimationType){
+        if(fAnimation != null && multipleSidesAnimations.containsKey(fAnimationType)){
+            String[] animations = multipleSidesAnimations.get(fAnimationType);
+            fAnimation.removeAnimation(fAnimationType);
+            fAnimation.removeAnimation(animations[0]);
+            fAnimation.removeAnimation(animations[1]);
+            fAnimation.removeAnimation(animations[2]);
+            fAnimation.removeAnimation(animations[3]);
+        }
+    }
+
+    public void removeMultipleSidesStaticAnimation(String staticAnimationType){
+        if(staticAnimation != null && multipleSidesAnimations.containsKey(staticAnimationType)){
+            String[] animations = multipleSidesAnimations.get(staticAnimationType);
+            staticAnimation.removeAnimation(staticAnimationType);
+            staticAnimation.removeAnimation(animations[0]);
+            staticAnimation.removeAnimation(animations[1]);
+            staticAnimation.removeAnimation(animations[2]);
+            staticAnimation.removeAnimation(animations[3]);
+        }
+    }
+}

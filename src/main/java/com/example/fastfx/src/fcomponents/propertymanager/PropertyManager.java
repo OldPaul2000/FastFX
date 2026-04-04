@@ -3,7 +3,7 @@ package com.example.fastfx.src.fcomponents.propertymanager;
 import com.example.fastfx.src.fcomponents.flistener.ResizeListener;
 import com.example.fastfx.src.fcomponents.propertymanager.constants.FUnit;
 import com.example.fastfx.src.fcomponents.propertymanager.constants.MainProps;
-import com.example.fastfx.src.fcomponents.propertymanager.delayedtask.DelayedTaskManager;
+import com.example.fastfx.src.fcomponents.propertymanager.pendingtask.PendingTaskManager;
 import com.example.fastfx.src.fcomponents.pseudoclass.PseudoClass;
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;
@@ -119,7 +119,7 @@ public class PropertyManager {
     private Set<ResizeListener> resizeListeners;
 
     private Map<String, InvalidationListener> doublePropertiesListeners;
-    private DelayedTaskManager delayedTaskManager;
+    private PendingTaskManager pendingTaskManager;
     private PropertyParser parser;
 
     public PropertyManager (Region component) {
@@ -131,7 +131,7 @@ public class PropertyManager {
         initBrWidthProperties();
         resizeListeners = new HashSet<>();
         doublePropertiesListeners = new HashMap<>();
-        delayedTaskManager = new DelayedTaskManager();
+        pendingTaskManager = new PendingTaskManager();
         parser = new PropertyParser();
     }
 
@@ -237,8 +237,8 @@ public class PropertyManager {
         } else if (unit.equals(FUnit.PERCENTAGE)) {
             if (parent == null) {
                 System.out.println("parent is null");
-                delayedTaskManager.removeTaskById("x");
-                delayedTaskManager.addTask("x", (p) -> {
+                pendingTaskManager.removeTaskById("x");
+                pendingTaskManager.addTask("x", (p) -> {
                     System.out.println(p.getPrefWidth());
                     component.setLayoutX(p.getPrefWidth() * (value / 100));
                     ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
@@ -713,7 +713,7 @@ public class PropertyManager {
     }
 
     public void top(double value){
-        if(parent != null){
+        if(parent != null && !setPropertiesOnHover && !setPropertiesOnClick){
             component.setLayoutY(value);
             parent.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
                 component.setLayoutY(value);
@@ -2240,8 +2240,8 @@ public class PropertyManager {
     }
 
     public void notifyParentWasSet(Region parent){
-        delayedTaskManager.setParent(parent);
-        delayedTaskManager.executeAllTasks();
-        delayedTaskManager.removeAllTasks();
+        pendingTaskManager.setParent(parent);
+        pendingTaskManager.executeAllTasks();
+        pendingTaskManager.removeAllTasks();
     }
 }

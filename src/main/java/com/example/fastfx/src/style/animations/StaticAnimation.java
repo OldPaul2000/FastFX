@@ -2,6 +2,7 @@ package com.example.fastfx.src.style.animations;
 
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import com.example.fastfx.src.utility.style.BorderSetter;
+import com.example.fastfx.src.utility.style.PaddingUtil;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Region;
 
@@ -104,14 +105,33 @@ public class StaticAnimation {
         if(doubleValues.containsKey(StaticAnimations.PADDING)){
             double[] values = doubleValues.get(StaticAnimations.PADDING);
             if(values.length == 2){
-                element.setPadding(new Insets(values[1]));
+                PaddingUtil.setPadding(element, values[1]);
+//                element.setPadding(new Insets(values[1]));
             }
             if(values.length == 4){
-                element.setPadding(new Insets(values[2], values[3], values[2], values[3]));
+                PaddingUtil.setPadding(element, values[2], values[3], values[2], values[3]);
+//                element.setPadding(new Insets(values[2], values[3], values[2], values[3]));
             }
             if(values.length == 8){
-                element.setPadding(new Insets(values[4], values[5], values[6], values[7]));
+                PaddingUtil.setPadding(element, values[0], values[1], values[2], values[3]);
+//                element.setPadding(new Insets(values[4], values[5], values[6], values[7]));
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.TOP_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.TOP_PADDING);
+            PaddingUtil.setTopPadding(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.RIGHT_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.RIGHT_PADDING);
+            PaddingUtil.setRightPadding(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BOTTOM_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.BOTTOM_PADDING);
+            PaddingUtil.setBottomPadding(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.LEFT_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.LEFT_PADDING);
+            PaddingUtil.setLeftPadding(element, values[1]);
         }
         if(doubleValues.containsKey(StaticAnimations.MARGIN)){
             double[] values = doubleValues.get(StaticAnimations.MARGIN);
@@ -245,6 +265,22 @@ public class StaticAnimation {
                 BorderSetter.setBorderInsets(element, values[4], values[5], values[6], values[7]);
             }
         }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_TOP_INSET);
+            BorderSetter.setTopBorderInset(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_RIGHT_INSET);
+            BorderSetter.setRightBorderInset(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_BOTTOM_INSET);
+            BorderSetter.setBottomBorderInset(element, values[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_LEFT_INSET);
+            BorderSetter.setLeftBorderInset(element, values[1]);
+        }
         if(doubleValues.containsKey(StaticAnimations.BR_OPACITY)){
             double[] values = doubleValues.get(StaticAnimations.BR_OPACITY);
             if(values.length == 2){
@@ -347,6 +383,22 @@ public class StaticAnimation {
             if(values.length == 8){
                 element.setPadding(new Insets(values[0], values[1], values[2], values[3]));
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.TOP_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.TOP_PADDING);
+            PaddingUtil.setTopPadding(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.RIGHT_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.RIGHT_PADDING);
+            PaddingUtil.setRightPadding(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BOTTOM_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.BOTTOM_PADDING);
+            PaddingUtil.setBottomPadding(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.LEFT_PADDING)){
+            double[] values = doubleValues.get(StaticAnimations.LEFT_PADDING);
+            PaddingUtil.setLeftPadding(element, values[0]);
         }
         if(doubleValues.containsKey(StaticAnimations.MARGIN)){
             double[] values = doubleValues.get(StaticAnimations.MARGIN);
@@ -479,6 +531,22 @@ public class StaticAnimation {
             if(values.length == 8){
                 BorderSetter.setBorderInsets(element, values[0], values[1], values[2], values[3]);
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_TOP_INSET);
+            BorderSetter.setTopBorderInset(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_RIGHT_INSET);
+            BorderSetter.setRightBorderInset(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_BOTTOM_INSET);
+            BorderSetter.setBottomBorderInset(element, values[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_INSET)){
+            double[] values = doubleValues.get(StaticAnimations.BR_LEFT_INSET);
+            BorderSetter.setLeftBorderInset(element, values[0]);
         }
         if(doubleValues.containsKey(StaticAnimations.BR_OPACITY)){
             double[] values = doubleValues.get(StaticAnimations.BR_OPACITY);

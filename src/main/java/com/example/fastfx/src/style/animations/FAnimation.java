@@ -120,6 +120,16 @@ public class FAnimation {
         add(fAnimation, value, duration, "linear");
     }
 
+    /**
+     * Add a new animation. See
+     *
+     * @param fAnimation    represents the animation type
+     * @param value         represents the String value for the color animations.
+     * @param duration      represents the duration of the animation
+     * @param fInterpolator represents the interpolation type
+     * @Class <strong>FAnimation</strong>
+     * for all supported animations.
+     */
     public void add (String fAnimation, String value, Duration duration, String fInterpolator) {
         String animation = FAnimations.get(fAnimation);
         Interpolator interpolator = FInterpolator.get(fInterpolator);
@@ -488,6 +498,7 @@ public class FAnimation {
                 timeline.getKeyFrames().remove(keyFrame);
             });
             currentAnimations.remove(animation);
+            removeProperty(animation);
             if (animation.equals(FAnimations.SHADOW)) {
                 lowerRadius = 0;
                 higherRadius = 0;

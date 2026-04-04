@@ -65,6 +65,26 @@ public class StaticAnimations {
     public static final String PADDING = "padding";
 
     /**
+     * Animation name for <strong>top padding</strong> property
+     */
+    public static final String TOP_PADDING = "topPadding";
+
+    /**
+     * Animation name for <strong>right padding</strong> property
+     */
+    public static final String RIGHT_PADDING = "rightPadding";
+
+    /**
+     * Animation name for <strong>bottom padding</strong> property
+     */
+    public static final String BOTTOM_PADDING = "bottomPadding";
+
+    /**
+     * Animation name for <strong>left padding</strong> property
+     */
+    public static final String LEFT_PADDING = "leftPadding";
+
+    /**
      * Animation name for <strong>margin</strong> property
      */
     public static final String MARGIN = "margin";
@@ -207,6 +227,26 @@ public class StaticAnimations {
     public static final String BR_INSETS = "brInsets";
 
     /**
+     * Animation name for <strong>top border inset</strong> property
+     */
+    public static final String BR_TOP_INSET = "brTopInset";
+
+    /**
+     * Animation name for <strong>right border inset</strong> property
+     */
+    public static final String BR_RIGHT_INSET = "brRightInset";
+
+    /**
+     * Animation name for <strong>bottom border inset</strong> property
+     */
+    public static final String BR_BOTTOM_INSET = "brBottomInset";
+
+    /**
+     * Animation name for <strong>left border inset</strong> property
+     */
+    public static final String BR_LEFT_INSET = "brLeftInset";
+
+    /**
      * Animation name for <strong>border radius</strong>
      */
     public static final String BR_RADIUS = "brRadius";
@@ -302,6 +342,10 @@ public class StaticAnimations {
                     TRANSLATE_Y,
                     OPACITY,
                     PADDING,
+                    TOP_PADDING,
+                    RIGHT_PADDING,
+                    BOTTOM_PADDING,
+                    LEFT_PADDING,
                     MARGIN,
                     BG_OPACITY,
                     BG_RADIUS,
@@ -326,6 +370,10 @@ public class StaticAnimations {
                     BR_BOTTOM_WIDTH,
                     BR_LEFT_WIDTH,
                     BR_INSETS,
+                    BR_TOP_INSET,
+                    BR_RIGHT_INSET,
+                    BR_BOTTOM_INSET,
+                    BR_LEFT_INSET,
                     BR_RADIUS,
                     BR_TL_RADIUS,
                     BR_TR_RADIUS,

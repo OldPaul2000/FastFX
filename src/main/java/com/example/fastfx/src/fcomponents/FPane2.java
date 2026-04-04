@@ -296,6 +296,7 @@ public class FPane2 extends Pane implements FComponent{
 
     @Override
     public FComponent top (String rawValue) {
+        propertyManager.top(rawValue);
         return this;
     }
 
@@ -312,6 +313,7 @@ public class FPane2 extends Pane implements FComponent{
 
     @Override
     public FComponent right (String rawValue) {
+        propertyManager.right(rawValue);
         return this;
     }
 
@@ -328,6 +330,7 @@ public class FPane2 extends Pane implements FComponent{
 
     @Override
     public FComponent bottom (String rawValue) {
+        propertyManager.bottom(rawValue);
         return this;
     }
 
@@ -344,6 +347,7 @@ public class FPane2 extends Pane implements FComponent{
 
     @Override
     public FComponent left (String rawValue) {
+        propertyManager.left(rawValue);
         return this;
     }
 
@@ -975,6 +979,9 @@ public class FPane2 extends Pane implements FComponent{
         component.notifyAdded(this);
     }
 
+    /**
+     * This method should be called only by PropertyManager.
+     */
     public void notifyAdded(Region component){
         propertyManager.notifyParentWasSet(component);
     }
