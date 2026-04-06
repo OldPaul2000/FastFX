@@ -1253,6 +1253,9 @@ public class PropertyManager2 {
     public void top(double value){
         if(!setPropertiesOnHover && !setPropertiesOnClick){
             propertyHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
+            pendingTaskManager.removeTaskById(ListenerID.HEIGHT_Y);
+            pendingTaskManager.removeTaskById(ListenerID.HEIGHT_TOP);
+            pendingTaskManager.removeTaskById(ListenerID.HEIGHT_BOTTOM);
             listenersManager.remove(ListenerID.HEIGHT_Y);
             listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PARENT);
             listenersManager.remove(ListenerID.HEIGHT_BOTTOM_COMPONENT);
@@ -1266,7 +1269,6 @@ public class PropertyManager2 {
         if(parser.isValid() && !setPropertiesOnHover && !setPropertiesOnClick){
             double value = parser.getDoubleValue(0);
             long duration = parser.getDuration(0);
-            System.out.println("value: " + value);
             String interpolator = parser.getInterpolator(0);
             propertyHelper.stopTempAnimation(FAnimations.LAYOUT_Y);
             listenersManager.remove(ListenerID.HEIGHT_Y);
@@ -1288,12 +1290,11 @@ public class PropertyManager2 {
             else{
                 pendingTaskManager.removeTaskById(ListenerID.HEIGHT_Y);
                 pendingTaskManager.removeTaskById(ListenerID.HEIGHT_TOP);
+                pendingTaskManager.removeTaskById(ListenerID.HEIGHT_BOTTOM);
                 pendingTaskManager.addTask(ListenerID.HEIGHT_TOP, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     if(duration > 0) {
                         propertyHelper.setAnimationType(FAnimations.LAYOUT_Y);
-                        System.out.println("layoutY: " + component.getLayoutY());
-                        System.out.println("parser value: " + value);
                         propertyHelper.setValues(component.getLayoutY(), value);
                         propertyHelper.setDuration(duration);
                         propertyHelper.setInterpolator(interpolator);
@@ -1315,23 +1316,24 @@ public class PropertyManager2 {
             listenersManager.remove(ListenerID.WIDTH_RIGHT_PARENT);
             listenersManager.remove(ListenerID.WIDTH_RIGHT_COMPONENT);
             if(parent != null){
-                component.setLayoutX(parent.getPrefWidth() - component.getPrefWidth() - value);
+                double layoutXValue = parent.getPrefWidth() - component.getPrefWidth() - value;
+                component.setLayoutX(layoutXValue);
                 ChangeListener<Number> parentListener = (val, oldVal, newVal) -> {
                     double parentWidth = parent.getPrefWidth();
                     double componentWidth = component.getPrefWidth();
                     component.setLayoutX(parentWidth - componentWidth - value);
-//                    valuesManager.set(MainProps.X, parentWidth - componentWidth - value);
                 };
                 ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                     component.setLayoutX(parent.getPrefWidth() - (double)newVal - value);
-//                    valuesManager.set(MainProps.X, parent.getPrefWidth() - (double)newVal - value);
                 };
                 listenersManager.add(parent, ListenerID.WIDTH_RIGHT_PARENT, MainProps.WIDTH, parentListener);
                 listenersManager.add(component, ListenerID.WIDTH_RIGHT_COMPONENT, MainProps.WIDTH, componentListener);
-                valuesManager.set(MainProps.X, parent.getPrefWidth() - component.getPrefWidth() - value);
+                valuesManager.set(MainProps.X, layoutXValue);
             }
             else{
+                pendingTaskManager.removeTaskById(ListenerID.WIDTH_X);
                 pendingTaskManager.removeTaskById(ListenerID.WIDTH_RIGHT);
+                pendingTaskManager.removeTaskById(ListenerID.WIDTH_LEFT);
                 pendingTaskManager.addTask(ListenerID.WIDTH_RIGHT, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     component.setLayoutX(p.getPrefWidth() - component.getPrefWidth() - value);
@@ -1339,11 +1341,9 @@ public class PropertyManager2 {
                         double parentWidth = p.getPrefWidth();
                         double componentWidth = component.getPrefWidth();
                         component.setLayoutX(parentWidth - componentWidth - value);
-//                        valuesManager.set(MainProps.X, parentWidth - componentWidth - value);
                     };
                     ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                         component.setLayoutX(p.getPrefWidth() - (double)newVal - value);
-//                        valuesManager.set(MainProps.X, p.getPrefWidth() - (double)newVal - value);
                     };
                     listenersManager.add(p, ListenerID.WIDTH_RIGHT_PARENT, MainProps.WIDTH, parentListener);
                     listenersManager.add(component, ListenerID.WIDTH_RIGHT_COMPONENT, MainProps.WIDTH, componentListener);
@@ -1379,11 +1379,9 @@ public class PropertyManager2 {
                     double parentWidth = parent.getPrefWidth();
                     double componentWidth = component.getPrefWidth();
                     component.setLayoutX(parentWidth - componentWidth - value);
-                    valuesManager.set(MainProps.X, parentWidth - componentWidth - value);
                 };
                 ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                     component.setLayoutX(parent.getPrefWidth() - (double)newVal - value);
-                    valuesManager.set(MainProps.X, parent.getPrefWidth() - (double)newVal - value);
                 };
                 listenersManager.add(parent, ListenerID.WIDTH_RIGHT_PARENT, MainProps.WIDTH, parentListener);
                 listenersManager.add(component, ListenerID.WIDTH_RIGHT_COMPONENT, MainProps.WIDTH, componentListener);
@@ -1391,8 +1389,9 @@ public class PropertyManager2 {
             }
             else{
                 pendingTaskManager.removeTaskById(ListenerID.WIDTH_X);
+                pendingTaskManager.removeTaskById(ListenerID.WIDTH_RIGHT);
                 pendingTaskManager.removeTaskById(ListenerID.WIDTH_LEFT);
-                pendingTaskManager.addTask(ListenerID.WIDTH_LEFT, (p) -> {
+                pendingTaskManager.addTask(ListenerID.WIDTH_RIGHT, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     double layoutXValue = p.getPrefWidth() - component.getPrefWidth() - value;
                     if(duration > 0) {
@@ -1409,11 +1408,9 @@ public class PropertyManager2 {
                         double parentWidth = p.getPrefWidth();
                         double componentWidth = component.getPrefWidth();
                         component.setLayoutX(parentWidth - componentWidth - value);
-//                        valuesManager.set(MainProps.X, parentWidth - componentWidth - value);
                     };
                     ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                         component.setLayoutX(p.getPrefWidth() - (double)newVal - value);
-//                        valuesManager.set(MainProps.X, p.getPrefWidth() - (double)newVal - value);
                     };
                     listenersManager.add(parent, ListenerID.WIDTH_RIGHT_PARENT, MainProps.WIDTH, parentListener);
                     listenersManager.add(component, ListenerID.WIDTH_RIGHT_COMPONENT, MainProps.WIDTH, componentListener);
@@ -1431,24 +1428,25 @@ public class PropertyManager2 {
             listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PARENT);
             listenersManager.remove(ListenerID.HEIGHT_BOTTOM_COMPONENT);
             if(parent != null){
-                component.setLayoutY(parent.getPrefHeight() - component.getPrefHeight() - value);
+                double layoutYValue = parent.getPrefHeight() - component.getPrefHeight() - value;
+                component.setLayoutY(layoutYValue);
                 ChangeListener<Number> parentListener = (val, oldVal, newVal) -> {
                     double parentHeight = (double) newVal;
                     double componentHeight = component.getPrefHeight();
                     component.setLayoutY(parentHeight - componentHeight - value);
-//                    valuesManager.set(MainProps.Y, parentHeight - componentHeight - value);
                 };
                 ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                     double componentHeight = (double) newVal;
                     component.setLayoutY(parent.getPrefHeight() - componentHeight - value);
-//                    valuesManager.set(MainProps.Y, parent.getPrefHeight() - componentHeight - value);
                 };
                 listenersManager.add(parent, ListenerID.HEIGHT_BOTTOM_PARENT, MainProps.HEIGHT, parentListener);
                 listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_COMPONENT, MainProps.HEIGHT, componentListener);
-                valuesManager.set(MainProps.Y, parent.getPrefHeight() - component.getPrefHeight() - value);
+                valuesManager.set(MainProps.Y, layoutYValue);
             }
             else{
+                pendingTaskManager.removeTaskById(ListenerID.HEIGHT_Y);
                 pendingTaskManager.removeTaskById(ListenerID.HEIGHT_BOTTOM);
+                pendingTaskManager.removeTaskById(ListenerID.HEIGHT_TOP);
                 pendingTaskManager.addTask(ListenerID.HEIGHT_BOTTOM, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     component.setLayoutY(p.getPrefHeight() - component.getPrefHeight() - value);
@@ -1456,11 +1454,9 @@ public class PropertyManager2 {
                         double parentHeight = p.getPrefHeight();
                         double componentHeight = component.getPrefHeight();
                         component.setLayoutY(parentHeight - componentHeight - value);
-//                        valuesManager.set(MainProps.Y, parentHeight - componentHeight - value);
                     };
                     ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                         component.setLayoutY(p.getPrefHeight() - (double)newVal - value);
-//                        valuesManager.set(MainProps.Y, p.getPrefHeight() - (double)newVal - value);
                     };
                     listenersManager.add(p, ListenerID.HEIGHT_BOTTOM_PARENT, MainProps.HEIGHT, parentListener);
                     listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_COMPONENT, MainProps.HEIGHT, componentListener);
@@ -1496,11 +1492,9 @@ public class PropertyManager2 {
                     double parentHeight = parent.getPrefHeight();
                     double componentHeight = component.getPrefHeight();
                     component.setLayoutY(parentHeight - componentHeight - value);
-//                    valuesManager.set(MainProps.Y, parentHeight - componentHeight - value);
                 };
                 ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                     component.setLayoutY(parent.getPrefHeight() - (double)newVal - value);
-//                    valuesManager.set(MainProps.Y, parent.getPrefHeight() - (double)newVal - value);
                 };
                 listenersManager.add(parent, ListenerID.HEIGHT_BOTTOM_PARENT, MainProps.HEIGHT, parentListener);
                 listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_COMPONENT, MainProps.HEIGHT, componentListener);
@@ -1509,6 +1503,7 @@ public class PropertyManager2 {
             else{
                 pendingTaskManager.removeTaskById(ListenerID.HEIGHT_Y);
                 pendingTaskManager.removeTaskById(ListenerID.HEIGHT_BOTTOM);
+                pendingTaskManager.removeTaskById(ListenerID.HEIGHT_TOP);
                 pendingTaskManager.addTask(ListenerID.HEIGHT_BOTTOM, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     double layoutYValue = p.getPrefHeight() - component.getPrefHeight() - value;
@@ -1526,11 +1521,9 @@ public class PropertyManager2 {
                         double parentHeight = p.getPrefHeight();
                         double componentHeight = component.getPrefHeight();
                         component.setLayoutY(parentHeight - componentHeight - value);
-//                        valuesManager.set(MainProps.Y, parentHeight - componentHeight - value);
                     };
                     ChangeListener<Number> componentListener = (val, oldVal, newVal) -> {
                         component.setLayoutY(p.getPrefHeight() - (double)newVal - value);
-//                        valuesManager.set(MainProps.Y, p.getPrefHeight() - (double)newVal - value);
                     };
                     listenersManager.add(parent, ListenerID.HEIGHT_BOTTOM_PARENT, MainProps.HEIGHT, parentListener);
                     listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_COMPONENT, MainProps.HEIGHT, componentListener);
@@ -1578,6 +1571,7 @@ public class PropertyManager2 {
             else{
                 pendingTaskManager.removeTaskById(ListenerID.WIDTH_X);
                 pendingTaskManager.removeTaskById(ListenerID.WIDTH_LEFT);
+                pendingTaskManager.removeTaskById(ListenerID.WIDTH_RIGHT);
                 pendingTaskManager.addTask(ListenerID.WIDTH_LEFT, (p) -> {
                     propertyHelper.stopTempAnimation(FAnimations.LAYOUT_X);
                     if(duration > 0) {
@@ -1613,29 +1607,35 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.COLOR_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawBgColor = rawValue;
-            String currentColor = BackgroundSetter.getBackgroundHexColor(component);
-            if (currentColor != null) {
-                currentColor = "#" + currentColor;
-            } else {
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BG_COLOR, currentColor);
+            String color = parser.getColorValue(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            propertyHelper.setProperty(MainProps.BG_COLOR);
+            propertyHelper.setAnimationsTypes(FAnimations.BG_COLOR, StaticAnimations.BG_COLOR);
+            propertyHelper.setColors(valuesManager.getString(MainProps.BG_COLOR), color);
+            propertyHelper.setDuration(duration);
+            propertyHelper.setInterpolator(interpolator);
+            if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
             }
-            initialValues.put(MainProps.BG_OPACITY, parser.getBgOpacity(0) + "");
-            if (setPropertiesOnHover) {
-                hoverAnimation.removeAnimation(FAnimations.BG_COLOR);
-                staticHoverAnimation.removeAnimation(FAnimations.BG_COLOR);
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BG_COLOR, hoverAnimation, FAnimations.BG_COLOR, parser.getColorValue(0), parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                clickAnimation.removeAnimation(FAnimations.BG_COLOR);
-                staticClickAnimation.removeAnimation(FAnimations.BG_COLOR);
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BG_COLOR, clickAnimation, FAnimations.BG_COLOR, parser.getColorValue(0), parser.getDuration(0));
-            } else {
-                initialValues.put(MainProps.BG_COLOR, parser.getColorValue(0));
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setBackgroundColor(component, parser.getColorValue(0));
-                } else {
-                    PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BG_COLOR, FAnimations.BG_COLOR, parser.getColorValue(0), parser.getDuration(0));
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
+            }
+            else{
+                propertyHelper.stopTempAnimation(FAnimations.BG_COLOR);
+                propertyHelper.stopTempAnimation(FAnimations.BG_OPACITY);
+                if(duration == 0){
+                    BackgroundSetter.setBackgroundColor(component, color);
                 }
+                else{
+                    propertyHelper.addTempAnimation(FAnimations.BG_COLOR, PropertyHelper.COLOR_ANIMATION);
+                }
+                BackgroundSetter.setBackgroundOpacity(component, valuesManager.getDouble(MainProps.BG_OPACITY));
+                valuesManager.set(MainProps.BG_COLOR, color);
+                propertyHelper.updateAnimationStartColor(hoverAnimation, FAnimations.BG_COLOR, color);
+                propertyHelper.updateAnimationStartColor(clickAnimation, FAnimations.BG_COLOR, color);
             }
         }
     }
@@ -1648,26 +1648,62 @@ public class PropertyManager2 {
         return rawBgColor;
     }
 
-    public void bgOpacity (double opacity) {
-        BackgroundSetter.setBackgroundOpacity(component, opacity);
+    public void bgOpacity (double value) {
+        propertyHelper.setProperty(MainProps.BG_OPACITY);
+        propertyHelper.setStaticAnimationType(StaticAnimations.BG_OPACITY);
+        propertyHelper.setValues(BackgroundSetter.getBackgroundOpacity(component), value);
+        if (setPropertiesOnHover){
+            propertyHelper.setStaticAnimation(staticHoverAnimation);
+            propertyHelper.addStaticAnimation(PropertyHelper.NUMBER_ANIMATION);
+        }
+        else if (setPropertiesOnClick){
+            propertyHelper.setStaticAnimation(staticClickAnimation);
+            propertyHelper.addStaticAnimation(PropertyHelper.NUMBER_ANIMATION);
+        }
+        else{
+            propertyHelper.stopTempAnimation(FAnimations.BG_OPACITY);
+            propertyHelper.stopTempAnimation(FAnimations.BG_COLOR);
+            BackgroundSetter.setBackgroundColor(component, valuesManager.getString(MainProps.BG_COLOR));
+            BackgroundSetter.setBackgroundOpacity(component, value);
+            valuesManager.set(MainProps.BG_OPACITY, value);
+            propertyHelper.updateAnimationStartValue(FAnimations.BG_OPACITY, clickAnimation, value);
+            propertyHelper.updateAnimationStartValue(FAnimations.BG_OPACITY, hoverAnimation, value);
+        }
     }
 
-    public void bgOpacity (String rawValue) {
+    public void bgOpacity(String rawValue){
         parser.parse(PropertyParser.NUMBER_PROPERTY, rawValue);
-        if (parser.isValid()) {
+        if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawBgOpacity = rawValue;
-            double currOpacity = BackgroundSetter.getBackgroundOpacity(component);
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BG_OPACITY, hoverAnimation, FAnimations.BG_OPACITY, parser.getDoubleValue(0), parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BG_OPACITY, clickAnimation, FAnimations.BG_OPACITY, parser.getDoubleValue(0), parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setBackgroundOpacity(component, parser.getDoubleValue(0));
-                } else {
-                    initialValues.put(MainProps.BG_OPACITY, parser.getDoubleValue(0) + "");
-                    PropertyUtil.setTempAnimation(component, currOpacity, initialValues, MainProps.BG_OPACITY, FAnimations.BG_OPACITY, parser.getDoubleValue(0), parser.getDuration(0));
+            double value = parser.getDoubleValue(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            propertyHelper.setProperty(MainProps.BG_OPACITY);
+            propertyHelper.setAnimationsTypes(FAnimations.BG_OPACITY, StaticAnimations.BG_OPACITY);
+            propertyHelper.setValues(valuesManager.getDouble(MainProps.BG_OPACITY), value);
+            propertyHelper.setDuration(duration);
+            propertyHelper.setInterpolator(interpolator);
+            if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+            }
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+            }
+            else{
+                propertyHelper.stopTempAnimation(FAnimations.BG_OPACITY);
+                propertyHelper.stopTempAnimation(FAnimations.BG_COLOR);
+                BackgroundSetter.setBackgroundColor(component, valuesManager.getString(MainProps.BG_COLOR));
+                if(duration == 0){
+                    BackgroundSetter.setBackgroundOpacity(component, value);
                 }
+                else{
+                    propertyHelper.addTempAnimation(FAnimations.BG_OPACITY, PropertyHelper.NUMBER_ANIMATION);
+                }
+                valuesManager.set(MainProps.BG_OPACITY, value);
+                propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_OPACITY, value);
+                propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_OPACITY, value);
             }
         }
     }

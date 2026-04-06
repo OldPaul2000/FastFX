@@ -105,6 +105,11 @@ public class StaticAnimations {
     //*************
 
     /**
+     * Animation name for <strong>background color</strong>
+     */
+    public static final String BG_COLOR = "bgColor";
+
+    /**
      * Animation name for <strong>background opacity</strong>
      */
     public static final String BG_OPACITY = "bgOpacity";
@@ -347,6 +352,7 @@ public class StaticAnimations {
                     BOTTOM_PADDING,
                     LEFT_PADDING,
                     MARGIN,
+                    BG_COLOR,
                     BG_OPACITY,
                     BG_RADIUS,
                     BG_TL_RADIUS,

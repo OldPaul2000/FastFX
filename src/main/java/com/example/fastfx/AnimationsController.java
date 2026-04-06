@@ -33,15 +33,17 @@ public class AnimationsController {
         mainContainer.add(fPane);
 
         FPane2 fPane2 = new FPane2();
-        fPane2.bgColor("#333333");
+        fPane2.bgColor("#ff0000 1s");
+        fPane2.click(() -> {
+            fPane2.bgOpacity("0.9 0.5s");
+        });
+        fPane2.bgOpacity(0.5);
         fPane2.width(40);
         fPane2.height(40);
-        fPane2.left("40");
-        fPane2.right("15");
-        fPane2.top("15 1s");
-        fPane2.bottom("40 1s");
-        //        fPane2.top("15 1s");
         fPane.add(fPane2);
+        fPane2.right(15);
+        fPane2.bottom("15");
+//        fPane2.y("25");
 
         resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
 

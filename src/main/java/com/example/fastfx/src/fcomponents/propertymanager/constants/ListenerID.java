@@ -30,4 +30,7 @@ public class ListenerID {
     public static final String HEIGHT_BOTTOM_COMPONENT = HEIGHT_BOTTOM + SEPARATOR + PARENT;
     public static final String WIDTH_RIGHT_PARENT = WIDTH_RIGHT + SEPARATOR + PARENT;
     public static final String WIDTH_RIGHT_COMPONENT = WIDTH_RIGHT + SEPARATOR + COMPONENT;
+
+    public static final String BG_COLOR = "BG_COLOR";
+    public static final String BG_OPACITY = "BG_OPACITY";
 }

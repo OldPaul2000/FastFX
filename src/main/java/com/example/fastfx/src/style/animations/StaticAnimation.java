@@ -143,6 +143,9 @@ public class StaticAnimation {
         //***************************
         //*  BACKGROUND PROPERTIES  *
         //***************************
+        if(doubleValues.containsKey(StaticAnimations.BG_COLOR)){
+            BackgroundSetter.setBackgroundColor(element, stringValues.get(StaticAnimations.BG_COLOR)[1]);
+        }
         if(doubleValues.containsKey(StaticAnimations.BG_OPACITY)){
             BackgroundSetter.setBackgroundOpacity(element, doubleValues.get(StaticAnimations.BG_OPACITY)[1]);
         }
@@ -410,6 +413,9 @@ public class StaticAnimation {
         //***************************
         //*  BACKGROUND PROPERTIES  *
         //***************************
+        if(doubleValues.containsKey(StaticAnimations.BG_COLOR)){
+            BackgroundSetter.setBackgroundColor(element, stringValues.get(StaticAnimations.BG_COLOR)[0]);
+        }
         if(doubleValues.containsKey(StaticAnimations.BG_OPACITY)){
             BackgroundSetter.setBackgroundOpacity(element, doubleValues.get(StaticAnimations.BG_OPACITY)[0]);
         }

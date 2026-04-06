@@ -116,5 +116,7 @@ public class ValuesManager {
         fComponentValues.put(MainProps.RIGHT, "0");
         fComponentValues.put(MainProps.BOTTOM, "0");
         fComponentValues.put(MainProps.LEFT, "0");
+        fComponentValues.put(MainProps.BG_COLOR, "#00000000");
+        fComponentValues.put(MainProps.BG_OPACITY, "1");
     }
 }

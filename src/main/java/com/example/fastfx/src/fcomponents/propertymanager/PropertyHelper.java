@@ -29,7 +29,7 @@ public class PropertyHelper {
     private PendingTaskManager pendingTaskManager;
     private FAnimation fAnimation;
     private Map<String, FAnimation> tempAnimations;
-    private Map<FAnimation, Boolean> tempAnimationHasBeenStopped;
+    private Map<String, Boolean> tempAnimationHasBeenStopped;
     private boolean paddingAnimationsStopped = false;
     private StaticAnimation staticAnimation;
     private String animationType;
@@ -156,7 +156,6 @@ public class PropertyHelper {
      *                 and also to be updated with the new value(e.g. MainProps.WIDTH)
      */
     public void setProperty (String property) {
-        System.out.println("Set prop: " + property);
         this.property = property;
     }
 
@@ -178,7 +177,6 @@ public class PropertyHelper {
      * @param endValue the value the animation will end to
      */
     public void setValues (double startValue, double endValue) {
-        System.out.println("Set values: " + startValue + " --- " + endValue);
         this.startValue = startValue;
         this.endValue = endValue;
     }
@@ -265,13 +263,11 @@ public class PropertyHelper {
      *             or a color based animation(for animating the background color for example)
      */
     public void addAnimation (String type) {
-//        if (valuesManager.contains(property)) {
-            if (type.equals(NUMBER_ANIMATION)) {
-                startValue = valuesManager.getDouble(property);
-            } else if (type.equals(COLOR_ANIMATION)) {
-                startColor = valuesManager.getString(property);
-            }
-//        }
+        if (type.equals(NUMBER_ANIMATION)) {
+            startValue = valuesManager.getDouble(property);
+        } else if (type.equals(COLOR_ANIMATION)) {
+            startColor = valuesManager.getString(property);
+        }
         if (type.equals(NUMBER_ANIMATION)) {
             fAnimation.removeAnimation(animationType);
             if (duration == 0) {
@@ -301,13 +297,11 @@ public class PropertyHelper {
      *             or a color based animation(for animating the background color for example)
      */
     public void addTempAnimation (String animationId, String type) {
-//        if (valuesManager.contains(property)) {
-            if (type.equals(NUMBER_ANIMATION)) {
-                startValue = valuesManager.getDouble(property);
-            } else if (type.equals(COLOR_ANIMATION)) {
-                startColor = valuesManager.getString(property);
-            }
-//        }
+        if (type.equals(NUMBER_ANIMATION)) {
+            startValue = valuesManager.getDouble(property);
+        } else if (type.equals(COLOR_ANIMATION)) {
+            startColor = valuesManager.getString(property);
+        }
         FAnimation tempAnimation = new FAnimation(component);
         tempAnimations.put(animationId, tempAnimation);
         if (type.equals(NUMBER_ANIMATION)) {
@@ -321,7 +315,7 @@ public class PropertyHelper {
         }
         tempAnimation.destroyOnFinished();
         tempAnimation.play();
-        tempAnimationHasBeenStopped.put(tempAnimation, false);
+        tempAnimationHasBeenStopped.put(animationId, false);
     }
     
     public void addMultipleSidesSizeAnimation(String fAnimationType, String prop){
@@ -597,7 +591,7 @@ public class PropertyHelper {
                 valuesManager.set(MainProps.TOP_PADDING, doubleValue1);
                 tempAnimation1.destroyOnFinished();
                 tempAnimation1.play();
-                tempAnimationHasBeenStopped.put(tempAnimation1, false);
+                tempAnimationHasBeenStopped.put(FAnimations.TOP_PADDING, false);
             }
             else{
                 PaddingUtil.setTopPadding(component, endValue1);
@@ -610,7 +604,7 @@ public class PropertyHelper {
                 valuesManager.set(MainProps.RIGHT_PADDING, doubleValue2);
                 tempAnimation2.destroyOnFinished();
                 tempAnimation2.play();
-                tempAnimationHasBeenStopped.put(tempAnimation2, false);
+                tempAnimationHasBeenStopped.put(FAnimations.RIGHT_PADDING, false);
             }
             else{
                 PaddingUtil.setRightPadding(component, endValue2);
@@ -623,7 +617,7 @@ public class PropertyHelper {
                 valuesManager.set(MainProps.BOTTOM_PADDING, doubleValue3);
                 tempAnimation3.destroyOnFinished();
                 tempAnimation3.play();
-                tempAnimationHasBeenStopped.put(tempAnimation3, false);
+                tempAnimationHasBeenStopped.put(FAnimations.BOTTOM_PADDING, false);
             }
             else{
                 PaddingUtil.setBottomPadding(component, endValue3);
@@ -636,7 +630,7 @@ public class PropertyHelper {
                 valuesManager.set(MainProps.LEFT_PADDING, doubleValue4);
                 tempAnimation4.destroyOnFinished();
                 tempAnimation4.play();
-                tempAnimationHasBeenStopped.put(tempAnimation4, false);
+                tempAnimationHasBeenStopped.put(FAnimations.LEFT_PADDING, false);
             }
             else{
                 PaddingUtil.setLeftPadding(component, endValue4);
@@ -669,15 +663,11 @@ public class PropertyHelper {
      * @param animationId the animation id
      */
     public void stopTempAnimation(String animationId){
-        System.out.println("animation id: " + animationId);
-        System.out.println("animations: " + tempAnimations.get(animationId));
-        System.out.println("has been stopped: " + tempAnimationHasBeenStopped);
-        System.out.println();
         FAnimation tempAnimation = tempAnimations.get(animationId);
         if(tempAnimation != null){
-            if(tempAnimationHasBeenStopped.containsKey(tempAnimation) && !tempAnimationHasBeenStopped.get(tempAnimation)){
+            if(tempAnimationHasBeenStopped.containsKey(animationId) && !tempAnimationHasBeenStopped.get(animationId)){
                 tempAnimation.stop();
-                tempAnimationHasBeenStopped.put(tempAnimation, true);
+                tempAnimationHasBeenStopped.put(animationId, true);
                 tempAnimations.remove(animationId);
             }
         }
@@ -745,6 +735,30 @@ public class PropertyHelper {
             staticAnimation.removeAnimation(animations[1]);
             staticAnimation.removeAnimation(animations[2]);
             staticAnimation.removeAnimation(animations[3]);
+        }
+    }
+
+    public void updateAnimationStartColor(FAnimation fAnimation, String animationType, String color){
+        if(fAnimation != null){
+            fAnimation.updateStartColor(animationType, color);
+        }
+    }
+
+    public void updateAnimationEndColor(FAnimation fAnimation, String animationType, String color){
+        if(fAnimation != null){
+            fAnimation.updateEndColor(animationType, color);
+        }
+    }
+
+    public void updateAnimationStartValue(FAnimation fAnimation, String animationType, double value){
+        if(fAnimation != null){
+            fAnimation.updateStartValue(animationType, value);
+        }
+    }
+
+    public void updateAnimationEndValue(FAnimation fAnimation, String animationType, double value){
+        if(fAnimation != null){
+            fAnimation.updateEndValue(animationType, value);
         }
     }
 }

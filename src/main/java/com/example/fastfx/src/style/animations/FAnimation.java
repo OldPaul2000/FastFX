@@ -324,6 +324,114 @@ public class FAnimation {
     }
 
     /**
+     * Updates the start color for an existing animation
+     */
+    public void updateStartColor(String fAnimation, String newColor){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            Color startValue = null;
+            Color endValue = null;
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (Color) kv.getEndValue();
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (Color)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                endValue = startValue;
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            String redHex = Integer.toHexString((int)(endValue.getRed() * 255));
+            String greenHex = Integer.toHexString((int)(endValue.getGreen() * 255));
+            String blueHex = Integer.toHexString((int)(endValue.getBlue() * 255));
+            String endColor = "#" + redHex + greenHex + blueHex;
+            add(fAnimation, newColor, Duration.ZERO, interpolator);
+            add(fAnimation, endColor, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the end color for an existing animation
+     */
+    public void updateEndColor(String fAnimation, String newColor){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            Color startValue = null;
+            Color endValue = null;
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                startValue = (Color)kv.getEndValue();
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            Set<KeyValue> keyValues2 = kf2.getValues();
+            for(KeyValue kv : keyValues2){
+                endValue = (Color)kv.getEndValue();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                startValue = endValue;
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            String redHex = Integer.toHexString((int)(endValue.getRed() * 255));
+            String greenHex = Integer.toHexString((int)(endValue.getGreen() * 255));
+            String blueHex = Integer.toHexString((int)(endValue.getBlue() * 255));
+            String startColor = "#" + redHex + greenHex + blueHex;
+            add(fAnimation, startColor, Duration.ZERO, interpolator);
+            add(fAnimation, newColor, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
+     * Updates the start color and the end color for an existing animation
+     */
+    public void updateColors(String fAnimation, String startColor, String endColor){
+        if (currentAnimations.containsKey(fAnimation)) {
+            timeline.stop();
+            KeyFrame kf1 = currentAnimations.get(fAnimation).get(0);
+            KeyFrame kf2 = currentAnimations.get(fAnimation).get(1);
+            double duration = kf2.getTime().toMillis();
+            String interpolator = FInterpolator.LINEAR;
+
+            Set<KeyValue> keyValues1 = kf1.getValues();
+            for(KeyValue kv : keyValues1){
+                interpolator = kv.getInterpolator()
+                                 .toString()
+                                 .substring(13)
+                                 .replace("_", "-")
+                                 .toLowerCase();
+            }
+            if(kf1.getTime().toMillis() > kf2.getTime().toMillis()){
+                duration = kf1.getTime().toMillis();
+            }
+            removeAnimation(fAnimation);
+            add(fAnimation, startColor, Duration.ZERO, interpolator);
+            add(fAnimation, endColor, Duration.millis(duration), interpolator);
+        }
+    }
+
+    /**
      * Updates the duration for an existing animation
      */
     public void updateDuration(String fAnimation, long newDuration){
