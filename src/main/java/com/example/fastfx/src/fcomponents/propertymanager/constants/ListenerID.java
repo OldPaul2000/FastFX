@@ -33,4 +33,11 @@ public class ListenerID {
 
     public static final String BG_COLOR = "BG_COLOR";
     public static final String BG_OPACITY = "BG_OPACITY";
+    public static final String WIDTH_BG_RADIUS = "WIDTH_BG_RADIUS";
+    public static final String WIDTH_BG_TL_BR_RADIUS = "WIDTH_BG_TL_BR_RADIUS";
+    public static final String WIDTH_BG_TR_BL_RADIUS = "WIDTH_BG_TR_BL_RADIUS";
+    public static final String WIDTH_BG_TL_RADIUS = "WIDTH_BG_TL_RADIUS";
+    public static final String WIDTH_BG_TR_RADIUS = "WIDTH_BG_TR_RADIUS";
+    public static final String WIDTH_BG_BR_RADIUS = "WIDTH_BG_BR_RADIUS";
+    public static final String WIDTH_BG_BL_RADIUS = "WIDTH_BG_BL_RADIUS";
 }

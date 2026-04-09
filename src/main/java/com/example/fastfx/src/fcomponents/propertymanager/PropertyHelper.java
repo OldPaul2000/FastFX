@@ -7,6 +7,7 @@ import com.example.fastfx.src.fcomponents.propertymanager.pendingtask.PendingTas
 import com.example.fastfx.src.style.animations.FAnimation;
 import com.example.fastfx.src.style.animations.FAnimations;
 import com.example.fastfx.src.style.animations.StaticAnimation;
+import com.example.fastfx.src.utility.style.BackgroundSetter;
 import com.example.fastfx.src.utility.style.PaddingUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Region;
@@ -31,6 +32,7 @@ public class PropertyHelper {
     private Map<String, FAnimation> tempAnimations;
     private Map<String, Boolean> tempAnimationHasBeenStopped;
     private boolean paddingAnimationsStopped = false;
+    private boolean bgRadiusAnimationsStopped = false;
     private StaticAnimation staticAnimation;
     private String animationType;
     private String staticAnimationType;
@@ -342,7 +344,7 @@ public class PropertyHelper {
             if(parametersCount == 1){
                 if(parser.getUnit(0).equals(FUnit.PIXELS)){
                     if(duration1 == 0){
-                        staticAnimation.addAnimation(staticAnimationType, startValue1, endValue1);
+                        staticAnimation.addAnimation(fAnimationType, startValue1, endValue1);
                     }
                     else{
                         fAnimation.add(fAnimationType, startValue1, Duration.ZERO, interpolator1);
@@ -642,6 +644,427 @@ public class PropertyHelper {
         }
     }
 
+    private double bgRadiusStartValue1;
+    private double bgRadiusStartValue2;
+    private double bgRadiusStartValue3;
+    private double bgRadiusStartValue4;
+    private double bgRadiusEndValue1;
+    private double bgRadiusEndValue2;
+    private double bgRadiusEndValue3;
+    private double bgRadiusEndValue4;
+    private double bgRadiusDoubleValue1;
+    private double bgRadiusDoubleValue2;
+    private double bgRadiusDoubleValue3;
+    private double bgRadiusDoubleValue4;
+    private String bgRadiusUnit1;
+    private String bgRadiusUnit2;
+    private String bgRadiusUnit3;
+    private String bgRadiusUnit4;
+    private long bgRadiusDuration1;
+    private long bgRadiusDuration2;
+    private long bgRadiusDuration3;
+    private long bgRadiusDuration4;
+    private String bgRadiusInterpolator1;
+    private String bgRadiusInterpolator2;
+    private String bgRadiusInterpolator3;
+    private String bgRadiusInterpolator4;
+    public void addBgRadiusProperty (boolean parentIsNull){
+        int parametersCount = parser.getParametersCount();
+        bgRadiusStartValue1 = valuesManager.getDouble(MainProps.BG_TL_RADIUS);
+        bgRadiusStartValue2 = valuesManager.getDouble(MainProps.BG_TR_RADIUS);
+        bgRadiusStartValue3 = valuesManager.getDouble(MainProps.BG_BR_RADIUS);
+        bgRadiusStartValue4 = valuesManager.getDouble(MainProps.BG_BL_RADIUS);
+        bgRadiusEndValue1 = 0;
+        bgRadiusEndValue2 = 0;
+        bgRadiusEndValue3 = 0;
+        bgRadiusEndValue4 = 0;
+        bgRadiusDoubleValue1 = parser.getDoubleValue(0);
+        bgRadiusDoubleValue2 = parser.getDoubleValue(1);
+        bgRadiusDoubleValue3 = parser.getDoubleValue(2);
+        bgRadiusDoubleValue4 = parser.getDoubleValue(3);
+        bgRadiusUnit1 = parser.getUnit(0);
+        bgRadiusUnit2 = parser.getUnit(1);
+        bgRadiusUnit3 = parser.getUnit(2);
+        bgRadiusUnit4 = parser.getUnit(3);
+        bgRadiusDuration1 = parser.getDuration(0);
+        bgRadiusDuration2 = parser.getDuration(1);
+        bgRadiusDuration3 = parser.getDuration(2);
+        bgRadiusDuration4 = parser.getDuration(3);
+        bgRadiusInterpolator1 = parser.getInterpolator(0);
+        bgRadiusInterpolator2 = parser.getInterpolator(1);
+        bgRadiusInterpolator3 = parser.getInterpolator(2);
+        bgRadiusInterpolator4 = parser.getInterpolator(3);
+        listenersManager.remove(ListenerID.WIDTH_BG_TL_BR_RADIUS);
+        listenersManager.remove(ListenerID.WIDTH_BG_TR_BL_RADIUS);
+        listenersManager.remove(ListenerID.WIDTH_BG_TL_RADIUS);
+        listenersManager.remove(ListenerID.WIDTH_BG_TR_RADIUS);
+        listenersManager.remove(ListenerID.WIDTH_BG_BR_RADIUS);
+        listenersManager.remove(ListenerID.WIDTH_BG_BL_RADIUS);
+        stopTempBgRadiusAnimations();
+        if(!parentIsNull){
+            if(parametersCount == 1){
+                bgRadiusDuration2 = bgRadiusDuration1;
+                bgRadiusDuration3 = bgRadiusDuration1;
+                bgRadiusDuration4 = bgRadiusDuration1;
+                bgRadiusInterpolator2 = bgRadiusInterpolator1;
+                bgRadiusInterpolator3 = bgRadiusInterpolator1;
+                bgRadiusInterpolator4 = bgRadiusInterpolator1;
+                if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                    bgRadiusEndValue2 = bgRadiusEndValue1;
+                    bgRadiusEndValue3 = bgRadiusEndValue1;
+                    bgRadiusEndValue4 = bgRadiusEndValue1;
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                    bgRadiusEndValue2 = bgRadiusEndValue1;
+                    bgRadiusEndValue3 = bgRadiusEndValue1;
+                    bgRadiusEndValue4 = bgRadiusEndValue1;
+                }
+            }
+            else if(parametersCount == 2){
+                bgRadiusDuration3 = bgRadiusDuration1;
+                bgRadiusDuration4 = bgRadiusDuration2;
+                bgRadiusInterpolator3 = bgRadiusInterpolator1;
+                bgRadiusInterpolator4 = bgRadiusInterpolator2;
+                if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                    bgRadiusEndValue3 = bgRadiusEndValue1;
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TL_BR_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                    bgRadiusEndValue3 = bgRadiusEndValue1;
+                }
+                if(bgRadiusUnit2.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                    bgRadiusEndValue4 = bgRadiusEndValue2;
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TR_BL_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue2 = bgRadiusDoubleValue2;
+                    bgRadiusEndValue4 = bgRadiusEndValue2;
+                }
+            }
+            else if(parametersCount == 4){
+                if(bgRadiusUnit1.equals(FUnit.PERCENTAGE) && bgRadiusUnit3.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                    bgRadiusEndValue3 = component.getPrefWidth() * (bgRadiusDoubleValue3 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue3 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TL_BR_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TL_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit3.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue3 = component.getPrefWidth() * (bgRadiusDoubleValue3 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue3 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_BR_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                }
+                if(bgRadiusUnit3.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue3 = bgRadiusDoubleValue3;
+                }
+                if(bgRadiusUnit2.equals(FUnit.PERCENTAGE) && bgRadiusUnit4.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                    bgRadiusEndValue4 = component.getPrefWidth() * (bgRadiusDoubleValue4 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue4 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TR_BL_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit2.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TR_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                else if(bgRadiusUnit4.equals(FUnit.PERCENTAGE)){
+                    bgRadiusEndValue4 = component.getPrefWidth() * (bgRadiusDoubleValue4 / 100);
+                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                        stopTempBgRadiusAnimations();
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue4 / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_BL_RADIUS, MainProps.WIDTH, widthListener);
+                }
+                if(bgRadiusUnit2.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue2 = bgRadiusDoubleValue2;
+                }
+                if(bgRadiusUnit4.equals(FUnit.PIXELS)){
+                    bgRadiusEndValue4 = bgRadiusDoubleValue4;
+                }
+            }
+            if(bgRadiusDuration1 > 0){
+                FAnimation tempAnimation = new FAnimation(component);
+                tempAnimations.put(FAnimations.BG_TL_RADIUS, tempAnimation);
+                tempAnimation.add(FAnimations.BG_TL_RADIUS, bgRadiusStartValue1, Duration.ZERO, bgRadiusInterpolator1);
+                tempAnimation.add(FAnimations.BG_TL_RADIUS, bgRadiusEndValue1, Duration.millis(bgRadiusDuration1), bgRadiusInterpolator1);
+                valuesManager.set(MainProps.BG_TL_RADIUS, bgRadiusDoubleValue1);
+                tempAnimation.destroyOnFinished();
+                tempAnimation.play();
+                tempAnimationHasBeenStopped.put(FAnimations.BG_TL_RADIUS, false);
+            }
+            else{
+                BackgroundSetter.setTopLeftBackgroundRadius(component, bgRadiusEndValue1);
+            }
+            if(bgRadiusDuration2 > 0){
+                FAnimation tempAnimation = new FAnimation(component);
+                tempAnimations.put(FAnimations.BG_TR_RADIUS, tempAnimation);
+                tempAnimation.add(FAnimations.BG_TR_RADIUS, bgRadiusStartValue2, Duration.ZERO, bgRadiusInterpolator2);
+                tempAnimation.add(FAnimations.BG_TR_RADIUS, bgRadiusEndValue2, Duration.millis(bgRadiusDuration2), bgRadiusInterpolator2);
+                valuesManager.set(MainProps.BG_TR_RADIUS, bgRadiusDoubleValue2);
+                tempAnimation.destroyOnFinished();
+                tempAnimation.play();
+                tempAnimationHasBeenStopped.put(FAnimations.BG_TR_RADIUS, false);
+            }
+            else{
+                BackgroundSetter.setTopRightBackgroundRadius(component, bgRadiusEndValue2);
+            }
+            if(bgRadiusDuration3 > 0){
+                FAnimation tempAnimation = new FAnimation(component);
+                tempAnimations.put(FAnimations.BG_BR_RADIUS, tempAnimation);
+                tempAnimation.add(FAnimations.BG_BR_RADIUS, bgRadiusStartValue3, Duration.ZERO, bgRadiusInterpolator3);
+                tempAnimation.add(FAnimations.BG_BR_RADIUS, bgRadiusEndValue3, Duration.millis(bgRadiusDuration3), bgRadiusInterpolator3);
+                valuesManager.set(MainProps.BG_BR_RADIUS, bgRadiusDoubleValue3);
+                tempAnimation.destroyOnFinished();
+                tempAnimation.play();
+                tempAnimationHasBeenStopped.put(FAnimations.BG_BR_RADIUS, false);
+            }
+            else{
+                BackgroundSetter.setBottomRightBackgroundRadius(component, bgRadiusEndValue3);
+            }
+            if(bgRadiusDuration4 > 0){
+                FAnimation tempAnimation = new FAnimation(component);
+                tempAnimations.put(FAnimations.BG_BL_RADIUS, tempAnimation);
+                tempAnimation.add(FAnimations.BG_BL_RADIUS, bgRadiusStartValue4, Duration.ZERO, bgRadiusInterpolator4);
+                tempAnimation.add(FAnimations.BG_BL_RADIUS, bgRadiusEndValue4, Duration.millis(bgRadiusDuration4), bgRadiusInterpolator4);
+                valuesManager.set(MainProps.BG_BL_RADIUS, bgRadiusDoubleValue4);
+                tempAnimation.destroyOnFinished();
+                tempAnimation.play();
+                tempAnimationHasBeenStopped.put(FAnimations.BG_BL_RADIUS, false);
+            }
+            else{
+                BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusEndValue4);
+            }
+            setFourSidesSizeValuesInValuesManager(MainProps.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
+        }
+        else{
+            pendingTaskManager.addTask(ListenerID.WIDTH_BG_RADIUS, (parent) -> {
+                if(parametersCount == 1){
+                    bgRadiusDuration2 = bgRadiusDuration1;
+                    bgRadiusDuration3 = bgRadiusDuration1;
+                    bgRadiusDuration4 = bgRadiusDuration1;
+                    bgRadiusInterpolator2 = bgRadiusInterpolator1;
+                    bgRadiusInterpolator3 = bgRadiusInterpolator1;
+                    bgRadiusInterpolator4 = bgRadiusInterpolator1;
+                    if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                        bgRadiusEndValue2 = bgRadiusEndValue1;
+                        bgRadiusEndValue3 = bgRadiusEndValue1;
+                        bgRadiusEndValue4 = bgRadiusEndValue1;
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                        bgRadiusEndValue2 = bgRadiusEndValue1;
+                        bgRadiusEndValue3 = bgRadiusEndValue1;
+                        bgRadiusEndValue4 = bgRadiusEndValue1;
+                    }
+                }
+                else if(parametersCount == 2){
+                    bgRadiusDuration3 = bgRadiusDuration1;
+                    bgRadiusDuration4 = bgRadiusDuration2;
+                    bgRadiusInterpolator3 = bgRadiusInterpolator1;
+                    bgRadiusInterpolator4 = bgRadiusInterpolator2;
+                    if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                        bgRadiusEndValue3 = bgRadiusEndValue1;
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                            BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TL_BR_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                        bgRadiusEndValue3 = bgRadiusEndValue1;
+                    }
+                    if(bgRadiusUnit2.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                        bgRadiusEndValue4 = bgRadiusEndValue2;
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                            BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TR_BL_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue2 = bgRadiusDoubleValue2;
+                        bgRadiusEndValue4 = bgRadiusEndValue2;
+                    }
+                }
+                else if(parametersCount == 4){
+                    if(bgRadiusUnit1.equals(FUnit.PERCENTAGE) && bgRadiusUnit3.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                        bgRadiusEndValue3 = component.getPrefWidth() * (bgRadiusDoubleValue3 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                            BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue3 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TL_BR_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit1.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue1 = component.getPrefWidth() * (bgRadiusDoubleValue1 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue1 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TL_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit3.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue3 = component.getPrefWidth() * (bgRadiusDoubleValue3 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue3 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_BR_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    if(bgRadiusUnit1.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue1 = bgRadiusDoubleValue1;
+                    }
+                    if(bgRadiusUnit3.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue3 = bgRadiusDoubleValue3;
+                    }
+                    if(bgRadiusUnit2.equals(FUnit.PERCENTAGE) && bgRadiusUnit4.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                        bgRadiusEndValue4 = component.getPrefWidth() * (bgRadiusDoubleValue4 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                            BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue4 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TR_BL_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit2.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue2 = component.getPrefWidth() * (bgRadiusDoubleValue2 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue2 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TR_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    else if(bgRadiusUnit4.equals(FUnit.PERCENTAGE)){
+                        bgRadiusEndValue4 = component.getPrefWidth() * (bgRadiusDoubleValue4 / 100);
+                        ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                            stopTempBgRadiusAnimations();
+                            BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (bgRadiusDoubleValue4 / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_BL_RADIUS, MainProps.WIDTH, widthListener);
+                    }
+                    if(bgRadiusUnit2.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue2 = bgRadiusDoubleValue2;
+                    }
+                    if(bgRadiusUnit4.equals(FUnit.PIXELS)){
+                        bgRadiusEndValue4 = bgRadiusDoubleValue4;
+                    }
+                }
+                if(bgRadiusDuration1 > 0){
+                    FAnimation tempAnimation = new FAnimation(component);
+                    tempAnimations.put(FAnimations.BG_TL_RADIUS, tempAnimation);
+                    tempAnimation.add(FAnimations.BG_TL_RADIUS, bgRadiusStartValue1, Duration.ZERO, bgRadiusInterpolator1);
+                    tempAnimation.add(FAnimations.BG_TL_RADIUS, bgRadiusEndValue1, Duration.millis(bgRadiusDuration1), bgRadiusInterpolator1);
+                    valuesManager.set(MainProps.BG_TL_RADIUS, bgRadiusDoubleValue1);
+                    tempAnimation.destroyOnFinished();
+                    tempAnimation.play();
+                    tempAnimationHasBeenStopped.put(FAnimations.BG_TL_RADIUS, false);
+                }
+                else{
+                    BackgroundSetter.setTopLeftBackgroundRadius(component, bgRadiusEndValue1);
+                }
+                if(bgRadiusDuration2 > 0){
+                    FAnimation tempAnimation = new FAnimation(component);
+                    tempAnimations.put(FAnimations.BG_TR_RADIUS, tempAnimation);
+                    tempAnimation.add(FAnimations.BG_TR_RADIUS, bgRadiusStartValue2, Duration.ZERO, bgRadiusInterpolator2);
+                    tempAnimation.add(FAnimations.BG_TR_RADIUS, bgRadiusEndValue2, Duration.millis(bgRadiusDuration2), bgRadiusInterpolator2);
+                    valuesManager.set(MainProps.BG_TR_RADIUS, bgRadiusDoubleValue2);
+                    tempAnimation.destroyOnFinished();
+                    tempAnimation.play();
+                    tempAnimationHasBeenStopped.put(FAnimations.BG_TR_RADIUS, false);
+                }
+                else{
+                    BackgroundSetter.setTopRightBackgroundRadius(component, bgRadiusEndValue2);
+                }
+                if(bgRadiusDuration3 > 0){
+                    FAnimation tempAnimation = new FAnimation(component);
+                    tempAnimations.put(FAnimations.BG_BR_RADIUS, tempAnimation);
+                    tempAnimation.add(FAnimations.BG_BR_RADIUS, bgRadiusStartValue3, Duration.ZERO, bgRadiusInterpolator3);
+                    tempAnimation.add(FAnimations.BG_BR_RADIUS, bgRadiusEndValue3, Duration.millis(bgRadiusDuration3), bgRadiusInterpolator3);
+                    valuesManager.set(MainProps.BG_BR_RADIUS, bgRadiusDoubleValue3);
+                    tempAnimation.destroyOnFinished();
+                    tempAnimation.play();
+                    tempAnimationHasBeenStopped.put(FAnimations.BG_BR_RADIUS, false);
+                }
+                else{
+                    BackgroundSetter.setBottomRightBackgroundRadius(component, bgRadiusEndValue3);
+                }
+                if(bgRadiusDuration4 > 0){
+                    FAnimation tempAnimation = new FAnimation(component);
+                    tempAnimations.put(FAnimations.BG_BL_RADIUS, tempAnimation);
+                    tempAnimation.add(FAnimations.BG_BL_RADIUS, bgRadiusStartValue4, Duration.ZERO, bgRadiusInterpolator4);
+                    tempAnimation.add(FAnimations.BG_BL_RADIUS, bgRadiusEndValue4, Duration.millis(bgRadiusDuration4), bgRadiusInterpolator4);
+                    valuesManager.set(MainProps.BG_BL_RADIUS, bgRadiusDoubleValue4);
+                    tempAnimation.destroyOnFinished();
+                    tempAnimation.play();
+                    tempAnimationHasBeenStopped.put(FAnimations.BG_BL_RADIUS, false);
+                }
+                else{
+                    BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusEndValue4);
+                }
+                setFourSidesSizeValuesInValuesManager(MainProps.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
+            });
+        }
+    }
+
     private void setFourSidesSizeValuesInValuesManager (String mainProp, double value1, double value2, double value3, double value4){
         String[] props = multipleSidesProps.get(mainProp);
         valuesManager.set(props[0], value1);
@@ -680,6 +1103,16 @@ public class PropertyHelper {
             stopTempAnimation(FAnimations.BOTTOM_PADDING);
             stopTempAnimation(FAnimations.LEFT_PADDING);
             paddingAnimationsStopped = true;
+        }
+    }
+
+    private void stopTempBgRadiusAnimations(){
+        if(!bgRadiusAnimationsStopped){
+            stopTempAnimation(FAnimations.BG_TL_RADIUS);
+            stopTempAnimation(FAnimations.BG_TR_RADIUS);
+            stopTempAnimation(FAnimations.BG_BR_RADIUS);
+            stopTempAnimation(FAnimations.BG_BL_RADIUS);
+            bgRadiusAnimationsStopped = true;
         }
     }
 

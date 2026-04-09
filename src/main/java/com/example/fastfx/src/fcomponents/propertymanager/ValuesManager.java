@@ -118,5 +118,9 @@ public class ValuesManager {
         fComponentValues.put(MainProps.LEFT, "0");
         fComponentValues.put(MainProps.BG_COLOR, "#00000000");
         fComponentValues.put(MainProps.BG_OPACITY, "1");
+        fComponentValues.put(MainProps.BG_TL_RADIUS, "0");
+        fComponentValues.put(MainProps.BG_TR_RADIUS, "0");
+        fComponentValues.put(MainProps.BG_BR_RADIUS, "0");
+        fComponentValues.put(MainProps.BG_BL_RADIUS, "0");
     }
 }

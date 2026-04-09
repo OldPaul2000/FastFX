@@ -33,14 +33,15 @@ public class AnimationsController {
         mainContainer.add(fPane);
 
         FPane2 fPane2 = new FPane2();
-        fPane2.bgColor("#ff0000 1s");
+        fPane2.bgColor("#ff0000");
+        fPane2.bgRadius("5px 1s 15px 1s 25px 1s 35px 1s");
         fPane2.click(() -> {
-            fPane2.bgOpacity("0.9 0.5s");
+            fPane2.bgRadius("5px 0.3s");
         });
-        fPane2.bgOpacity(0.5);
-        fPane2.width(40);
-        fPane2.height(40);
         fPane.add(fPane2);
+        fPane2.bgOpacity(0.5);
+        fPane2.width(70);
+        fPane2.height(70);
         fPane2.right(15);
         fPane2.bottom("15");
 //        fPane2.y("25");

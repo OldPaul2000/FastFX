@@ -143,7 +143,7 @@ public class StaticAnimation {
         //***************************
         //*  BACKGROUND PROPERTIES  *
         //***************************
-        if(doubleValues.containsKey(StaticAnimations.BG_COLOR)){
+        if(stringValues.containsKey(StaticAnimations.BG_COLOR)){
             BackgroundSetter.setBackgroundColor(element, stringValues.get(StaticAnimations.BG_COLOR)[1]);
         }
         if(doubleValues.containsKey(StaticAnimations.BG_OPACITY)){
@@ -413,7 +413,7 @@ public class StaticAnimation {
         //***************************
         //*  BACKGROUND PROPERTIES  *
         //***************************
-        if(doubleValues.containsKey(StaticAnimations.BG_COLOR)){
+        if(stringValues.containsKey(StaticAnimations.BG_COLOR)){
             BackgroundSetter.setBackgroundColor(element, stringValues.get(StaticAnimations.BG_COLOR)[0]);
         }
         if(doubleValues.containsKey(StaticAnimations.BG_OPACITY)){

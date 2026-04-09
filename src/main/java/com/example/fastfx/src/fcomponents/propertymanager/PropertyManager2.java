@@ -1728,104 +1728,126 @@ public class PropertyManager2 {
         BackgroundSetter.setBackgroundRadius(component, topLeft, topRight, bottomRight, bottomLeft);
     }
 
-    public void bgRadius (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateMultipleDimensionValue(values);
-        if (validated) {
+    public void bgRadius(String rawValue){
+        parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
+        if (parser.isValid()) {
             this.rawBgRadius = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterMultipleDimensionValues(values);
-            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
-            if (radii == null) {
-                radii = new CornerRadii(0, false);
+            if (setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_RADIUS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_RADIUS);
+                propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_RADIUS, MainProps.BG_RADIUS);
             }
-            if (filteredValues.length == 1) {
-                String[] currValue = filteredValues[0].split("\\s+");
-                double value = PropertyValidatorFilter.getDoubleValue(currValue[0]);
-                String unit = PropertyValidatorFilter.getUnit(currValue[0]);
-                long duration = 1;
-                if (currValue.length == 2) {
-                    duration = PropertyValidatorFilter.getDuration(currValue[1]);
-                }
-                if (unit.equals(FUnit.PERCENTAGE)) {
-                    bgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
-                    bgRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                        BackgroundSetter.setBackgroundRadius(component, (double) newVal);
-                    });
-                    value = (value / 100) * component.getPrefWidth();
-                }
-                if (setPropertiesOnHover) {
-                    PropertyUtil.setOneDimensionAnimation(radii.getTopLeftHorizontalRadius(), initialValues, MainProps.BG_RADIUS, hoverAnimation, FAnimations.BG_RADIUS, value, duration);
-                } else if (setPropertiesOnClick) {
-                    PropertyUtil.setOneDimensionAnimation(radii.getTopLeftHorizontalRadius(), initialValues, MainProps.BG_RADIUS, clickAnimation, FAnimations.BG_RADIUS, value, duration);
-                } else {
-                    if (duration == 1) {
-                        BackgroundSetter.setBackgroundRadius(component, value);
-                    } else {
-                        PropertyUtil.setTempAnimation(component, radii.getTopLeftVerticalRadius(), initialValues, MainProps.BG_RADIUS, FAnimations.BG_RADIUS, value, duration);
-                    }
-                }
-            } else if (filteredValues.length == 4) {
-                List<String> radiusAnimationSides = new ArrayList<>(List.of(FAnimations.BG_TL_RADIUS, FAnimations.BG_TR_RADIUS, FAnimations.BG_BR_RADIUS, FAnimations.BG_BL_RADIUS));
-                List<Double> currRadiusValues = new ArrayList<>(List.of(radii.getTopLeftHorizontalRadius(), radii.getTopRightHorizontalRadius(), radii.getBottomRightHorizontalRadius(), radii.getBottomLeftHorizontalRadius()));
-                List<String> bgRadiusInitialValues = new ArrayList<>(List.of(MainProps.BG_TL_RADIUS, MainProps.BG_TR_RADIUS, MainProps.BG_BR_RADIUS, MainProps.BG_BL_RADIUS));
-                for (int i = 0; i < filteredValues.length; i++) {
-                    String[] currValue = filteredValues[i].split("\\s+");
-                    double value = PropertyValidatorFilter.getDoubleValue(currValue[0]);
-                    String unit = PropertyValidatorFilter.getUnit(currValue[0]);
-                    long duration = 1;
-                    if (currValue.length == 2) {
-                        duration = PropertyValidatorFilter.getDuration(currValue[1]);
-                    }
-                    if (unit.equals(FUnit.PERCENTAGE)) {
-                        bgRadiusProperties.get(i).bind(component.prefWidthProperty().multiply(value / 100));
-                        if (i == 0) {
-                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
-                                BackgroundSetter.setTopLeftBackgroundRadius(component, (double) newVal);
-                            });
-                        }
-                        if (i == 1) {
-                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
-                                BackgroundSetter.setTopRightBackgroundRadius(component, (double) newVal);
-                            });
-                        }
-                        if (i == 2) {
-                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
-                                BackgroundSetter.setBottomRightBackgroundRadius(component, (double) newVal);
-                            });
-                        }
-                        if (i == 3) {
-                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
-                                BackgroundSetter.setBottomLeftBackgroundRadius(component, (double) newVal);
-                            });
-                        }
-                        value = (value / 100) * component.getPrefWidth();
-                    }
-                    if (setPropertiesOnHover) {
-                        PropertyUtil.setOneDimensionAnimation(currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), hoverAnimation, radiusAnimationSides.get(i), value, duration);
-                    } else if (setPropertiesOnClick) {
-                        PropertyUtil.setOneDimensionAnimation(currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), clickAnimation, radiusAnimationSides.get(i), value, duration);
-                    } else {
-                        if (duration == 1) {
-                            if (i == 0) {
-                                BackgroundSetter.setTopLeftBackgroundRadius(component, value);
-                            }
-                            if (i == 1) {
-                                BackgroundSetter.setTopRightBackgroundRadius(component, value);
-                            }
-                            if (i == 2) {
-                                BackgroundSetter.setBottomRightBackgroundRadius(component, value);
-                            }
-                            if (i == 3) {
-                                BackgroundSetter.setBottomLeftBackgroundRadius(component, value);
-                            }
-                        } else {
-                            PropertyUtil.setTempAnimation(component, currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), radiusAnimationSides.get(i), value, duration);
-                        }
-                    }
-                }
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_RADIUS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_RADIUS);
+                propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_RADIUS, MainProps.BG_RADIUS);
+            }
+            else{
+                propertyHelper.addBgRadiusProperty(parent == null);
             }
         }
     }
+
+//    public void bgRadius (String rawValue) {
+//        String[] values = rawValue.split("\\s+");
+//        boolean validated = PropertyValidatorFilter.validateMultipleDimensionValue(values);
+//        if (validated) {
+//            this.rawBgRadius = rawValue;
+//            String[] filteredValues = PropertyValidatorFilter.filterMultipleDimensionValues(values);
+//            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
+//            if (radii == null) {
+//                radii = new CornerRadii(0, false);
+//            }
+//            if (filteredValues.length == 1) {
+//                String[] currValue = filteredValues[0].split("\\s+");
+//                double value = PropertyValidatorFilter.getDoubleValue(currValue[0]);
+//                String unit = PropertyValidatorFilter.getUnit(currValue[0]);
+//                long duration = 1;
+//                if (currValue.length == 2) {
+//                    duration = PropertyValidatorFilter.getDuration(currValue[1]);
+//                }
+//                if (unit.equals(FUnit.PERCENTAGE)) {
+//                    bgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
+//                    bgRadiusProperty.addListener((valType, oldVal, newVal) -> {
+//                        BackgroundSetter.setBackgroundRadius(component, (double) newVal);
+//                    });
+//                    value = (value / 100) * component.getPrefWidth();
+//                }
+//                if (setPropertiesOnHover) {
+//                    PropertyUtil.setOneDimensionAnimation(radii.getTopLeftHorizontalRadius(), initialValues, MainProps.BG_RADIUS, hoverAnimation, FAnimations.BG_RADIUS, value, duration);
+//                } else if (setPropertiesOnClick) {
+//                    PropertyUtil.setOneDimensionAnimation(radii.getTopLeftHorizontalRadius(), initialValues, MainProps.BG_RADIUS, clickAnimation, FAnimations.BG_RADIUS, value, duration);
+//                } else {
+//                    if (duration == 1) {
+//                        BackgroundSetter.setBackgroundRadius(component, value);
+//                    } else {
+//                        PropertyUtil.setTempAnimation(component, radii.getTopLeftVerticalRadius(), initialValues, MainProps.BG_RADIUS, FAnimations.BG_RADIUS, value, duration);
+//                    }
+//                }
+//            } else if (filteredValues.length == 4) {
+//                List<String> radiusAnimationSides = new ArrayList<>(List.of(FAnimations.BG_TL_RADIUS, FAnimations.BG_TR_RADIUS, FAnimations.BG_BR_RADIUS, FAnimations.BG_BL_RADIUS));
+//                List<Double> currRadiusValues = new ArrayList<>(List.of(radii.getTopLeftHorizontalRadius(), radii.getTopRightHorizontalRadius(), radii.getBottomRightHorizontalRadius(), radii.getBottomLeftHorizontalRadius()));
+//                List<String> bgRadiusInitialValues = new ArrayList<>(List.of(MainProps.BG_TL_RADIUS, MainProps.BG_TR_RADIUS, MainProps.BG_BR_RADIUS, MainProps.BG_BL_RADIUS));
+//                for (int i = 0; i < filteredValues.length; i++) {
+//                    String[] currValue = filteredValues[i].split("\\s+");
+//                    double value = PropertyValidatorFilter.getDoubleValue(currValue[0]);
+//                    String unit = PropertyValidatorFilter.getUnit(currValue[0]);
+//                    long duration = 1;
+//                    if (currValue.length == 2) {
+//                        duration = PropertyValidatorFilter.getDuration(currValue[1]);
+//                    }
+//                    if (unit.equals(FUnit.PERCENTAGE)) {
+//                        bgRadiusProperties.get(i).bind(component.prefWidthProperty().multiply(value / 100));
+//                        if (i == 0) {
+//                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
+//                                BackgroundSetter.setTopLeftBackgroundRadius(component, (double) newVal);
+//                            });
+//                        }
+//                        if (i == 1) {
+//                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
+//                                BackgroundSetter.setTopRightBackgroundRadius(component, (double) newVal);
+//                            });
+//                        }
+//                        if (i == 2) {
+//                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
+//                                BackgroundSetter.setBottomRightBackgroundRadius(component, (double) newVal);
+//                            });
+//                        }
+//                        if (i == 3) {
+//                            bgRadiusProperties.get(i).addListener((valType, oldVal, newVal) -> {
+//                                BackgroundSetter.setBottomLeftBackgroundRadius(component, (double) newVal);
+//                            });
+//                        }
+//                        value = (value / 100) * component.getPrefWidth();
+//                    }
+//                    if (setPropertiesOnHover) {
+//                        PropertyUtil.setOneDimensionAnimation(currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), hoverAnimation, radiusAnimationSides.get(i), value, duration);
+//                    } else if (setPropertiesOnClick) {
+//                        PropertyUtil.setOneDimensionAnimation(currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), clickAnimation, radiusAnimationSides.get(i), value, duration);
+//                    } else {
+//                        if (duration == 1) {
+//                            if (i == 0) {
+//                                BackgroundSetter.setTopLeftBackgroundRadius(component, value);
+//                            }
+//                            if (i == 1) {
+//                                BackgroundSetter.setTopRightBackgroundRadius(component, value);
+//                            }
+//                            if (i == 2) {
+//                                BackgroundSetter.setBottomRightBackgroundRadius(component, value);
+//                            }
+//                            if (i == 3) {
+//                                BackgroundSetter.setBottomLeftBackgroundRadius(component, value);
+//                            }
+//                        } else {
+//                            PropertyUtil.setTempAnimation(component, currRadiusValues.get(i), initialValues, bgRadiusInitialValues.get(i), radiusAnimationSides.get(i), value, duration);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public CornerRadii getBgRadius () {
         return BackgroundSetter.getBackgroundRadius(component);
