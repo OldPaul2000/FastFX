@@ -286,8 +286,7 @@ public class PropertyParser {
      * This method is helpful to avoid if checks when setting properties where there are multiple sides to style.<br>
      * For example for border insets.
      */
-
-    // For removal
+    
     public void spreadDoubleValues () {
         if (parametersCount == 1) {
             doubleValues[1] = doubleValues[0];
@@ -297,6 +296,54 @@ public class PropertyParser {
         if (parametersCount == 2) {
             doubleValues[2] = doubleValues[0];
             doubleValues[3] = doubleValues[1];
+        }
+    }
+
+    public void spreadUnits () {
+        if (parametersCount == 1) {
+            units[1] = units[0];
+            units[2] = units[1];
+            units[3] = units[2];
+        }
+        if (parametersCount == 2) {
+            units[2] = units[0];
+            units[3] = units[1];
+        }
+    }
+
+    public void spreadColorValues () {
+        if (parametersCount == 1) {
+            colorValues[1] = colorValues[0];
+            colorValues[2] = colorValues[1];
+            colorValues[3] = colorValues[2];
+        }
+        if (parametersCount == 2) {
+            colorValues[2] = colorValues[0];
+            colorValues[3] = colorValues[1];
+        }
+    }
+
+    public void spreadDurations () {
+        if (parametersCount == 1) {
+            durations[1] = durations[0];
+            durations[2] = durations[1];
+            durations[3] = durations[2];
+        }
+        if (parametersCount == 2) {
+            durations[2] = durations[0];
+            durations[3] = durations[1];
+        }
+    }
+
+    public void spreadInterpolators () {
+        if (parametersCount == 1) {
+            interpolators[1] = interpolators[0];
+            interpolators[2] = interpolators[1];
+            interpolators[3] = interpolators[2];
+        }
+        if (parametersCount == 2) {
+            interpolators[2] = interpolators[0];
+            interpolators[3] = interpolators[1];
         }
     }
 

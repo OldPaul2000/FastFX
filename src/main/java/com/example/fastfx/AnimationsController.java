@@ -34,7 +34,7 @@ public class AnimationsController {
 
         FPane2 fPane2 = new FPane2();
         fPane2.bgColor("#ff0000");
-        fPane2.bgRadius("5px 1s 15px 1s 25px 1s 35px 1s");
+        fPane2.bgRadius("10px 1s 20px 1s");
         fPane2.click(() -> {
             fPane2.bgRadius("5px 0.3s");
         });
@@ -53,7 +53,6 @@ public class AnimationsController {
 
 //        fLabel.width(150);
 //        fLabel.height(100);
-
 //        long start = System.currentTimeMillis();
 //        for(int i = 0; i < 1_000_000; i++){
 //            fPane2.x(30);

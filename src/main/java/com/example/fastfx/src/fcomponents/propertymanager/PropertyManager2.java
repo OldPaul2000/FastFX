@@ -167,9 +167,11 @@ public class PropertyManager2 {
     public void hover (PseudoClass hover) {
         if (hoverAnimation == null) {
             hoverAnimation = new FAnimation(component);
+            propertyHelper.setComponentHoverAnimation(hoverAnimation);
         }
         if (staticHoverAnimation == null){
             staticHoverAnimation = new StaticAnimation(component);
+            propertyHelper.setComponentStaticHoverAnimation(staticHoverAnimation);
         }
         setPropertiesOnClick = false;
         setPropertiesOnHover = true;
@@ -190,9 +192,11 @@ public class PropertyManager2 {
     public void click (PseudoClass click) {
         if (clickAnimation == null) {
             clickAnimation = new FAnimation(component);
+            propertyHelper.setComponentClickAnimation(clickAnimation);
         }
         if(staticClickAnimation == null){
             staticClickAnimation = new StaticAnimation(component);
+            propertyHelper.setComponentStaticClickAnimation(staticClickAnimation);
         }
         setPropertiesOnHover = false;
         setPropertiesOnClick = true;

@@ -28,6 +28,10 @@ public class PropertyHelper {
     private PropertyParser parser;
     private ListenersManager listenersManager;
     private PendingTaskManager pendingTaskManager;
+    private FAnimation clickAnimation;
+    private FAnimation hoverAnimation;
+    private StaticAnimation staticClickAnimation;
+    private StaticAnimation staticHoverAnimation;
     private FAnimation fAnimation;
     private Map<String, FAnimation> tempAnimations;
     private Map<String, Boolean> tempAnimationHasBeenStopped;
@@ -63,6 +67,22 @@ public class PropertyHelper {
         this.component = component;
         initMultipleSidesAnimations();
         initMultipleSidesProps();
+    }
+    
+    public void setComponentClickAnimation(FAnimation animation){
+        this.clickAnimation = animation;
+    }
+
+    public void setComponentHoverAnimation(FAnimation animation){
+        this.clickAnimation = animation;
+    }
+
+    public void setComponentStaticClickAnimation(StaticAnimation clickAnimation){
+        this.staticClickAnimation = clickAnimation;
+    }
+
+    public void setComponentStaticHoverAnimation(StaticAnimation animation){
+        this.staticClickAnimation = animation;
     }
 
     private void initMultipleSidesAnimations(){
@@ -320,11 +340,117 @@ public class PropertyHelper {
         tempAnimationHasBeenStopped.put(animationId, false);
     }
     
+//    public void addMultipleSidesSizeAnimation(String fAnimationType, String prop){
+//        if(multipleSidesAnimations.containsKey(fAnimationType)){
+//            String[] animations = multipleSidesAnimations.get(fAnimationType);
+//            String[] props = multipleSidesProps.get(prop);
+//            int parametersCount = parser.getParametersCount();
+//            double startValue1 = valuesManager.getDouble(props[0]);
+//            double startValue2 = valuesManager.getDouble(props[1]);
+//            double startValue3 = valuesManager.getDouble(props[2]);
+//            double startValue4 = valuesManager.getDouble(props[3]);
+//            double endValue1 = parser.getDoubleValue(0);
+//            double endValue2 = parser.getDoubleValue(1);
+//            double endValue3 = parser.getDoubleValue(2);
+//            double endValue4 = parser.getDoubleValue(3);
+//            long duration1 = parser.getDuration(0);
+//            long duration2 = parser.getDuration(1);
+//            long duration3 = parser.getDuration(2);
+//            long duration4 = parser.getDuration(3);
+//            String interpolator1 = parser.getInterpolator(0);
+//            String interpolator2 = parser.getInterpolator(1);
+//            String interpolator3 = parser.getInterpolator(2);
+//            String interpolator4 = parser.getInterpolator(3);
+//            if(parametersCount == 1){
+//                if(parser.getUnit(0).equals(FUnit.PIXELS)){
+//                    if(duration1 == 0){
+//                        staticAnimation.addAnimation(fAnimationType, startValue1, endValue1);
+//                    }
+//                    else{
+//                        fAnimation.add(fAnimationType, startValue1, Duration.ZERO, interpolator1);
+//                        fAnimation.add(fAnimationType, endValue1, Duration.millis(duration1), interpolator1);
+//                    }
+//                    valuesManager.set(prop, parser.getDoubleValue(0));
+//                }
+//            }
+//            else if(parametersCount == 2){
+//                if(parser.getUnit(0).equals(FUnit.PIXELS) && parser.getUnit(1).equals(FUnit.PIXELS)){
+//                    if(duration1 == 0){
+//                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
+//                        staticAnimation.addAnimation(animations[2], startValue1, endValue1);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
+//                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
+//                        fAnimation.add(animations[2], startValue2, Duration.ZERO, interpolator2);
+//                        fAnimation.add(animations[2], endValue2, Duration.millis(duration2), interpolator2);
+//                    }
+//                    if(duration2 == 0){
+//                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
+//                        staticAnimation.addAnimation(animations[3], startValue2, endValue2);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
+//                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
+//                        fAnimation.add(animations[3], startValue2, Duration.ZERO, interpolator2);
+//                        fAnimation.add(animations[3], endValue2, Duration.millis(duration2), interpolator2);
+//                    }
+//                    valuesManager.set(props[0], parser.getDoubleValue(0));
+//                    valuesManager.set(props[1], parser.getDoubleValue(1));
+//                    valuesManager.set(props[2], parser.getDoubleValue(0));
+//                    valuesManager.set(props[3], parser.getDoubleValue(1));
+//                }
+//            }
+//            else if(parametersCount == 4){
+//                if(parser.getUnit(0).equals(FUnit.PIXELS)
+//                        && parser.getUnit(1).equals(FUnit.PIXELS)
+//                        && parser.getUnit(2).equals(FUnit.PIXELS)
+//                        && parser.getUnit(3).equals(FUnit.PIXELS)){
+//                    if(duration1 == 0){
+//                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
+//                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
+//                    }
+//                    if(duration2 == 0){
+//                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
+//                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
+//                    }
+//                    if(duration3 == 0){
+//                        staticAnimation.addAnimation(animations[2], startValue3, endValue3);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[2], startValue3, Duration.ZERO, interpolator3);
+//                        fAnimation.add(animations[2], endValue3, Duration.millis(duration3), interpolator3);
+//                    }
+//                    if(duration4 == 0){
+//                        staticAnimation.addAnimation(animations[3], startValue4, endValue4);
+//                    }
+//                    else{
+//                        fAnimation.add(animations[3], startValue4, Duration.ZERO, interpolator4);
+//                        fAnimation.add(animations[3], endValue4, Duration.millis(duration4), interpolator4);
+//                    }
+//                    valuesManager.set(props[0], parser.getDoubleValue(0));
+//                    valuesManager.set(props[1], parser.getDoubleValue(1));
+//                    valuesManager.set(props[2], parser.getDoubleValue(2));
+//                    valuesManager.set(props[3], parser.getDoubleValue(3));
+//                }
+//            }
+//        }
+//    }
+
     public void addMultipleSidesSizeAnimation(String fAnimationType, String prop){
         if(multipleSidesAnimations.containsKey(fAnimationType)){
             String[] animations = multipleSidesAnimations.get(fAnimationType);
             String[] props = multipleSidesProps.get(prop);
-            int parametersCount = parser.getParametersCount();
+            parser.spreadDoubleValues();
+            parser.spreadUnits();
+            parser.spreadDurations();
+            parser.spreadInterpolators();
             double startValue1 = valuesManager.getDouble(props[0]);
             double startValue2 = valuesManager.getDouble(props[1]);
             double startValue3 = valuesManager.getDouble(props[2]);
@@ -341,84 +467,42 @@ public class PropertyHelper {
             String interpolator2 = parser.getInterpolator(1);
             String interpolator3 = parser.getInterpolator(2);
             String interpolator4 = parser.getInterpolator(3);
-            if(parametersCount == 1){
-                if(parser.getUnit(0).equals(FUnit.PIXELS)){
-                    if(duration1 == 0){
-                        staticAnimation.addAnimation(fAnimationType, startValue1, endValue1);
-                    }
-                    else{
-                        fAnimation.add(fAnimationType, startValue1, Duration.ZERO, interpolator1);
-                        fAnimation.add(fAnimationType, endValue1, Duration.millis(duration1), interpolator1);
-                    }
-                    valuesManager.set(prop, parser.getDoubleValue(0));
+            if(parser.getUnit(0).equals(FUnit.PIXELS)
+                    && parser.getUnit(1).equals(FUnit.PIXELS)
+                    && parser.getUnit(2).equals(FUnit.PIXELS)
+                    && parser.getUnit(3).equals(FUnit.PIXELS)){
+                if(duration1 == 0){
+                    staticAnimation.addAnimation(animations[0], startValue1, endValue1);
                 }
-            }
-            else if(parametersCount == 2){
-                if(parser.getUnit(0).equals(FUnit.PIXELS) && parser.getUnit(1).equals(FUnit.PIXELS)){
-                    if(duration1 == 0){
-                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
-                        staticAnimation.addAnimation(animations[2], startValue1, endValue1);
-                    }
-                    else{
-                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
-                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
-                        fAnimation.add(animations[2], startValue2, Duration.ZERO, interpolator2);
-                        fAnimation.add(animations[2], endValue2, Duration.millis(duration2), interpolator2);
-                    }
-                    if(duration2 == 0){
-                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
-                        staticAnimation.addAnimation(animations[3], startValue2, endValue2);
-                    }
-                    else{
-                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
-                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
-                        fAnimation.add(animations[3], startValue2, Duration.ZERO, interpolator2);
-                        fAnimation.add(animations[3], endValue2, Duration.millis(duration2), interpolator2);
-                    }
-                    valuesManager.set(props[0], parser.getDoubleValue(0));
-                    valuesManager.set(props[1], parser.getDoubleValue(1));
-                    valuesManager.set(props[2], parser.getDoubleValue(0));
-                    valuesManager.set(props[3], parser.getDoubleValue(1));
+                else{
+                    fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
+                    fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
                 }
-            }
-            else if(parametersCount == 4){
-                if(parser.getUnit(0).equals(FUnit.PIXELS)
-                        && parser.getUnit(1).equals(FUnit.PIXELS)
-                        && parser.getUnit(2).equals(FUnit.PIXELS)
-                        && parser.getUnit(3).equals(FUnit.PIXELS)){
-                    if(duration1 == 0){
-                        staticAnimation.addAnimation(animations[0], startValue1, endValue1);
-                    }
-                    else{
-                        fAnimation.add(animations[0], startValue1, Duration.ZERO, interpolator1);
-                        fAnimation.add(animations[0], endValue1, Duration.millis(duration1), interpolator1);
-                    }
-                    if(duration2 == 0){
-                        staticAnimation.addAnimation(animations[1], startValue2, endValue2);
-                    }
-                    else{
-                        fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
-                        fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
-                    }
-                    if(duration3 == 0){
-                        staticAnimation.addAnimation(animations[2], startValue3, endValue3);
-                    }
-                    else{
-                        fAnimation.add(animations[2], startValue3, Duration.ZERO, interpolator3);
-                        fAnimation.add(animations[2], endValue3, Duration.millis(duration3), interpolator3);
-                    }
-                    if(duration4 == 0){
-                        staticAnimation.addAnimation(animations[3], startValue4, endValue4);
-                    }
-                    else{
-                        fAnimation.add(animations[3], startValue4, Duration.ZERO, interpolator4);
-                        fAnimation.add(animations[3], endValue4, Duration.millis(duration4), interpolator4);
-                    }
-                    valuesManager.set(props[0], parser.getDoubleValue(0));
-                    valuesManager.set(props[1], parser.getDoubleValue(1));
-                    valuesManager.set(props[2], parser.getDoubleValue(2));
-                    valuesManager.set(props[3], parser.getDoubleValue(3));
+                if(duration2 == 0){
+                    staticAnimation.addAnimation(animations[1], startValue2, endValue2);
                 }
+                else{
+                    fAnimation.add(animations[1], startValue2, Duration.ZERO, interpolator2);
+                    fAnimation.add(animations[1], endValue2, Duration.millis(duration2), interpolator2);
+                }
+                if(duration3 == 0){
+                    staticAnimation.addAnimation(animations[2], startValue3, endValue3);
+                }
+                else{
+                    fAnimation.add(animations[2], startValue3, Duration.ZERO, interpolator3);
+                    fAnimation.add(animations[2], endValue3, Duration.millis(duration3), interpolator3);
+                }
+                if(duration4 == 0){
+                    staticAnimation.addAnimation(animations[3], startValue4, endValue4);
+                }
+                else{
+                    fAnimation.add(animations[3], startValue4, Duration.ZERO, interpolator4);
+                    fAnimation.add(animations[3], endValue4, Duration.millis(duration4), interpolator4);
+                }
+                valuesManager.set(props[0], parser.getDoubleValue(0));
+                valuesManager.set(props[1], parser.getDoubleValue(1));
+                valuesManager.set(props[2], parser.getDoubleValue(2));
+                valuesManager.set(props[3], parser.getDoubleValue(3));
             }
         }
     }
@@ -880,6 +964,14 @@ public class PropertyHelper {
                 BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusEndValue4);
             }
             setFourSidesSizeValuesInValuesManager(MainProps.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
+            updateAnimationStartValue(clickAnimation, FAnimations.BG_TL_RADIUS, bgRadiusEndValue1);
+            updateAnimationStartValue(clickAnimation, FAnimations.BG_TR_RADIUS, bgRadiusEndValue2);
+            updateAnimationStartValue(clickAnimation, FAnimations.BG_BR_RADIUS, bgRadiusEndValue3);
+            updateAnimationStartValue(clickAnimation, FAnimations.BG_BL_RADIUS, bgRadiusEndValue4);
+            updateAnimationStartValue(hoverAnimation, FAnimations.BG_TL_RADIUS, bgRadiusEndValue1);
+            updateAnimationStartValue(hoverAnimation, FAnimations.BG_TR_RADIUS, bgRadiusEndValue2);
+            updateAnimationStartValue(hoverAnimation, FAnimations.BG_BR_RADIUS, bgRadiusEndValue3);
+            updateAnimationStartValue(hoverAnimation, FAnimations.BG_BL_RADIUS, bgRadiusEndValue4);
         }
         else{
             pendingTaskManager.addTask(ListenerID.WIDTH_BG_RADIUS, (parent) -> {
@@ -1061,6 +1153,14 @@ public class PropertyHelper {
                     BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusEndValue4);
                 }
                 setFourSidesSizeValuesInValuesManager(MainProps.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
+                updateAnimationStartValue(clickAnimation, FAnimations.BG_TL_RADIUS, bgRadiusEndValue1);
+                updateAnimationStartValue(clickAnimation, FAnimations.BG_TR_RADIUS, bgRadiusEndValue2);
+                updateAnimationStartValue(clickAnimation, FAnimations.BG_BR_RADIUS, bgRadiusEndValue3);
+                updateAnimationStartValue(clickAnimation, FAnimations.BG_BL_RADIUS, bgRadiusEndValue4);
+                updateAnimationStartValue(hoverAnimation, FAnimations.BG_TL_RADIUS, bgRadiusEndValue1);
+                updateAnimationStartValue(hoverAnimation, FAnimations.BG_TR_RADIUS, bgRadiusEndValue2);
+                updateAnimationStartValue(hoverAnimation, FAnimations.BG_BR_RADIUS, bgRadiusEndValue3);
+                updateAnimationStartValue(hoverAnimation, FAnimations.BG_BL_RADIUS, bgRadiusEndValue4);
             });
         }
     }
