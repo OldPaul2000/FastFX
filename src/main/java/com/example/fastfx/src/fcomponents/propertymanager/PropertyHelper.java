@@ -404,225 +404,449 @@ public class PropertyHelper {
         }
     }
 
+//    public void addPaddingProperty (boolean parentIsNull){
+//        int parametersCount = parser.getParametersCount();
+//        double startValue1 = valuesManager.getDouble(MainProps.TOP_PADDING);
+//        double startValue2 = valuesManager.getDouble(MainProps.RIGHT_PADDING);
+//        double startValue3 = valuesManager.getDouble(MainProps.BOTTOM_PADDING);
+//        double startValue4 = valuesManager.getDouble(MainProps.LEFT_PADDING);
+//        double endValue1 = 0;
+//        double endValue2 = 0;
+//        double endValue3 = 0;
+//        double endValue4 = 0;
+//        double doubleValue1 = parser.getDoubleValue(0);
+//        double doubleValue2 = parser.getDoubleValue(1);
+//        double doubleValue3 = parser.getDoubleValue(2);
+//        double doubleValue4 = parser.getDoubleValue(3);
+//        String unit1 = parser.getUnit(0);
+//        String unit2 = parser.getUnit(1);
+//        String unit3 = parser.getUnit(2);
+//        String unit4 = parser.getUnit(3);
+//        long duration1 = parser.getDuration(0);
+//        long duration2 = parser.getDuration(1);
+//        long duration3 = parser.getDuration(2);
+//        long duration4 = parser.getDuration(3);
+//        String interpolator1 = parser.getInterpolator(0);
+//        String interpolator2 = parser.getInterpolator(1);
+//        String interpolator3 = parser.getInterpolator(2);
+//        String interpolator4 = parser.getInterpolator(3);
+//        if(!parentIsNull){
+//            listenersManager.remove(ListenerID.WIDTH_HORIZONTAL_PADDING);
+//            listenersManager.remove(ListenerID.HEIGHT_VERTICAL_PADDING);
+//            listenersManager.remove(ListenerID.HEIGHT_TOP_PADDING);
+//            listenersManager.remove(ListenerID.WIDTH_RIGHT_PADDING);
+//            listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PADDING);
+//            listenersManager.remove(ListenerID.WIDTH_LEFT_PADDING);
+//            stopTempPaddingAnimations();
+//            if(parametersCount == 1){
+//                duration2 = duration1;
+//                duration3 = duration1;
+//                duration4 = duration1;
+//                interpolator2 = interpolator1;
+//                interpolator3 = interpolator1;
+//                interpolator4 = interpolator1;
+//                if(unit1.equals(FUnit.PERCENTAGE)){
+//                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+//                    endValue2 = component.getPrefWidth() * (doubleValue1 / 100);
+//                    endValue3 = endValue1;
+//                    endValue4 = endValue2;
+//                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
+//                    };
+//                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue1 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+//                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+//                }
+//                else if(unit1.equals(FUnit.PIXELS)){
+//                    endValue1 = doubleValue1;
+//                    endValue2 = endValue1;
+//                    endValue3 = endValue1;
+//                    endValue4 = endValue1;
+//                }
+//            }
+//            else if(parametersCount == 2){
+//                duration3 = duration1;
+//                duration4 = duration2;
+//                interpolator3 = interpolator1;
+//                interpolator4 = interpolator2;
+//                if(unit1.equals(FUnit.PERCENTAGE)){
+//                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+//                    endValue3 = endValue1;
+//                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+//                }
+//                else if(unit1.equals(FUnit.PIXELS)){
+//                    endValue1 = doubleValue1;
+//                    endValue3 = endValue1;
+//                }
+//                if(unit2.equals(FUnit.PERCENTAGE)){
+//                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+//                    endValue4 = endValue2;
+//                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue2 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+//                }
+//                else if(unit1.equals(FUnit.PIXELS)){
+//                    endValue2 = doubleValue2;
+//                    endValue4 = endValue2;
+//                }
+//            }
+//            else if(parametersCount == 4){
+//                if(unit1.equals(FUnit.PERCENTAGE) && unit3.equals(FUnit.PERCENTAGE)){
+//                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+//                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
+//                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
+//                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
+//                }
+//                if(unit2.equals(FUnit.PERCENTAGE) && unit4.equals(FUnit.PERCENTAGE)){
+//                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+//                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
+//                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
+//                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
+//                }
+//                if(unit1.equals(FUnit.PERCENTAGE)){
+//                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
+//                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.HEIGHT_TOP_PADDING, MainProps.HEIGHT, heightListener);
+//                }
+//                else if(unit1.equals(FUnit.PIXELS)){
+//                    endValue1 = doubleValue1;
+//                }
+//                if(unit2.equals(FUnit.PERCENTAGE)){
+//                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
+//                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.WIDTH_RIGHT_PADDING, MainProps.WIDTH, widthListener);
+//                }
+//                else if(unit2.equals(FUnit.PIXELS)){
+//                    endValue2 = doubleValue2;
+//                }
+//                if(unit3.equals(FUnit.PERCENTAGE)){
+//                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
+//                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+//                }
+//                else if(unit3.equals(FUnit.PIXELS)){
+//                    endValue3 = doubleValue3;
+//                }
+//                if(unit4.equals(FUnit.PERCENTAGE)){
+//                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
+//                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+//                        stopTempPaddingAnimations();
+//                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
+//                    };
+//                    listenersManager.add(component, ListenerID.WIDTH_LEFT_PADDING, MainProps.WIDTH, widthListener);
+//                }
+//                else if(unit4.equals(FUnit.PIXELS)){
+//                    endValue4 = doubleValue4;
+//                }
+//            }
+//            if(duration1 > 0){
+//                FAnimation tempAnimation1 = new FAnimation(component);
+//                tempAnimations.put(FAnimations.TOP_PADDING, tempAnimation1);
+//                tempAnimation1.add(FAnimations.TOP_PADDING, startValue1, Duration.ZERO, interpolator1);
+//                tempAnimation1.add(FAnimations.TOP_PADDING, endValue1, Duration.millis(duration1), interpolator1);
+//                valuesManager.set(MainProps.TOP_PADDING, doubleValue1);
+//                tempAnimation1.destroyOnFinished();
+//                tempAnimation1.play();
+//                tempAnimationHasBeenStopped.put(FAnimations.TOP_PADDING, false);
+//            }
+//            else{
+//                PaddingUtil.setTopPadding(component, endValue1);
+//            }
+//            if(duration2 > 0){
+//                FAnimation tempAnimation2 = new FAnimation(component);
+//                tempAnimations.put(FAnimations.RIGHT_PADDING, tempAnimation2);
+//                tempAnimation2.add(FAnimations.RIGHT_PADDING, startValue2, Duration.ZERO, interpolator2);
+//                tempAnimation2.add(FAnimations.RIGHT_PADDING, endValue2, Duration.millis(duration2), interpolator2);
+//                valuesManager.set(MainProps.RIGHT_PADDING, doubleValue2);
+//                tempAnimation2.destroyOnFinished();
+//                tempAnimation2.play();
+//                tempAnimationHasBeenStopped.put(FAnimations.RIGHT_PADDING, false);
+//            }
+//            else{
+//                PaddingUtil.setRightPadding(component, endValue2);
+//            }
+//            if(duration3 > 0){
+//                FAnimation tempAnimation3 = new FAnimation(component);
+//                tempAnimations.put(FAnimations.BOTTOM_PADDING, tempAnimation3);
+//                tempAnimation3.add(FAnimations.BOTTOM_PADDING, startValue3, Duration.ZERO, interpolator3);
+//                tempAnimation3.add(FAnimations.BOTTOM_PADDING, endValue3, Duration.millis(duration3), interpolator3);
+//                valuesManager.set(MainProps.BOTTOM_PADDING, doubleValue3);
+//                tempAnimation3.destroyOnFinished();
+//                tempAnimation3.play();
+//                tempAnimationHasBeenStopped.put(FAnimations.BOTTOM_PADDING, false);
+//            }
+//            else{
+//                PaddingUtil.setBottomPadding(component, endValue3);
+//            }
+//            if(duration4 > 0){
+//                FAnimation tempAnimation4 = new FAnimation(component);
+//                tempAnimations.put(FAnimations.LEFT_PADDING, tempAnimation4);
+//                tempAnimation4.add(FAnimations.LEFT_PADDING, startValue4, Duration.ZERO, interpolator4);
+//                tempAnimation4.add(FAnimations.LEFT_PADDING, endValue4, Duration.millis(duration4), interpolator4);
+//                valuesManager.set(MainProps.LEFT_PADDING, doubleValue4);
+//                tempAnimation4.destroyOnFinished();
+//                tempAnimation4.play();
+//                tempAnimationHasBeenStopped.put(FAnimations.LEFT_PADDING, false);
+//            }
+//            else{
+//                PaddingUtil.setLeftPadding(component, endValue4);
+//            }
+//            setFourSidesSizeValuesInValuesManager(MainProps.PADDING, endValue1, endValue2, endValue3, endValue4);
+//        }
+//        else{
+//
+//        }
+//    }
+
+    private int paddingParametersCount;
+    private double paddingStartValue1;
+    private double paddingStartValue2;
+    private double paddingStartValue3;
+    private double paddingStartValue4;
+    private double paddingEndValue1;
+    private double paddingEndValue2;
+    private double paddingEndValue3;
+    private double paddingEndValue4;
+    private double paddingDoubleValue1;
+    private double paddingDoubleValue2;
+    private double paddingDoubleValue3;
+    private double paddingDoubleValue4;
+    private String paddingUnit1;
+    private String paddingUnit2;
+    private String paddingUnit3;
+    private String paddingUnit4;
+    private long paddingDuration1;
+    private long paddingDuration2;
+    private long paddingDuration3;
+    private long paddingDuration4;
+    private String paddingInterpolator1;
+    private String paddingInterpolator2;
+    private String paddingInterpolator3;
+    private String paddingInterpolator4;
     public void addPaddingProperty (boolean parentIsNull){
-        int parametersCount = parser.getParametersCount();
-        double startValue1 = valuesManager.getDouble(MainProps.TOP_PADDING);
-        double startValue2 = valuesManager.getDouble(MainProps.RIGHT_PADDING);
-        double startValue3 = valuesManager.getDouble(MainProps.BOTTOM_PADDING);
-        double startValue4 = valuesManager.getDouble(MainProps.LEFT_PADDING);
-        double endValue1 = 0;
-        double endValue2 = 0;
-        double endValue3 = 0;
-        double endValue4 = 0;
-        double doubleValue1 = parser.getDoubleValue(0);
-        double doubleValue2 = parser.getDoubleValue(1);
-        double doubleValue3 = parser.getDoubleValue(2);
-        double doubleValue4 = parser.getDoubleValue(3);
-        String unit1 = parser.getUnit(0);
-        String unit2 = parser.getUnit(1);
-        String unit3 = parser.getUnit(2);
-        String unit4 = parser.getUnit(3);
-        long duration1 = parser.getDuration(0);
-        long duration2 = parser.getDuration(1);
-        long duration3 = parser.getDuration(2);
-        long duration4 = parser.getDuration(3);
-        String interpolator1 = parser.getInterpolator(0);
-        String interpolator2 = parser.getInterpolator(1);
-        String interpolator3 = parser.getInterpolator(2);
-        String interpolator4 = parser.getInterpolator(3);
-        if(!parentIsNull){
-            listenersManager.remove(ListenerID.WIDTH_HORIZONTAL_PADDING);
-            listenersManager.remove(ListenerID.HEIGHT_VERTICAL_PADDING);
-            listenersManager.remove(ListenerID.HEIGHT_TOP_PADDING);
-            listenersManager.remove(ListenerID.WIDTH_RIGHT_PADDING);
-            listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PADDING);
-            listenersManager.remove(ListenerID.WIDTH_LEFT_PADDING);
-            stopTempPaddingAnimations();
-            if(parametersCount == 1){
-                duration2 = duration1;
-                duration3 = duration1;
-                duration4 = duration1;
-                interpolator2 = interpolator1;
-                interpolator3 = interpolator1;
-                interpolator4 = interpolator1;
-                if(unit1.equals(FUnit.PERCENTAGE)){
-                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
-                    endValue2 = component.getPrefWidth() * (doubleValue1 / 100);
-                    endValue3 = endValue1;
-                    endValue4 = endValue2;
-                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
-                    };
-                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue1 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
-                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
-                }
-                else if(unit1.equals(FUnit.PIXELS)){
-                    endValue1 = doubleValue1;
-                    endValue2 = endValue1;
-                    endValue3 = endValue1;
-                    endValue4 = endValue1;
-                }
-            }
-            else if(parametersCount == 2){
-                duration3 = duration1;
-                duration4 = duration2;
-                interpolator3 = interpolator1;
-                interpolator4 = interpolator2;
-                if(unit1.equals(FUnit.PERCENTAGE)){
-                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
-                    endValue3 = endValue1;
-                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setTopBottomPadding(component, (double)newVal * (doubleValue1 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
-                }
-                else if(unit1.equals(FUnit.PIXELS)){
-                    endValue1 = doubleValue1;
-                    endValue3 = endValue1;
-                }
-                if(unit2.equals(FUnit.PERCENTAGE)){
-                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
-                    endValue4 = endValue2;
-                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setRightLeftPadding(component, (double)newVal * (doubleValue2 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
-                }
-                else if(unit1.equals(FUnit.PIXELS)){
-                    endValue2 = doubleValue2;
-                    endValue4 = endValue2;
-                }
-            }
-            else if(parametersCount == 4){
-                if(unit1.equals(FUnit.PERCENTAGE) && unit3.equals(FUnit.PERCENTAGE)){
-                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
-                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
-                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
-                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.HEIGHT_VERTICAL_PADDING, MainProps.HEIGHT, heightListener);
-                }
-                if(unit2.equals(FUnit.PERCENTAGE) && unit4.equals(FUnit.PERCENTAGE)){
-                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
-                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
-                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
-                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.WIDTH_HORIZONTAL_PADDING, MainProps.WIDTH, widthListener);
-                }
-                if(unit1.equals(FUnit.PERCENTAGE)){
-                    endValue1 = component.getPrefHeight() * (doubleValue1 / 100);
-                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setTopPadding(component, (double)newVal * (doubleValue1 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.HEIGHT_TOP_PADDING, MainProps.HEIGHT, heightListener);
-                }
-                else if(unit1.equals(FUnit.PIXELS)){
-                    endValue1 = doubleValue1;
-                }
-                if(unit2.equals(FUnit.PERCENTAGE)){
-                    endValue2 = component.getPrefWidth() * (doubleValue2 / 100);
-                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setRightPadding(component, (double)newVal * (doubleValue2 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.WIDTH_RIGHT_PADDING, MainProps.WIDTH, widthListener);
-                }
-                else if(unit2.equals(FUnit.PIXELS)){
-                    endValue2 = doubleValue2;
-                }
-                if(unit3.equals(FUnit.PERCENTAGE)){
-                    endValue3 = component.getPrefHeight() * (doubleValue3 / 100);
-                    ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setBottomPadding(component, (double)newVal * (doubleValue3 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
-                }
-                else if(unit3.equals(FUnit.PIXELS)){
-                    endValue3 = doubleValue3;
-                }
-                if(unit4.equals(FUnit.PERCENTAGE)){
-                    endValue4 = component.getPrefWidth() * (doubleValue4 / 100);
-                    ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
-                        stopTempPaddingAnimations();
-                        PaddingUtil.setLeftPadding(component, (double)newVal * (doubleValue4 / 100));
-                    };
-                    listenersManager.add(component, ListenerID.WIDTH_LEFT_PADDING, MainProps.WIDTH, widthListener);
-                }
-                else if(unit4.equals(FUnit.PIXELS)){
-                    endValue4 = doubleValue4;
-                }
-            }
-            if(duration1 > 0){
-                FAnimation tempAnimation1 = new FAnimation(component);
-                tempAnimations.put(FAnimations.TOP_PADDING, tempAnimation1);
-                tempAnimation1.add(FAnimations.TOP_PADDING, startValue1, Duration.ZERO, interpolator1);
-                tempAnimation1.add(FAnimations.TOP_PADDING, endValue1, Duration.millis(duration1), interpolator1);
-                valuesManager.set(MainProps.TOP_PADDING, doubleValue1);
-                tempAnimation1.destroyOnFinished();
-                tempAnimation1.play();
-                tempAnimationHasBeenStopped.put(FAnimations.TOP_PADDING, false);
-            }
-            else{
-                PaddingUtil.setTopPadding(component, endValue1);
-            }
-            if(duration2 > 0){
-                FAnimation tempAnimation2 = new FAnimation(component);
-                tempAnimations.put(FAnimations.RIGHT_PADDING, tempAnimation2);
-                tempAnimation2.add(FAnimations.RIGHT_PADDING, startValue2, Duration.ZERO, interpolator2);
-                tempAnimation2.add(FAnimations.RIGHT_PADDING, endValue2, Duration.millis(duration2), interpolator2);
-                valuesManager.set(MainProps.RIGHT_PADDING, doubleValue2);
-                tempAnimation2.destroyOnFinished();
-                tempAnimation2.play();
-                tempAnimationHasBeenStopped.put(FAnimations.RIGHT_PADDING, false);
-            }
-            else{
-                PaddingUtil.setRightPadding(component, endValue2);
-            }
-            if(duration3 > 0){
-                FAnimation tempAnimation3 = new FAnimation(component);
-                tempAnimations.put(FAnimations.BOTTOM_PADDING, tempAnimation3);
-                tempAnimation3.add(FAnimations.BOTTOM_PADDING, startValue3, Duration.ZERO, interpolator3);
-                tempAnimation3.add(FAnimations.BOTTOM_PADDING, endValue3, Duration.millis(duration3), interpolator3);
-                valuesManager.set(MainProps.BOTTOM_PADDING, doubleValue3);
-                tempAnimation3.destroyOnFinished();
-                tempAnimation3.play();
-                tempAnimationHasBeenStopped.put(FAnimations.BOTTOM_PADDING, false);
-            }
-            else{
-                PaddingUtil.setBottomPadding(component, endValue3);
-            }
-            if(duration4 > 0){
-                FAnimation tempAnimation4 = new FAnimation(component);
-                tempAnimations.put(FAnimations.LEFT_PADDING, tempAnimation4);
-                tempAnimation4.add(FAnimations.LEFT_PADDING, startValue4, Duration.ZERO, interpolator4);
-                tempAnimation4.add(FAnimations.LEFT_PADDING, endValue4, Duration.millis(duration4), interpolator4);
-                valuesManager.set(MainProps.LEFT_PADDING, doubleValue4);
-                tempAnimation4.destroyOnFinished();
-                tempAnimation4.play();
-                tempAnimationHasBeenStopped.put(FAnimations.LEFT_PADDING, false);
-            }
-            else{
-                PaddingUtil.setLeftPadding(component, endValue4);
-            }
-            setFourSidesSizeValuesInValuesManager(MainProps.PADDING, endValue1, endValue2, endValue3, endValue4);
+        paddingParametersCount = parser.getParametersCount();
+        paddingStartValue1 = valuesManager.getDouble(MainProps.TOP_PADDING);
+        paddingStartValue2 = valuesManager.getDouble(MainProps.RIGHT_PADDING);
+        paddingStartValue3 = valuesManager.getDouble(MainProps.BOTTOM_PADDING);
+        paddingStartValue4 = valuesManager.getDouble(MainProps.LEFT_PADDING);
+        paddingEndValue1 = 0;
+        paddingEndValue2 = 0;
+        paddingEndValue3 = 0;
+        paddingEndValue4 = 0;
+        paddingDoubleValue1 = parser.getDoubleValue(0);
+        paddingDoubleValue2 = parser.getDoubleValue(1);
+        paddingDoubleValue3 = parser.getDoubleValue(2);
+        paddingDoubleValue4 = parser.getDoubleValue(3);
+        paddingUnit1 = parser.getUnit(0);
+        paddingUnit2 = parser.getUnit(1);
+        paddingUnit3 = parser.getUnit(2);
+        paddingUnit4 = parser.getUnit(3);
+        paddingDuration1 = parser.getDuration(0);
+        paddingDuration2 = parser.getDuration(1);
+        paddingDuration3 = parser.getDuration(2);
+        paddingDuration4 = parser.getDuration(3);
+        paddingInterpolator1 = parser.getInterpolator(0);
+        paddingInterpolator2 = parser.getInterpolator(1);
+        paddingInterpolator3 = parser.getInterpolator(2);
+        paddingInterpolator4 = parser.getInterpolator(3);
+        listenersManager.remove(ListenerID.WIDTH_RIGHT_LEFT_PADDING);
+        listenersManager.remove(ListenerID.HEIGHT_TOP_BOTTOM_PADDING);
+        listenersManager.remove(ListenerID.HEIGHT_TOP_PADDING);
+        listenersManager.remove(ListenerID.WIDTH_RIGHT_PADDING);
+        listenersManager.remove(ListenerID.HEIGHT_BOTTOM_PADDING);
+        listenersManager.remove(ListenerID.WIDTH_LEFT_PADDING);
+        stopTempPaddingAnimations();
+        if(!parentIsNull) {
+            addPaddingProp();
         }
         else{
-
+            pendingTaskManager.addTask(ListenerID.PADDING, (e) -> {
+                addPaddingProp();
+            });
         }
+    }
+
+    private void addPaddingProp(){
+        if(paddingParametersCount == 1){
+            paddingDuration2 = paddingDuration1;
+            paddingDuration3 = paddingDuration1;
+            paddingDuration4 = paddingDuration1;
+            paddingInterpolator2 = paddingInterpolator1;
+            paddingInterpolator3 = paddingInterpolator1;
+            paddingInterpolator4 = paddingInterpolator1;
+            if(paddingUnit1.equals(FUnit.PERCENTAGE)){
+                paddingEndValue1 = component.getPrefHeight() * (paddingDoubleValue1 / 100);
+                paddingEndValue2 = component.getPrefWidth() * (paddingDoubleValue1 / 100);
+                paddingEndValue3 = paddingEndValue1;
+                paddingEndValue4 = paddingEndValue2;
+                ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setRightLeftPadding(component, (double)newVal * (paddingDoubleValue1 / 100));
+                };
+                ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setTopBottomPadding(component, (double)newVal * (paddingDoubleValue1 / 100));
+                };
+                listenersManager.add(component, ListenerID.WIDTH_RIGHT_LEFT_PADDING, MainProps.WIDTH, widthListener);
+                listenersManager.add(component, ListenerID.HEIGHT_TOP_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+            }
+            else if(paddingUnit1.equals(FUnit.PIXELS)){
+                paddingEndValue1 = paddingDoubleValue1;
+                paddingEndValue2 = paddingEndValue1;
+                paddingEndValue3 = paddingEndValue1;
+                paddingEndValue4 = paddingEndValue1;
+            }
+        }
+        else if(paddingParametersCount == 2){
+            paddingDuration3 = paddingDuration1;
+            paddingDuration4 = paddingDuration2;
+            paddingInterpolator3 = paddingInterpolator1;
+            paddingInterpolator4 = paddingInterpolator2;
+            if(paddingUnit1.equals(FUnit.PERCENTAGE)){
+                paddingEndValue1 = component.getPrefHeight() * (paddingDoubleValue1 / 100);
+                paddingEndValue3 = paddingEndValue1;
+                ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setTopBottomPadding(component, (double)newVal * (paddingDoubleValue1 / 100));
+                };
+                listenersManager.add(component, ListenerID.HEIGHT_TOP_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+            }
+            else if(paddingUnit1.equals(FUnit.PIXELS)){
+                paddingEndValue1 = paddingDoubleValue1;
+                paddingEndValue3 = paddingEndValue1;
+            }
+            if(paddingUnit2.equals(FUnit.PERCENTAGE)){
+                paddingEndValue2 = component.getPrefWidth() * (paddingDoubleValue2 / 100);
+                paddingEndValue4 = paddingEndValue2;
+                ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setRightLeftPadding(component, (double)newVal * (paddingDoubleValue2 / 100));
+                };
+                listenersManager.add(component, ListenerID.WIDTH_RIGHT_LEFT_PADDING, MainProps.WIDTH, widthListener);
+            }
+            else if(paddingUnit1.equals(FUnit.PIXELS)){
+                paddingEndValue2 = paddingDoubleValue2;
+                paddingEndValue4 = paddingEndValue2;
+            }
+        }
+        else if(paddingParametersCount == 4){
+            if(paddingUnit1.equals(FUnit.PERCENTAGE) && paddingUnit3.equals(FUnit.PERCENTAGE)){
+                paddingEndValue1 = component.getPrefHeight() * (paddingDoubleValue1 / 100);
+                paddingEndValue3 = component.getPrefHeight() * (paddingDoubleValue3 / 100);
+                ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setTopBottomPadding(component, (double)newVal * (paddingDoubleValue1 / 100), (double)newVal * (paddingDoubleValue3 / 100));
+                };
+                listenersManager.add(component, ListenerID.HEIGHT_TOP_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+            }
+            else if(paddingUnit1.equals(FUnit.PERCENTAGE)){
+                paddingEndValue1 = component.getPrefHeight() * (paddingDoubleValue1 / 100);
+                ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setTopPadding(component, (double)newVal * (paddingDoubleValue1 / 100));
+                };
+                listenersManager.add(component, ListenerID.HEIGHT_TOP_PADDING, MainProps.HEIGHT, heightListener);
+            }
+            else if(paddingUnit3.equals(FUnit.PERCENTAGE)){
+                paddingEndValue3 = component.getPrefHeight() * (paddingDoubleValue3 / 100);
+                ChangeListener<Number> heightListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setBottomPadding(component, (double)newVal * (paddingDoubleValue3 / 100));
+                };
+                listenersManager.add(component, ListenerID.HEIGHT_BOTTOM_PADDING, MainProps.HEIGHT, heightListener);
+            }
+            if(paddingUnit1.equals(FUnit.PIXELS)){
+                paddingEndValue1 = paddingDoubleValue1;
+            }
+            if(paddingUnit3.equals(FUnit.PIXELS)){
+                paddingEndValue3 = paddingDoubleValue3;
+            }
+            if(paddingUnit2.equals(FUnit.PERCENTAGE) && paddingUnit4.equals(FUnit.PERCENTAGE)){
+                paddingEndValue2 = component.getPrefWidth() * (paddingDoubleValue2 / 100);
+                paddingEndValue4 = component.getPrefWidth() * (paddingDoubleValue4 / 100);
+                ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setRightLeftPadding(component, (double)newVal * (paddingDoubleValue2 / 100), (double)newVal * (paddingDoubleValue4 / 100));
+                };
+                listenersManager.add(component, ListenerID.WIDTH_RIGHT_LEFT_PADDING, MainProps.WIDTH, widthListener);
+            }
+            else if(paddingUnit2.equals(FUnit.PERCENTAGE)){
+                paddingEndValue2 = component.getPrefWidth() * (paddingDoubleValue2 / 100);
+                ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setRightPadding(component, (double)newVal * (paddingDoubleValue2 / 100));
+                };
+                listenersManager.add(component, ListenerID.WIDTH_RIGHT_PADDING, MainProps.WIDTH, widthListener);
+            }
+            else if(paddingUnit4.equals(FUnit.PERCENTAGE)){
+                paddingEndValue4 = component.getPrefWidth() * (paddingDoubleValue4 / 100);
+                ChangeListener<Number> widthListener = (val, oldVal, newVal) -> {
+                    stopTempPaddingAnimations();
+                    PaddingUtil.setLeftPadding(component, (double)newVal * (paddingDoubleValue4 / 100));
+                };
+                listenersManager.add(component, ListenerID.WIDTH_LEFT_PADDING, MainProps.WIDTH, widthListener);
+            }
+            if(paddingUnit2.equals(FUnit.PIXELS)){
+                paddingEndValue2 = paddingDoubleValue2;
+            }
+            if(paddingUnit4.equals(FUnit.PIXELS)){
+                paddingEndValue4 = paddingDoubleValue4;
+            }
+        }
+        if(paddingDuration1 > 0){
+            addTempAnimation(component, FAnimations.TOP_PADDING, paddingStartValue1, paddingEndValue1, paddingDoubleValue1, paddingDuration1, paddingInterpolator1);
+        }
+        else{
+            PaddingUtil.setTopPadding(component, paddingEndValue1);
+        }
+        if(paddingDuration2 > 0){
+            addTempAnimation(component, FAnimations.RIGHT_PADDING, paddingStartValue2, paddingEndValue2, paddingDoubleValue2, paddingDuration2, paddingInterpolator2);
+        }
+        else{
+            PaddingUtil.setRightPadding(component, paddingEndValue2);
+        }
+        if(paddingDuration3 > 0){
+            addTempAnimation(component, FAnimations.BOTTOM_PADDING, paddingStartValue3, paddingEndValue3, paddingDoubleValue3, paddingDuration3, paddingInterpolator3);
+        }
+        else{
+            PaddingUtil.setBottomPadding(component, paddingEndValue3);
+        }
+        if(paddingDuration4 > 0){
+            addTempAnimation(component, FAnimations.LEFT_PADDING, paddingStartValue4, paddingEndValue4, paddingDoubleValue4, paddingDuration4, paddingInterpolator4);
+        }
+        else{
+            PaddingUtil.setLeftPadding(component, paddingEndValue4);
+        }
+        setFourSidesSizeValuesInValuesManager(MainProps.PADDING, paddingEndValue1, paddingEndValue2, paddingEndValue3, paddingEndValue4);
+        updateFourSidesAnimationStartValue(clickAnimation, FAnimations.PADDING, paddingEndValue1, paddingEndValue2, paddingEndValue3, paddingEndValue4);
+        updateFourSidesAnimationStartValue(hoverAnimation, FAnimations.PADDING, paddingEndValue1, paddingEndValue2, paddingEndValue3, paddingEndValue4);
     }
 
     private int bgRadiusParametersCount;
@@ -843,6 +1067,10 @@ public class PropertyHelper {
         else{
             BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusEndValue4);
         }
+        System.out.println("bgRadiusEndValue1: " + bgRadiusEndValue1);
+        System.out.println("bgRadiusEndValue2: " + bgRadiusEndValue2);
+        System.out.println("bgRadiusEndValue3: " + bgRadiusEndValue3);
+        System.out.println("bgRadiusEndValue4: " + bgRadiusEndValue4);
         setFourSidesSizeValuesInValuesManager(MainProps.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
         updateFourSidesAnimationStartValue(clickAnimation, FAnimations.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
         updateFourSidesAnimationStartValue(hoverAnimation, FAnimations.BG_RADIUS, bgRadiusEndValue1, bgRadiusEndValue2, bgRadiusEndValue3, bgRadiusEndValue4);
@@ -850,6 +1078,11 @@ public class PropertyHelper {
 
     private void updateFourSidesAnimationStartValue(FAnimation animation, String animationType, double val1, double val2, double val3, double val4){
         if(multipleSidesAnimations.containsKey(animationType)){
+            System.out.println("Update anim: " + animationType);
+            System.out.println("Anim 1: " + multipleSidesAnimations.get(animationType)[0]);
+            System.out.println("Anim 2: " + multipleSidesAnimations.get(animationType)[1]);
+            System.out.println("Anim 3: " + multipleSidesAnimations.get(animationType)[2]);
+            System.out.println("Anim 4: " + multipleSidesAnimations.get(animationType)[3]);
             updateAnimationStartValue(animation, multipleSidesAnimations.get(animationType)[0], val1);
             updateAnimationStartValue(animation, multipleSidesAnimations.get(animationType)[1], val2);
             updateAnimationStartValue(animation, multipleSidesAnimations.get(animationType)[2], val3);

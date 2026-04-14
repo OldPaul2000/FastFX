@@ -110,6 +110,20 @@ public class PaddingUtil {
     }
 
     /**
+     * Sets the top and bottom padding(top and bottom inset) for the element
+     *
+     * @param element the element to set the top and bottom padding for
+     * @param top the value of the top padding
+     * @param bottom the value of the bottom padding
+     */
+    public static void setTopBottomPadding(Region element, double top, double bottom){
+        if(element != null){
+            Insets oldInsets = element.getInsets();
+            element.setPadding(new Insets(top, oldInsets.getRight(), bottom, oldInsets.getLeft()));
+        }
+    }
+
+    /**
      * Sets the right and left padding(right and left inset) for the element
      *
      * @param element the element to set the right and left padding for
@@ -119,6 +133,20 @@ public class PaddingUtil {
         if(element != null){
             Insets oldInsets = element.getInsets();
             element.setPadding(new Insets(oldInsets.getTop(), padding, oldInsets.getBottom(), padding));
+        }
+    }
+
+    /**
+     * Sets the right and left padding(right and left inset) for the element
+     *
+     * @param element the element to set the right and left padding for
+     * @param right the value of the right padding
+     * @param left the value of the left padding
+     */
+    public static void setRightLeftPadding(Region element, double right, double left){
+        if(element != null){
+            Insets oldInsets = element.getInsets();
+            element.setPadding(new Insets(oldInsets.getTop(), right, oldInsets.getBottom(), left));
         }
     }
 

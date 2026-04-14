@@ -15,8 +15,9 @@ public class ListenerID {
     public static final String HEIGHT_HEIGHT = "HEIGHT_HEIGHT";
     public static final String TRANSLATE_X = "TRANSLATE_X";
     public static final String TRANSLATE_Y = "TRANSLATE_Y";
-    public static final String HEIGHT_VERTICAL_PADDING = "HEIGHT_VERTICAL_PADDING";
-    public static final String WIDTH_HORIZONTAL_PADDING = "WIDTH_HORIZONTAL_PADDING";
+    public static final String PADDING = "PADDING";
+    public static final String HEIGHT_TOP_BOTTOM_PADDING = "HEIGHT_TOP_BOTTOM_PADDING";
+    public static final String WIDTH_RIGHT_LEFT_PADDING = "WIDTH_RIGHT_LEFT_PADDING";
     public static final String HEIGHT_TOP_PADDING = "HEIGHT_TOP_PADDING";
     public static final String WIDTH_RIGHT_PADDING = "WIDTH_RIGHT_PADDING";
     public static final String HEIGHT_BOTTOM_PADDING = "HEIGHT_BOTTOM_PADDING";

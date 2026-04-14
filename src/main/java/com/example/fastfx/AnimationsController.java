@@ -1,12 +1,17 @@
 package com.example.fastfx;
 
+import com.example.fastfx.src.fcomponents.FLabel;
 import com.example.fastfx.src.fcomponents.FPane2;
+import com.example.fastfx.src.style.animations.FAnimation;
+import com.example.fastfx.src.style.animations.FAnimations;
 import com.example.fastfx.src.userinteraction.ElementResizer;
 import com.example.fastfx.src.userinteraction.ResizeMode;
 import com.example.fastfx.src.utility.style.BackgroundSetter;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class AnimationsController {
 
@@ -34,9 +39,9 @@ public class AnimationsController {
 
         FPane2 fPane2 = new FPane2();
         fPane2.bgColor("#ff0000");
-        fPane2.click(() -> {
-            fPane2.bgRadius("5px 0.3s");
-        });
+//        fPane2.click(() -> {
+//            fPane2.bgRadius("5px 0.3s");
+//        });
         fPane.add(fPane2);
         fPane2.bgRadius("10px 1s 20px 2s 5px 15px 1s");
         fPane2.bgOpacity(0.5);
@@ -46,10 +51,39 @@ public class AnimationsController {
         fPane2.bottom("15");
 //        fPane2.y("25");
 
+
+        FLabel fLabel = new FLabel();
+        fLabel.setText("Za label");
+        fLabel.bgColor("#777777").x(50).y(50).width(100).height(30);
+        fPane.add(fLabel);
+        fLabel.hover(() -> {
+            fLabel.padding("10px 10px 10px 15px 1s");
+            fLabel.bgRadius("10px 10px 10px 15px 1s");
+        });
+//        fLabel.padding("20px 1s");
+//        fLabel.bgRadius("10px 1s");
+
         resizer.addElement(fPane, ResizeMode.DRAG_EDGES);
 
         ElementResizer resizer2 = new ElementResizer(fPane);
         resizer2.addElement(fPane2, ResizeMode.DRAG_EDGES);
+
+        FPane2 fPane3 = new FPane2();
+        fPane3.bgColor("#000000").width(100).height(100).x(40).y(40);
+        mainContainer.add(fPane3);
+
+        FAnimation animation = new FAnimation(fPane3);
+        animation.add(FAnimations.BG_TL_RADIUS, 0, Duration.ZERO);
+        animation.add(FAnimations.BG_TL_RADIUS, 15, Duration.millis(1000));
+        animation.updateEndValue(FAnimations.BG_TL_RADIUS, 20);
+        animation.updateEndValue(FAnimations.BG_TL_RADIUS, 25);
+        fPane3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
+            animation.play();
+        });
+        fPane3.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> {
+            animation.reverse();
+        });
+
 
 //        fLabel.width(150);
 //        fLabel.height(100);
