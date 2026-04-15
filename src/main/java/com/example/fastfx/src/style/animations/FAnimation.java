@@ -591,21 +591,26 @@ public class FAnimation {
      * are mentioned in the method is to prevent if checks to check if the animation type represents a DoubleProperty<br>
      * or and ObjectProperty<Color> and the existing property will be removed from its containing HashMap.
      */
-    private void removeProperty(String animation){
-        doubleProperties.remove(animation);
-        colorProperties.remove(animation);
+    private void removeProperty(String animationType){
+        doubleProperties.remove(animationType);
+        colorProperties.remove(animationType);
+    }
+
+    private void removePropertyListener(String animationType){
+        keyFrameBuilder.removePropertyListener(animationType);
     }
 
     /**
      * Removes the transition for the specified fAnimation.
      */
-    public void removeAnimation (String fAnimation) {
-        String animation = FAnimations.get(fAnimation);
+    public void removeAnimation (String animationType) {
+        String animation = FAnimations.get(animationType);
         if (animation != null && currentAnimations.containsKey(animation)) {
             currentAnimations.get(animation).forEach(keyFrame -> {
                 timeline.getKeyFrames().remove(keyFrame);
             });
             currentAnimations.remove(animation);
+            removePropertyListener(animation);
             removeProperty(animation);
             if (animation.equals(FAnimations.SHADOW)) {
                 lowerRadius = 0;

@@ -10,6 +10,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.effect.DropShadow;
@@ -19,6 +20,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +38,8 @@ public class KeyFrameBuilder {
     private EventHandler<ActionEvent> onFinishedHandler;
     private Map<String, DoubleProperty> doubleProperties;
     private Map<String, ObjectProperty<Color>> colorProperties;
+    private Map<String, ChangeListener<Number>> numberPropertyListeners;
+    private Map<String, ChangeListener<Color>> colorPropertyListeners;
 
     private Effect effect;
 
@@ -77,6 +81,34 @@ public class KeyFrameBuilder {
     private DoubleProperty rightBrInsetProperty;
     private DoubleProperty bottomBrInsetProperty;
     private DoubleProperty leftBrInsetProperty;
+
+    public KeyFrameBuilder(){
+        this.numberPropertyListeners = new HashMap<>();
+        this.colorPropertyListeners = new HashMap<>();
+    }
+
+    public void removePropertyListener(String animationType){
+        if(numberPropertyListeners.containsKey(animationType)){
+            ChangeListener<Number> listener = numberPropertyListeners.get(animationType);
+            if(doubleProperties.containsKey(animationType)){
+                doubleProperties.get(animationType).removeListener(listener);
+            }
+            numberPropertyListeners.remove(animationType);
+        }
+        else if(colorPropertyListeners.containsKey(animationType)){
+            ChangeListener<Color> listener = colorPropertyListeners.get(animationType);
+            if(colorProperties.containsKey(animationType)){
+                colorProperties.get(animationType).removeListener(listener);
+            }
+            colorPropertyListeners.remove(animationType);
+        }
+    }
+
+    private void addNumberPropertyListener(String animationType, ChangeListener<Number> listener){
+        if(!numberPropertyListeners.containsKey(animationType)){
+            numberPropertyListeners.put(animationType, listener);
+        }
+    }
 
     /**
      * Set the element from which this class can access the properties to animate.
@@ -274,9 +306,13 @@ public class KeyFrameBuilder {
             if (paddingProperty == null) {
                 paddingProperty = new SimpleDoubleProperty();
             }
-            paddingProperty.addListener((prop, oldVal, newVal) -> {
-                PaddingUtil.setPadding(element, paddingProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    PaddingUtil.setPadding(element, paddingProperty.get());
+                };
+                paddingProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, paddingProperty);
             return new KeyValue(paddingProperty, value, interpolator);
         }
@@ -284,9 +320,13 @@ public class KeyFrameBuilder {
             if (topPaddingProperty == null) {
                 topPaddingProperty = new SimpleDoubleProperty();
             }
-            topPaddingProperty.addListener((prop, oldVal, newVal) -> {
-                PaddingUtil.setTopPadding(element, topPaddingProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    PaddingUtil.setTopPadding(element, topPaddingProperty.get());
+                };
+                topPaddingProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, topPaddingProperty);
             return new KeyValue(topPaddingProperty, value, interpolator);
         }
@@ -294,9 +334,13 @@ public class KeyFrameBuilder {
             if (rightPaddingProperty == null) {
                 rightPaddingProperty = new SimpleDoubleProperty();
             }
-            rightPaddingProperty.addListener((prop, oldVal, newVal) -> {
-                PaddingUtil.setRightPadding(element, rightPaddingProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    PaddingUtil.setTopPadding(element, topPaddingProperty.get());
+                };
+                rightPaddingProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, rightPaddingProperty);
             return new KeyValue(rightPaddingProperty, value, interpolator);
         }
@@ -304,9 +348,13 @@ public class KeyFrameBuilder {
             if (bottomPaddingProperty == null) {
                 bottomPaddingProperty = new SimpleDoubleProperty();
             }
-            bottomPaddingProperty.addListener((prop, oldVal, newVal) -> {
-                PaddingUtil.setBottomPadding(element, bottomPaddingProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    PaddingUtil.setBottomPadding(element, bottomPaddingProperty.get());
+                };
+                bottomPaddingProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bottomPaddingProperty);
             return new KeyValue(bottomPaddingProperty, value, interpolator);
         }
@@ -314,9 +362,13 @@ public class KeyFrameBuilder {
             if (leftPaddingProperty == null) {
                 leftPaddingProperty = new SimpleDoubleProperty();
             }
-            leftPaddingProperty.addListener((prop, oldVal, newVal) -> {
-                PaddingUtil.setLeftPadding(element, leftPaddingProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    PaddingUtil.setLeftPadding(element, leftPaddingProperty.get());
+                };
+                leftPaddingProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, leftPaddingProperty);
             return new KeyValue(leftPaddingProperty, value, interpolator);
         }
@@ -327,9 +379,13 @@ public class KeyFrameBuilder {
             if (bgOpacityProperty == null) {
                 bgOpacityProperty = new SimpleDoubleProperty();
             }
-            bgOpacityProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setBackgroundOpacity(element, bgOpacityProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setBackgroundOpacity(element, bgOpacityProperty.get());
+                };
+                bgOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgOpacityProperty);
             return new KeyValue(bgOpacityProperty, value, interpolator);
         }
@@ -337,9 +393,13 @@ public class KeyFrameBuilder {
             if (bgRadiusProperty == null) {
                 bgRadiusProperty = new SimpleDoubleProperty();
             }
-            bgRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setBackgroundRadius(element, bgRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setBackgroundRadius(element, bgRadiusProperty.get());
+                };
+                bgRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgRadiusProperty);
             return new KeyValue(bgRadiusProperty, value, interpolator);
         }
@@ -347,9 +407,13 @@ public class KeyFrameBuilder {
             if (bgTopLeftRadiusProperty == null) {
                 bgTopLeftRadiusProperty = new SimpleDoubleProperty();
             }
-            bgTopLeftRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setTopLeftBackgroundRadius(element, bgTopLeftRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setTopLeftBackgroundRadius(element, bgTopLeftRadiusProperty.get());
+                };
+                bgTopLeftRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgTopLeftRadiusProperty);
             return new KeyValue(bgTopLeftRadiusProperty, value, interpolator);
         }
@@ -357,9 +421,13 @@ public class KeyFrameBuilder {
             if (bgTopRightRadiusProperty == null) {
                 bgTopRightRadiusProperty = new SimpleDoubleProperty();
             }
-            bgTopRightRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setTopRightBackgroundRadius(element, bgTopRightRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setTopRightBackgroundRadius(element, bgTopRightRadiusProperty.get());
+                };
+                bgTopRightRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgTopRightRadiusProperty);
             return new KeyValue(bgTopRightRadiusProperty, value, interpolator);
         }
@@ -367,9 +435,13 @@ public class KeyFrameBuilder {
             if (bgBottomRightRadiusProperty == null) {
                 bgBottomRightRadiusProperty = new SimpleDoubleProperty();
             }
-            bgBottomRightRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setBottomRightBackgroundRadius(element, bgBottomRightRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setBottomRightBackgroundRadius(element, bgBottomRightRadiusProperty.get());
+                };
+                bgBottomRightRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgBottomRightRadiusProperty);
             return new KeyValue(bgBottomRightRadiusProperty, value, interpolator);
         }
@@ -377,9 +449,13 @@ public class KeyFrameBuilder {
             if (bgBottomLeftRadiusProperty == null) {
                 bgBottomLeftRadiusProperty = new SimpleDoubleProperty();
             }
-            bgBottomLeftRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BackgroundSetter.setBottomLeftBackgroundRadius(element, bgBottomLeftRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setBottomLeftBackgroundRadius(element, bgBottomLeftRadiusProperty.get());
+                };
+                bgBottomLeftRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bgBottomLeftRadiusProperty);
             return new KeyValue(bgBottomLeftRadiusProperty, value, interpolator);
         }
@@ -390,9 +466,13 @@ public class KeyFrameBuilder {
             if (brOpacityProperty == null) {
                 brOpacityProperty = new SimpleDoubleProperty();
             }
-            brOpacityProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBorderOpacity(element, brOpacityProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBorderOpacity(element, brOpacityProperty.get());
+                };
+                brOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brOpacityProperty);
             return new KeyValue(brOpacityProperty, value, interpolator);
         }
@@ -400,9 +480,13 @@ public class KeyFrameBuilder {
             if (brWidthProperty == null) {
                 brWidthProperty = new SimpleDoubleProperty();
             }
-            brWidthProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBorderWidth(element, brWidthProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBorderWidth(element, brWidthProperty.get());
+                };
+                brWidthProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brWidthProperty);
             return new KeyValue(brWidthProperty, value, interpolator);
         }
@@ -410,9 +494,13 @@ public class KeyFrameBuilder {
             if (brTopWidthProperty == null) {
                 brTopWidthProperty = new SimpleDoubleProperty();
             }
-            brTopWidthProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setTopBorderWidth(element, brTopWidthProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setTopBorderWidth(element, brTopWidthProperty.get());
+                };
+                brTopWidthProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brTopWidthProperty);
             return new KeyValue(brTopWidthProperty, value, interpolator);
         }
@@ -420,9 +508,13 @@ public class KeyFrameBuilder {
             if (brRightWidthProperty == null) {
                 brRightWidthProperty = new SimpleDoubleProperty();
             }
-            brRightWidthProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setRightBorderWidth(element, brRightWidthProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setRightBorderWidth(element, brRightWidthProperty.get());
+                };
+                brRightWidthProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brRightWidthProperty);
             return new KeyValue(brRightWidthProperty, value, interpolator);
         }
@@ -430,9 +522,13 @@ public class KeyFrameBuilder {
             if (brBottomWidthProperty == null) {
                 brBottomWidthProperty = new SimpleDoubleProperty();
             }
-            brBottomWidthProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBottomBorderWidth(element, brBottomWidthProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomBorderWidth(element, brBottomWidthProperty.get());
+                };
+                brBottomWidthProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brBottomWidthProperty);
             return new KeyValue(brBottomWidthProperty, value, interpolator);
         }
@@ -440,9 +536,13 @@ public class KeyFrameBuilder {
             if (brLeftWidthProperty == null) {
                 brLeftWidthProperty = new SimpleDoubleProperty();
             }
-            brLeftWidthProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setLeftBorderWidth(element, brLeftWidthProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setLeftBorderWidth(element, brLeftWidthProperty.get());
+                };
+                brLeftWidthProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brLeftWidthProperty);
             return new KeyValue(brLeftWidthProperty, value, interpolator);
         }
@@ -450,9 +550,13 @@ public class KeyFrameBuilder {
             if (brRadiusProperty == null) {
                 brRadiusProperty = new SimpleDoubleProperty();
             }
-            brRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBorderRadius(element, brRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBorderRadius(element, brRadiusProperty.get());
+                };
+                brRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brRadiusProperty);
             return new KeyValue(brRadiusProperty, value, interpolator);
         }
@@ -460,9 +564,13 @@ public class KeyFrameBuilder {
             if (brTopLeftRadiusProperty == null) {
                 brTopLeftRadiusProperty = new SimpleDoubleProperty();
             }
-            brTopLeftRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setTopLeftBorderRadius(element, brTopLeftRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setTopLeftBorderRadius(element, brTopLeftRadiusProperty.get());
+                };
+                brTopLeftRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brTopLeftRadiusProperty);
             return new KeyValue(brTopLeftRadiusProperty, value, interpolator);
         }
@@ -470,9 +578,13 @@ public class KeyFrameBuilder {
             if (brTopRightRadiusProperty == null) {
                 brTopRightRadiusProperty = new SimpleDoubleProperty();
             }
-            brTopRightRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setTopRightBorderRadius(element, brTopRightRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setTopRightBorderRadius(element, brTopRightRadiusProperty.get());
+                };
+                brTopRightRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brTopRightRadiusProperty);
             return new KeyValue(brTopRightRadiusProperty, value, interpolator);
         }
@@ -480,9 +592,13 @@ public class KeyFrameBuilder {
             if (brBottomRightRadiusProperty == null) {
                 brBottomRightRadiusProperty = new SimpleDoubleProperty();
             }
-            brBottomRightRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBottomRightBorderRadius(element, brBottomRightRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomRightBorderRadius(element, brBottomRightRadiusProperty.get());
+                };
+                brBottomRightRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brBottomRightRadiusProperty);
             return new KeyValue(brBottomRightRadiusProperty, value, interpolator);
         }
@@ -490,9 +606,13 @@ public class KeyFrameBuilder {
             if (brBottomLeftRadiusProperty == null) {
                 brBottomLeftRadiusProperty = new SimpleDoubleProperty();
             }
-            brBottomLeftRadiusProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBottomLeftBorderRadius(element, brBottomLeftRadiusProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomLeftBorderRadius(element, brBottomLeftRadiusProperty.get());
+                };
+                brBottomLeftRadiusProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brBottomLeftRadiusProperty);
             return new KeyValue(brBottomLeftRadiusProperty, value, interpolator);
         }
@@ -500,9 +620,13 @@ public class KeyFrameBuilder {
             if (brInsetsProperty == null) {
                 brInsetsProperty = new SimpleDoubleProperty();
             }
-            brInsetsProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBorderInsets(element, brInsetsProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBorderInsets(element, brInsetsProperty.get());
+                };
+                brInsetsProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, brInsetsProperty);
             return new KeyValue(brInsetsProperty, value, interpolator);
         }
@@ -510,9 +634,13 @@ public class KeyFrameBuilder {
             if (topBrInsetProperty == null) {
                 topBrInsetProperty = new SimpleDoubleProperty();
             }
-            topBrInsetProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setTopBorderInset(element, topBrInsetProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setTopBorderInset(element, topBrInsetProperty.get());
+                };
+                topBrInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, topBrInsetProperty);
             return new KeyValue(topBrInsetProperty, value, interpolator);
         }
@@ -520,9 +648,13 @@ public class KeyFrameBuilder {
             if (rightBrInsetProperty == null) {
                 rightBrInsetProperty = new SimpleDoubleProperty();
             }
-            rightBrInsetProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setRightBorderInset(element, rightBrInsetProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setRightBorderInset(element, rightBrInsetProperty.get());
+                };
+                rightBrInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, rightBrInsetProperty);
             return new KeyValue(rightBrInsetProperty, value, interpolator);
         }
@@ -530,9 +662,13 @@ public class KeyFrameBuilder {
             if (bottomBrInsetProperty == null) {
                 bottomBrInsetProperty = new SimpleDoubleProperty();
             }
-            bottomBrInsetProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setBottomBorderInset(element, bottomBrInsetProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomBorderInset(element, bottomBrInsetProperty.get());
+                };
+                bottomBrInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, bottomBrInsetProperty);
             return new KeyValue(bottomBrInsetProperty, value, interpolator);
         }
@@ -540,9 +676,13 @@ public class KeyFrameBuilder {
             if (leftBrInsetProperty == null) {
                 leftBrInsetProperty = new SimpleDoubleProperty();
             }
-            leftBrInsetProperty.addListener((prop, oldVal, newVal) -> {
-                BorderSetter.setLeftBorderInset(element, leftBrInsetProperty.get());
-            });
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setLeftBorderInset(element, leftBrInsetProperty.get());
+                };
+                leftBrInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
             addDoubleProperty(animation, leftBrInsetProperty);
             return new KeyValue(leftBrInsetProperty, value, interpolator);
         }
@@ -583,9 +723,13 @@ public class KeyFrameBuilder {
                     bgColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                bgColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BackgroundSetter.setBackgroundColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BackgroundSetter.setBackgroundColor(element, newVal);
+                    };
+                    bgColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, bgColorProperty);
                 return new KeyValue(bgColorProperty, color, interpolator);
             }
@@ -596,9 +740,13 @@ public class KeyFrameBuilder {
                     brColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                brColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BorderSetter.setBorderColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BorderSetter.setBorderColor(element, newVal);
+                    };
+                    brColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, brColorProperty);
                 return new KeyValue(brColorProperty, color, interpolator);
             }
@@ -609,9 +757,13 @@ public class KeyFrameBuilder {
                     brTopColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                brTopColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BorderSetter.setTopBorderColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BorderSetter.setTopBorderColor(element, newVal);
+                    };
+                    brTopColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, brTopColorProperty);
                 return new KeyValue(brTopColorProperty, color, interpolator);
             }
@@ -622,9 +774,13 @@ public class KeyFrameBuilder {
                     brRightColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                brRightColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BorderSetter.setRightBorderColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BorderSetter.setRightBorderColor(element, newVal);
+                    };
+                    brRightColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, brRightColorProperty);
                 return new KeyValue(brRightColorProperty, color, interpolator);
             }
@@ -635,9 +791,13 @@ public class KeyFrameBuilder {
                     brBottomColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                brBottomColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BorderSetter.setBottomBorderColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BorderSetter.setBottomBorderColor(element, newVal);
+                    };
+                    brBottomColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, brBottomColorProperty);
                 return new KeyValue(brBottomColorProperty, color, interpolator);
             }
@@ -648,9 +808,13 @@ public class KeyFrameBuilder {
                     brLeftColorProperty = new SimpleObjectProperty<>();
                 }
                 Color color = Color.valueOf(value);
-                brLeftColorProperty.addListener((prop, oldVal, newVal) -> {
-                    BorderSetter.setLeftBorderColor(element, newVal);
-                });
+                if(!colorPropertyListeners.containsKey(animation)){
+                    ChangeListener<Color> listener = (prop, oldVal, newVal) -> {
+                        BorderSetter.setLeftBorderColor(element, newVal);
+                    };
+                    brLeftColorProperty.addListener(listener);
+                    colorPropertyListeners.put(animation, listener);
+                }
                 addColorProperty(animation, brLeftColorProperty);
                 return new KeyValue(brLeftColorProperty, color, interpolator);
             }
