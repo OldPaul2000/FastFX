@@ -197,9 +197,54 @@ public class StaticAnimations {
     public static final String LEFT_BORDER = "leftBorder";
 
     /**
+     * Animation name for <strong>border color</strong>
+     */
+    public static final String BR_COLOR = "brColor";
+
+    /**
+     * Animation name for <strong>top border color</strong>
+     */
+    public static final String BR_TOP_COLOR = "brTopColor";
+
+    /**
+     * Animation name for <strong>right border color</strong>
+     */
+    public static final String BR_RIGHT_COLOR = "brRightColor";
+
+    /**
+     * Animation name for <strong>bottom border color</strong>
+     */
+    public static final String BR_BOTTOM_COLOR = "brBottomColor";
+
+    /**
+     * Animation name for <strong>left border color</strong>
+     */
+    public static final String BR_LEFT_COLOR = "brLeftColor";
+
+    /**
      * Animation name for <strong>border opacity</strong>
      */
     public static final String BR_OPACITY = "brOpacity";
+
+    /**
+     * Animation name for <strong>top border opacity</strong>
+     */
+    public static final String BR_TOP_OPACITY = "brTopOpacity";
+
+    /**
+     * Animation name for <strong>right border opacity</strong>
+     */
+    public static final String BR_RIGHT_OPACITY = "brRightOpacity";
+
+    /**
+     * Animation name for <strong>bottom border opacity</strong>
+     */
+    public static final String BR_BOTTOM_OPACITY = "brBottomOpacity";
+
+    /**
+     * Animation name for <strong>left border opacity</strong>
+     */
+    public static final String BR_LEFT_OPACITY = "brLeftOpacity";
 
     /**
      * Animation name for <strong>border width</strong>
@@ -370,6 +415,15 @@ public class StaticAnimations {
                     BOTTOM_BORDER,
                     LEFT_BORDER,
                     BR_OPACITY,
+                    BR_TOP_OPACITY,
+                    BR_RIGHT_OPACITY,
+                    BR_BOTTOM_OPACITY,
+                    BR_LEFT_OPACITY,
+                    BR_COLOR,
+                    BR_TOP_COLOR,
+                    BR_RIGHT_COLOR,
+                    BR_BOTTOM_COLOR,
+                    BR_LEFT_COLOR,
                     BR_WIDTH,
                     BR_TOP_WIDTH,
                     BR_RIGHT_WIDTH,

@@ -42,9 +42,18 @@ public class MainProps {
     public static final String BG_TR_RADIUS = "trBgRadius";
     public static final String BG_BR_RADIUS = "brBgRadius";
     public static final String BG_BL_RADIUS = "blBgRadius";
+    public static final String BG_INSETS = "bgInsets";
+    public static final String BG_TOP_INSET = "topBgInset";
+    public static final String BG_RIGHT_INSET = "rightBgInset";
+    public static final String BG_BOTTOM_INSET = "bottomBgInset";
+    public static final String BG_LEFT_INSET = "leftBgInset";
 
     // Border properties
     public static final String BR_OPACITY = "brOpacity";
+    public static final String BR_TOP_OPACITY = "brTopOpacity";
+    public static final String BR_RIGHT_OPACITY = "brRightOpacity";
+    public static final String BR_BOTTOM_OPACITY = "brBottomOpacity";
+    public static final String BR_LEFT_OPACITY = "brLeftOpacity";
     public static final String BR_RADIUS = "brRadius";
     public static final String BR_TL_RADIUS = "tlBrRadius";
     public static final String BR_TR_RADIUS = "trBrRadius";
@@ -113,7 +122,16 @@ public class MainProps {
                     BG_TR_RADIUS,
                     BG_BR_RADIUS,
                     BG_BL_RADIUS,
+                    BG_INSETS,
+                    BG_TOP_INSET,
+                    BG_RIGHT_INSET,
+                    BG_BOTTOM_INSET,
+                    BG_LEFT_INSET,
                     BR_OPACITY,
+                    BR_TOP_OPACITY,
+                    BR_RIGHT_OPACITY,
+                    BR_BOTTOM_OPACITY,
+                    BR_LEFT_OPACITY,
                     BR_RADIUS,
                     BR_TL_RADIUS,
                     BR_TR_RADIUS,

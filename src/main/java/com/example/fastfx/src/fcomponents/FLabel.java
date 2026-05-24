@@ -10,10 +10,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import java.util.Set;
 
-public class FLabel extends Label implements FComponent {
+public class FLabel extends Label implements FLabeled {
     private PropertyManager2 propertyManager;
     private ChangeListener<Number> resizeWidthListener;
     private ChangeListener<Number> resizeHeightListener;
@@ -960,6 +963,111 @@ public class FLabel extends Label implements FComponent {
     }
     // ******************************************
     //              Border properties           *
+    // ******************************************
+    // ******************************************
+    //            Font related properties       *
+    // ******************************************
+    @Override
+    public void setFont (String fontFamily, FontPosture fontPosture, FontWeight fontWeight, double fontSize) {
+
+    }
+
+    @Override
+    public void setFont (String fontFamily, FontPosture fontPosture, double fontSize) {
+
+    }
+
+    @Override
+    public void setFont (String fontFamily, FontWeight fontWeight, double fontSize) {
+
+    }
+
+    @Override
+    public void setFont (String fontFamily, double fontSize) {
+
+    }
+
+    @Override
+    public void setStrFont (String font) {
+
+    }
+
+    @Override
+    public String getStrFont () {
+        return "";
+    }
+
+    @Override
+    public void setFontColor (Color color) {
+
+    }
+
+    @Override
+    public void setFontColor (String color) {
+
+    }
+
+    @Override
+    public void setSFontColor (String color) {
+
+    }
+
+    @Override
+    public String getSFontColor () {
+        return "";
+    }
+
+    @Override
+    public void setFontFamily (String fontFamily) {
+
+    }
+
+    @Override
+    public void setFontPosture (FontPosture fontPosture) {
+
+    }
+
+    @Override
+    public void setSFontPosture (String fontPosture) {
+
+    }
+
+    @Override
+    public String getSFontPosture () {
+        return "";
+    }
+
+    @Override
+    public void setFontWeight (FontWeight fontWeight) {
+
+    }
+
+    @Override
+    public void setSFontWeight (String fontWeight) {
+
+    }
+
+    @Override
+    public String getSFontWeight () {
+        return "";
+    }
+
+    @Override
+    public void setFontSize (double fontSize) {
+
+    }
+
+    @Override
+    public void setSFontSize (String fontSize) {
+
+    }
+
+    @Override
+    public String getSFontSize () {
+        return "";
+    }
+    // ******************************************
+    //            Font related properties       *
     // ******************************************
     // *********************************************************************************************
     // ******************************************

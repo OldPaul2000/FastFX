@@ -140,6 +140,31 @@ public class FAnimations {
      */
     public static final String BG_BL_RADIUS = "bgBLRadius";
 
+    /**
+     * Animation name for <strong>background insets</strong>
+     */
+    public static final String BG_INSETS = "bgInsets";
+
+    /**
+     * Animation name for <strong>background top inset</strong>
+     */
+    public static final String BG_TOP_INSET = "bgTopInset";
+
+    /**
+     * Animation name for <strong>background right inset</strong>
+     */
+    public static final String BG_RIGHT_INSET = "bgRightInset";
+
+    /**
+     * Animation name for <strong>background bottom inset</strong>
+     */
+    public static final String BG_BOTTOM_INSET = "bgBottomInset";
+
+    /**
+     * Animation name for <strong>background left inset</strong>
+     */
+    public static final String BG_LEFT_INSET = "bgLeftInset";
+
     //*************
     // Background *
     //*************
@@ -152,6 +177,26 @@ public class FAnimations {
      * Animation name for <strong>border opacity</strong>
      */
     public static final String BR_OPACITY = "brOpacity";
+
+    /**
+     * Animation name for <strong>top border opacity</strong>
+     */
+    public static final String BR_TOP_OPACITY = "brTopOpacity";
+
+    /**
+     * Animation name for <strong>right border opacity</strong>
+     */
+    public static final String BR_RIGHT_OPACITY = "brRightOpacity";
+
+    /**
+     * Animation name for <strong>bottom border opacity</strong>
+     */
+    public static final String BR_BOTTOM_OPACITY = "brBottomOpacity";
+
+    /**
+     * Animation name for <strong>left border opacity</strong>
+     */
+    public static final String BR_LEFT_OPACITY = "brLeftOpacity";
 
     /**
      * Animation name for <strong>border radius</strong>
@@ -315,7 +360,16 @@ public class FAnimations {
                     BG_TR_RADIUS,
                     BG_BR_RADIUS,
                     BG_BL_RADIUS,
+                    BG_INSETS,
+                    BG_TOP_INSET,
+                    BG_RIGHT_INSET,
+                    BG_BOTTOM_INSET,
+                    BG_LEFT_INSET,
                     BR_OPACITY,
+                    BR_TOP_OPACITY,
+                    BR_RIGHT_OPACITY,
+                    BR_BOTTOM_OPACITY,
+                    BR_LEFT_OPACITY,
                     BR_RADIUS,
                     BR_TL_RADIUS,
                     BR_TR_RADIUS,

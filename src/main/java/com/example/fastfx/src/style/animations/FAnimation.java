@@ -51,6 +51,8 @@ public class FAnimation {
         this.currentAnimations = new HashMap<>();
         this.doubleProperties = new HashMap<>();
         this.colorProperties = new HashMap<>();
+        keyFrameBuilder.setDoubleProperties(doubleProperties);
+        keyFrameBuilder.setColorProperties(colorProperties);
     }
 
     /**
@@ -134,7 +136,7 @@ public class FAnimation {
         String animation = FAnimations.get(fAnimation);
         Interpolator interpolator = FInterpolator.get(fInterpolator);
         if (animation != null) {
-            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setStringValue(value).setDuration(duration).setInterpolator(interpolator).setColorProperties(colorProperties).setOnFinishedListener((e) -> {
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setStringValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
                 if (rate > 0) {
                     KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
                     int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();
@@ -201,7 +203,7 @@ public class FAnimation {
                 }
             });
         } else if (animation != null && !animation.equals(FAnimations.BG_COLOR) && !animation.equals(FAnimations.BR_COLOR)) {
-            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setInterpolator(interpolator).setDoubleProperties(doubleProperties).setOnFinishedListener((e) -> {
+            KeyFrame keyFrame = keyFrameBuilder.setElement(element).setAnimation(animation).setDoubleValue(value).setDuration(duration).setInterpolator(interpolator).setOnFinishedListener((e) -> {
                 if (rate > 0) {
                     KeyFrame sourceKeyFrame = (KeyFrame) e.getSource();
                     int currAnimationDuration = (int) sourceKeyFrame.getTime().toMillis();

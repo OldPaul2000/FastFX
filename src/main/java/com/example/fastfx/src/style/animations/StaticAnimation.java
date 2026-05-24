@@ -27,6 +27,34 @@ public class StaticAnimation {
         doubleValues = new HashMap<>();
     }
 
+    public void updateStartDoubleValue (String animationType, double value){
+        double[] values = doubleValues.get(animationType);
+        if(values != null && values.length == 2){
+            values[0] = value;
+        }
+    }
+
+    public void updateEndDoubleValue (String animationType, double value){
+        double[] values = doubleValues.get(animationType);
+        if(values != null && values.length == 2){
+            values[1] = value;
+        }
+    }
+
+    public void updateStartStringValue (String animationType, String color){
+        String[] values = stringValues.get(animationType);
+        if(values != null && values.length == 2){
+            values[0] = color;
+        }
+    }
+
+    public void updateEndStringValue (String animationType, String color){
+        String[] values = stringValues.get(animationType);
+        if(values != null && values.length == 2){
+            values[1] = color;
+        }
+    }
+
     public void addAnimation(String animation, String initialValue, String finalValue){
         if(StaticAnimations.get(animation) != null){
             stringValues.put(animation, new String[]{initialValue, finalValue});
@@ -106,15 +134,12 @@ public class StaticAnimation {
             double[] values = doubleValues.get(StaticAnimations.PADDING);
             if(values.length == 2){
                 PaddingUtil.setPadding(element, values[1]);
-//                element.setPadding(new Insets(values[1]));
             }
             if(values.length == 4){
                 PaddingUtil.setPadding(element, values[2], values[3], values[2], values[3]);
-//                element.setPadding(new Insets(values[2], values[3], values[2], values[3]));
             }
             if(values.length == 8){
                 PaddingUtil.setPadding(element, values[0], values[1], values[2], values[3]);
-//                element.setPadding(new Insets(values[4], values[5], values[6], values[7]));
             }
         }
         if(doubleValues.containsKey(StaticAnimations.TOP_PADDING)){
@@ -244,6 +269,18 @@ public class StaticAnimation {
             String[] values = stringValues.get(StaticAnimations.LEFT_BORDER);
             BorderSetter.setLeftBorder(element, values[3], values[4], Double.parseDouble(values[5]));
         }
+        if(stringValues.containsKey(StaticAnimations.BR_TOP_COLOR)){
+            BorderSetter.setTopBorderColor(element, stringValues.get(StaticAnimations.BR_TOP_COLOR)[1]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_RIGHT_COLOR)){
+            BorderSetter.setRightBorderColor(element, stringValues.get(StaticAnimations.BR_RIGHT_COLOR)[1]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_BOTTOM_COLOR)){
+            BorderSetter.setBottomBorderColor(element, stringValues.get(StaticAnimations.BR_BOTTOM_COLOR)[1]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_LEFT_COLOR)){
+            BorderSetter.setLeftBorderColor(element, stringValues.get(StaticAnimations.BR_LEFT_COLOR)[1]);
+        }
         if(doubleValues.containsKey(StaticAnimations.BR_WIDTH)){
             double[] values = doubleValues.get(StaticAnimations.BR_WIDTH);
             if(values.length == 2){
@@ -255,6 +292,18 @@ public class StaticAnimation {
             if(values.length == 8){
                 BorderSetter.setBorderWidth(element, values[4], values[5], values[6], values[7]);
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_WIDTH)){
+            BorderSetter.setTopBorderWidth(element, doubleValues.get(StaticAnimations.BR_TOP_WIDTH)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_WIDTH)){
+            BorderSetter.setRightBorderWidth(element, doubleValues.get(StaticAnimations.BR_RIGHT_WIDTH)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_WIDTH)){
+            BorderSetter.setBottomBorderWidth(element, doubleValues.get(StaticAnimations.BR_BOTTOM_WIDTH)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_WIDTH)){
+            BorderSetter.setLeftBorderWidth(element, doubleValues.get(StaticAnimations.BR_LEFT_WIDTH)[1]);
         }
         if(doubleValues.containsKey(StaticAnimations.BR_INSETS)){
             double[] values = doubleValues.get(StaticAnimations.BR_INSETS);
@@ -295,6 +344,18 @@ public class StaticAnimation {
             if(values.length == 8){
                 BorderSetter.setBorderOpacity(element, values[4], values[5], values[6], values[7]);
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_OPACITY)){
+            BorderSetter.setTopBorderOpacity(element, doubleValues.get(StaticAnimations.BR_TOP_OPACITY)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_OPACITY)){
+            BorderSetter.setRightBorderOpacity(element, doubleValues.get(StaticAnimations.BR_RIGHT_OPACITY)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_OPACITY)){
+            BorderSetter.setBottomBorderOpacity(element, doubleValues.get(StaticAnimations.BR_BOTTOM_OPACITY)[1]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_OPACITY)){
+            BorderSetter.setLeftBorderOpacity(element, doubleValues.get(StaticAnimations.BR_LEFT_OPACITY)[1]);
         }
         if(doubleValues.containsKey(StaticAnimations.BR_RADIUS)){
             double[] values = doubleValues.get(StaticAnimations.BR_RADIUS);
@@ -514,6 +575,18 @@ public class StaticAnimation {
             String[] values = stringValues.get(StaticAnimations.LEFT_BORDER);
             BorderSetter.setLeftBorder(element, values[0], values[1], Double.parseDouble(values[2]));
         }
+        if(stringValues.containsKey(StaticAnimations.BR_TOP_COLOR)){
+            BorderSetter.setTopBorderColor(element, stringValues.get(StaticAnimations.BR_TOP_COLOR)[0]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_RIGHT_COLOR)){
+            BorderSetter.setRightBorderColor(element, stringValues.get(StaticAnimations.BR_RIGHT_COLOR)[0]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_BOTTOM_COLOR)){
+            BorderSetter.setBottomBorderColor(element, stringValues.get(StaticAnimations.BR_BOTTOM_COLOR)[0]);
+        }
+        if(stringValues.containsKey(StaticAnimations.BR_LEFT_COLOR)){
+            BorderSetter.setLeftBorderColor(element, stringValues.get(StaticAnimations.BR_LEFT_COLOR)[0]);
+        }
         if(doubleValues.containsKey(StaticAnimations.BR_WIDTH)){
             double[] values = doubleValues.get(StaticAnimations.BR_WIDTH);
             if(values.length == 2){
@@ -525,6 +598,18 @@ public class StaticAnimation {
             if(values.length == 8){
                 BorderSetter.setBorderWidth(element, values[0], values[1], values[2], values[3]);
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_WIDTH)){
+            BorderSetter.setTopBorderWidth(element, doubleValues.get(StaticAnimations.BR_TOP_WIDTH)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_WIDTH)){
+            BorderSetter.setRightBorderWidth(element, doubleValues.get(StaticAnimations.BR_RIGHT_WIDTH)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_WIDTH)){
+            BorderSetter.setBottomBorderWidth(element, doubleValues.get(StaticAnimations.BR_BOTTOM_WIDTH)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_WIDTH)){
+            BorderSetter.setLeftBorderWidth(element, doubleValues.get(StaticAnimations.BR_LEFT_WIDTH)[0]);
         }
         if(doubleValues.containsKey(StaticAnimations.BR_INSETS)){
             double[] values = doubleValues.get(StaticAnimations.BR_INSETS);
@@ -565,6 +650,18 @@ public class StaticAnimation {
             if(values.length == 8){
                 BorderSetter.setBorderOpacity(element, values[0], values[1], values[2], values[3]);
             }
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_TOP_OPACITY)){
+            BorderSetter.setTopBorderOpacity(element, doubleValues.get(StaticAnimations.BR_TOP_OPACITY)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_RIGHT_OPACITY)){
+            BorderSetter.setRightBorderOpacity(element, doubleValues.get(StaticAnimations.BR_RIGHT_OPACITY)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_BOTTOM_OPACITY)){
+            BorderSetter.setBottomBorderOpacity(element, doubleValues.get(StaticAnimations.BR_BOTTOM_OPACITY)[0]);
+        }
+        if(doubleValues.containsKey(StaticAnimations.BR_LEFT_OPACITY)){
+            BorderSetter.setLeftBorderOpacity(element, doubleValues.get(StaticAnimations.BR_LEFT_OPACITY)[0]);
         }
         if(doubleValues.containsKey(StaticAnimations.BR_RADIUS)){
             double[] values = doubleValues.get(StaticAnimations.BR_RADIUS);

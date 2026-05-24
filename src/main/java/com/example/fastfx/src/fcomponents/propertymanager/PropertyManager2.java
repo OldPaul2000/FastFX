@@ -240,8 +240,8 @@ public class PropertyManager2 {
             pendingTaskManager.removeTaskById(ListenerID.WIDTH_X);
             listenersManager.remove(ListenerID.WIDTH_X);
             valuesManager.set(MainProps.X, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.LAYOUT_X, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.LAYOUT_X, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.LAYOUT_X, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.LAYOUT_X, value);
         }
     }
 
@@ -395,8 +395,8 @@ public class PropertyManager2 {
             pendingTaskManager.removeTaskById(ListenerID.HEIGHT_Y);
             listenersManager.remove(ListenerID.HEIGHT_Y);
             valuesManager.set(MainProps.Y, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.LAYOUT_Y, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.LAYOUT_Y, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.LAYOUT_Y, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.LAYOUT_Y, value);
         }
     }
 
@@ -550,8 +550,8 @@ public class PropertyManager2 {
             pendingTaskManager.removeTaskById(ListenerID.WIDTH_WIDTH);
             listenersManager.remove(ListenerID.WIDTH_WIDTH);
             valuesManager.set(MainProps.WIDTH, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.WIDTH, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.WIDTH, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.WIDTH, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.WIDTH, value);
         }
     }
 
@@ -701,8 +701,8 @@ public class PropertyManager2 {
             pendingTaskManager.removeTaskById(ListenerID.HEIGHT_HEIGHT);
             listenersManager.remove(ListenerID.HEIGHT_HEIGHT);
             valuesManager.set(MainProps.HEIGHT, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.HEIGHT, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.HEIGHT, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.HEIGHT, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.HEIGHT, value);
         }
     }
 
@@ -847,8 +847,8 @@ public class PropertyManager2 {
             propertyHelper.stopTempAnimation(FAnimations.SCALE_X);
             component.setScaleX(value);
             valuesManager.set(MainProps.SCALE_X, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.SCALE_X, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.SCALE_X, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.SCALE_X, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.SCALE_X, value);
         }
     }
 
@@ -899,8 +899,8 @@ public class PropertyManager2 {
             propertyHelper.stopTempAnimation(FAnimations.SCALE_Y);
             component.setScaleY(value);
             valuesManager.set(MainProps.SCALE_Y, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.SCALE_Y, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.SCALE_Y, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.SCALE_Y, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.SCALE_Y, value);
         }
     }
 
@@ -952,8 +952,8 @@ public class PropertyManager2 {
             component.setTranslateX(value);
             listenersManager.remove(ListenerID.TRANSLATE_X);
             valuesManager.set(MainProps.TRANSLATE_X, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.TRANSLATE_X, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.TRANSLATE_X, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.TRANSLATE_X, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.TRANSLATE_X, value);
         }
     }
 
@@ -1049,8 +1049,8 @@ public class PropertyManager2 {
             component.setTranslateY(value);
             listenersManager.remove(ListenerID.TRANSLATE_Y);
             valuesManager.set(MainProps.TRANSLATE_Y, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.TRANSLATE_Y, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.TRANSLATE_Y, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.TRANSLATE_Y, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.TRANSLATE_Y, value);
         }
     }
 
@@ -1145,8 +1145,8 @@ public class PropertyManager2 {
             propertyHelper.stopTempAnimation(FAnimations.ROTATE);
             component.setRotate(value);
             valuesManager.set(MainProps.ROTATE, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.ROTATE, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.ROTATE, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.ROTATE, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.ROTATE, value);
         }
     }
 
@@ -1201,12 +1201,20 @@ public class PropertyManager2 {
                 propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
                 propertyHelper.removeMultipleSidesAnimation(FAnimations.PADDING);
                 propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.PADDING);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
                 propertyHelper.addMultipleSidesSizeAnimation(FAnimations.PADDING, MainProps.PADDING);
             }
             else if(setPropertiesOnClick){
                 propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
                 propertyHelper.removeMultipleSidesAnimation(FAnimations.PADDING);
                 propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.PADDING);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
                 propertyHelper.addMultipleSidesSizeAnimation(FAnimations.PADDING, MainProps.PADDING);
             }
             else{
@@ -1638,8 +1646,8 @@ public class PropertyManager2 {
                 }
                 BackgroundSetter.setBackgroundOpacity(component, valuesManager.getDouble(MainProps.BG_OPACITY));
                 valuesManager.set(MainProps.BG_COLOR, color);
-                propertyHelper.updateAnimationStartColor(hoverAnimation, FAnimations.BG_COLOR, color);
-                propertyHelper.updateAnimationStartColor(clickAnimation, FAnimations.BG_COLOR, color);
+                propertyHelper.updateAnimationStartStringValue(hoverAnimation, FAnimations.BG_COLOR, color);
+                propertyHelper.updateAnimationStartStringValue(clickAnimation, FAnimations.BG_COLOR, color);
             }
         }
     }
@@ -1670,8 +1678,8 @@ public class PropertyManager2 {
             BackgroundSetter.setBackgroundColor(component, valuesManager.getString(MainProps.BG_COLOR));
             BackgroundSetter.setBackgroundOpacity(component, value);
             valuesManager.set(MainProps.BG_OPACITY, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.BG_OPACITY, clickAnimation, value);
-            propertyHelper.updateAnimationStartValue(FAnimations.BG_OPACITY, hoverAnimation, value);
+            propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_OPACITY, value);
+            propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_OPACITY, value);
         }
     }
 
@@ -1740,12 +1748,20 @@ public class PropertyManager2 {
                 propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
                 propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_RADIUS);
                 propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_RADIUS);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
                 propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_RADIUS, MainProps.BG_RADIUS);
             }
             else if(setPropertiesOnClick){
                 propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
                 propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_RADIUS);
                 propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_RADIUS);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
                 propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_RADIUS, MainProps.BG_RADIUS);
             }
             else{
@@ -1770,28 +1786,85 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawTopLeftBgRadius = rawValue;
-            double initRadius = 0;
-            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
-            if (radii != null) {
-                initRadius = radii.getTopLeftHorizontalRadius();
-            }
             double value = parser.getDoubleValue(0);
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-                tlBgRadiusProperty.bind(component.prefWidthProperty().multiply(parser.getDoubleValue(0) / 100));
-                tlBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                    BackgroundSetter.setTopLeftBackgroundRadius(component, (double) newVal);
-                });
-                value = (value / 100) * component.getPrefWidth();
+            String unit = parser.getUnit(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            if(unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick){
+                if(parent != null){
+                    listenersManager.remove(ListenerID.WIDTH_BG_TL_BR_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_TL_RADIUS);
+                    propertyHelper.stopTempAnimation(FAnimations.BG_TL_RADIUS);
+                    double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                    if(duration > 0){
+                        propertyHelper.setProperty(MainProps.BG_TL_RADIUS);
+                        propertyHelper.setAnimationType(FAnimations.BG_TL_RADIUS);
+                        propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getTopLeftHorizontalRadius(), bgRadiusValue);
+                        propertyHelper.setDuration(duration);
+                        propertyHelper.setInterpolator(interpolator);
+                        propertyHelper.addTempAnimation(FAnimations.BG_TL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, bgRadiusValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_TL_RADIUS);
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (value / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TL_RADIUS, MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.BG_TL_RADIUS, bgRadiusValue);
+                }
+                else{
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_TL_RADIUS);
+                    pendingTaskManager.addTask(ListenerID.WIDTH_BG_TL_RADIUS, (p) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_TL_RADIUS);
+                        double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                        if(duration > 0) {
+                            propertyHelper.setProperty(MainProps.BG_TL_RADIUS);
+                            propertyHelper.setAnimationType(FAnimations.BG_TL_RADIUS);
+                            propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getTopLeftHorizontalRadius(), bgRadiusValue);
+                            propertyHelper.setDuration(duration);
+                            propertyHelper.setInterpolator(interpolator);
+                            propertyHelper.addTempAnimation(FAnimations.BG_TL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            BackgroundSetter.setTopLeftBackgroundRadius(component, bgRadiusValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyHelper.stopTempAnimation(FAnimations.BG_TL_RADIUS);
+                            BackgroundSetter.setTopLeftBackgroundRadius(component, (double)newVal * (value / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TL_RADIUS, MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.BG_TL_RADIUS, bgRadiusValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_TL_RADIUS, hoverAnimation, FAnimations.BG_TL_RADIUS, value, parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_TL_RADIUS, clickAnimation, FAnimations.BG_TL_RADIUS, value, parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setTopLeftBackgroundRadius(component, value);
+            else{
+                propertyHelper.setProperty(MainProps.BG_TL_RADIUS);
+                propertyHelper.setAnimationsTypes(FAnimations.BG_TL_RADIUS, StaticAnimations.BG_TL_RADIUS);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BG_TL_RADIUS), value);
+                propertyHelper.setDuration(duration);
+                propertyHelper.setInterpolator(interpolator);
+                if (setPropertiesOnHover) {
+                    propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, initRadius, initialValues, MainProps.BG_TL_RADIUS, FAnimations.BG_TL_RADIUS, value, parser.getDuration(0));
+                    propertyHelper.stopTempAnimation(FAnimations.BG_TL_RADIUS);
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_TL_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_TL_RADIUS);
+                    if (duration == 0) {
+                        BackgroundSetter.setTopLeftBackgroundRadius(component, value);
+                    } else {
+                        propertyHelper.addTempAnimation(FAnimations.BG_TL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_TL_RADIUS, value);
+                    propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_TL_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticHoverAnimation, StaticAnimations.BG_TL_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticClickAnimation, StaticAnimations.BG_TL_RADIUS, value);
+                    valuesManager.set(MainProps.BG_TL_RADIUS, value);
                 }
             }
         }
@@ -1813,28 +1886,85 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawTopRightBgRadius = rawValue;
-            double initRadius = 0;
-            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
-            if (radii != null) {
-                initRadius = radii.getTopRightHorizontalRadius();
-            }
             double value = parser.getDoubleValue(0);
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-                trBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
-                trBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                    BackgroundSetter.setTopRightBackgroundRadius(component, (double) newVal);
-                });
-                value = (value / 100) * component.getPrefWidth();
+            String unit = parser.getUnit(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            if(unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick){
+                if(parent != null){
+                    listenersManager.remove(ListenerID.WIDTH_BG_TR_BL_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_TR_RADIUS);
+                    propertyHelper.stopTempAnimation(FAnimations.BG_TR_RADIUS);
+                    double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                    if(duration > 0){
+                        propertyHelper.setProperty(MainProps.BG_TR_RADIUS);
+                        propertyHelper.setAnimationType(FAnimations.BG_TR_RADIUS);
+                        propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getTopRightHorizontalRadius(), bgRadiusValue);
+                        propertyHelper.setDuration(duration);
+                        propertyHelper.setInterpolator(interpolator);
+                        propertyHelper.addTempAnimation(FAnimations.BG_TR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        BackgroundSetter.setTopRightBackgroundRadius(component, bgRadiusValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_TR_RADIUS);
+                        BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (value / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_TR_RADIUS, MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.BG_TR_RADIUS, bgRadiusValue);
+                }
+                else{
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_TR_RADIUS);
+                    pendingTaskManager.addTask(ListenerID.WIDTH_BG_TR_RADIUS, (p) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_TR_RADIUS);
+                        double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                        if(duration > 0) {
+                            propertyHelper.setProperty(MainProps.BG_TR_RADIUS);
+                            propertyHelper.setAnimationType(FAnimations.BG_TR_RADIUS);
+                            propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getTopRightHorizontalRadius(), bgRadiusValue);
+                            propertyHelper.setDuration(duration);
+                            propertyHelper.setInterpolator(interpolator);
+                            propertyHelper.addTempAnimation(FAnimations.BG_TR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            BackgroundSetter.setTopRightBackgroundRadius(component, bgRadiusValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyHelper.stopTempAnimation(FAnimations.BG_TR_RADIUS);
+                            BackgroundSetter.setTopRightBackgroundRadius(component, (double)newVal * (value / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_TR_RADIUS, MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.BG_TR_RADIUS, bgRadiusValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_TR_RADIUS, hoverAnimation, FAnimations.BG_TR_RADIUS, value, parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_TR_RADIUS, clickAnimation, FAnimations.BG_TR_RADIUS, value, parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setTopRightBackgroundRadius(component, value);
+            else{
+                propertyHelper.setProperty(MainProps.BG_TR_RADIUS);
+                propertyHelper.setAnimationsTypes(FAnimations.BG_TR_RADIUS, StaticAnimations.BG_TR_RADIUS);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BG_TR_RADIUS), value);
+                propertyHelper.setDuration(duration);
+                propertyHelper.setInterpolator(interpolator);
+                if (setPropertiesOnHover) {
+                    propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, initRadius, initialValues, MainProps.BG_TR_RADIUS, FAnimations.BG_TR_RADIUS, value, parser.getDuration(0));
+                    propertyHelper.stopTempAnimation(FAnimations.BG_TR_RADIUS);
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_TR_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_TR_RADIUS);
+                    if (duration == 0) {
+                        BackgroundSetter.setTopRightBackgroundRadius(component, value);
+                    } else {
+                        propertyHelper.addTempAnimation(FAnimations.BG_TR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_TR_RADIUS, value);
+                    propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_TR_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticHoverAnimation, StaticAnimations.BG_TR_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticClickAnimation, StaticAnimations.BG_TR_RADIUS, value);
+                    valuesManager.set(MainProps.BG_TR_RADIUS, value);
                 }
             }
         }
@@ -1856,28 +1986,85 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawBottomRightBgRadius = rawValue;
-            double initRadius = 0;
-            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
-            if (radii != null) {
-                initRadius = radii.getBottomRightHorizontalRadius();
-            }
             double value = parser.getDoubleValue(0);
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-                brBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
-                brBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                    BackgroundSetter.setBottomRightBackgroundRadius(component, (double) newVal);
-                });
-                value = (value / 100) * component.getPrefWidth();
+            String unit = parser.getUnit(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            if(unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick){
+                if(parent != null){
+                    listenersManager.remove(ListenerID.WIDTH_BG_TL_BR_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_BR_RADIUS);
+                    propertyHelper.stopTempAnimation(FAnimations.BG_BR_RADIUS);
+                    double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                    if(duration > 0){
+                        propertyHelper.setProperty(MainProps.BG_BR_RADIUS);
+                        propertyHelper.setAnimationType(FAnimations.BG_BR_RADIUS);
+                        propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getBottomRightHorizontalRadius(), bgRadiusValue);
+                        propertyHelper.setDuration(duration);
+                        propertyHelper.setInterpolator(interpolator);
+                        propertyHelper.addTempAnimation(FAnimations.BG_BR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, bgRadiusValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_BR_RADIUS);
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (value / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_BR_RADIUS, MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.BG_BR_RADIUS, bgRadiusValue);
+                }
+                else{
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_BR_RADIUS);
+                    pendingTaskManager.addTask(ListenerID.WIDTH_BG_BR_RADIUS, (p) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_BR_RADIUS);
+                        double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                        if(duration > 0) {
+                            propertyHelper.setProperty(MainProps.BG_BR_RADIUS);
+                            propertyHelper.setAnimationType(FAnimations.BG_BR_RADIUS);
+                            propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getBottomRightHorizontalRadius(), bgRadiusValue);
+                            propertyHelper.setDuration(duration);
+                            propertyHelper.setInterpolator(interpolator);
+                            propertyHelper.addTempAnimation(FAnimations.BG_BR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            BackgroundSetter.setBottomRightBackgroundRadius(component, bgRadiusValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyHelper.stopTempAnimation(FAnimations.BG_BR_RADIUS);
+                            BackgroundSetter.setBottomRightBackgroundRadius(component, (double)newVal * (value / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_BR_RADIUS, MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.BG_BR_RADIUS, bgRadiusValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_BR_RADIUS, hoverAnimation, FAnimations.BG_BR_RADIUS, value, parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_BR_RADIUS, clickAnimation, FAnimations.BG_BR_RADIUS, value, parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setBottomRightBackgroundRadius(component, value);
+            else{
+                propertyHelper.setProperty(MainProps.BG_BR_RADIUS);
+                propertyHelper.setAnimationsTypes(FAnimations.BG_BR_RADIUS, StaticAnimations.BG_BR_RADIUS);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BG_BR_RADIUS), value);
+                propertyHelper.setDuration(duration);
+                propertyHelper.setInterpolator(interpolator);
+                if (setPropertiesOnHover) {
+                    propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, initRadius, initialValues, MainProps.BG_BR_RADIUS, FAnimations.BG_BR_RADIUS, value, parser.getDuration(0));
+                    propertyHelper.stopTempAnimation(FAnimations.BG_BR_RADIUS);
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_BR_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_BR_RADIUS);
+                    if (duration == 0) {
+                        BackgroundSetter.setBottomRightBackgroundRadius(component, value);
+                    } else {
+                        propertyHelper.addTempAnimation(FAnimations.BG_BR_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_BR_RADIUS, value);
+                    propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_BR_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticHoverAnimation, StaticAnimations.BG_BR_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticClickAnimation, StaticAnimations.BG_BR_RADIUS, value);
+                    valuesManager.set(MainProps.BG_BR_RADIUS, value);
                 }
             }
         }
@@ -1899,28 +2086,85 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid() && parser.getParametersCount() == 1) {
             this.rawBottomLeftBgRadius = rawValue;
-            double initRadius = 0;
-            CornerRadii radii = BackgroundSetter.getBackgroundRadius(component);
-            if (radii != null) {
-                initRadius = radii.getBottomLeftHorizontalRadius();
-            }
             double value = parser.getDoubleValue(0);
-            if (parser.getUnit(0).equals(FUnit.PERCENTAGE)) {
-                blBgRadiusProperty.bind(component.prefWidthProperty().multiply(value / 100));
-                blBgRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                    BackgroundSetter.setBottomLeftBackgroundRadius(component, (double) newVal);
-                });
-                value = (value / 100) * component.getPrefWidth();
+            String unit = parser.getUnit(0);
+            long duration = parser.getDuration(0);
+            String interpolator = parser.getInterpolator(0);
+            if(unit.equals(FUnit.PERCENTAGE) && !setPropertiesOnHover && !setPropertiesOnClick){
+                if(parent != null){
+                    listenersManager.remove(ListenerID.WIDTH_BG_TR_BL_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_BL_RADIUS);
+                    propertyHelper.stopTempAnimation(FAnimations.BG_BL_RADIUS);
+                    double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                    if(duration > 0){
+                        propertyHelper.setProperty(MainProps.BG_BL_RADIUS);
+                        propertyHelper.setAnimationType(FAnimations.BG_BL_RADIUS);
+                        propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getBottomLeftHorizontalRadius(), bgRadiusValue);
+                        propertyHelper.setDuration(duration);
+                        propertyHelper.setInterpolator(interpolator);
+                        propertyHelper.addTempAnimation(FAnimations.BG_BL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    else{
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusValue);
+                    }
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_BL_RADIUS);
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (value / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BG_BL_RADIUS, MainProps.WIDTH, listener);
+                    valuesManager.set(MainProps.BG_BL_RADIUS, bgRadiusValue);
+                }
+                else{
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_BL_RADIUS);
+                    pendingTaskManager.addTask(ListenerID.WIDTH_BG_BL_RADIUS, (p) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BG_BL_RADIUS);
+                        double bgRadiusValue = component.getPrefWidth() * (value / 100);
+                        if(duration > 0) {
+                            propertyHelper.setProperty(MainProps.BG_BL_RADIUS);
+                            propertyHelper.setAnimationType(FAnimations.BG_BL_RADIUS);
+                            propertyHelper.setValues(BackgroundSetter.getBackgroundRadius(component).getBottomLeftHorizontalRadius(), bgRadiusValue);
+                            propertyHelper.setDuration(duration);
+                            propertyHelper.setInterpolator(interpolator);
+                            propertyHelper.addTempAnimation(FAnimations.BG_BL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                        }
+                        else{
+                            BackgroundSetter.setBottomLeftBackgroundRadius(component, bgRadiusValue);
+                        }
+                        ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                            propertyHelper.stopTempAnimation(FAnimations.BG_BL_RADIUS);
+                            BackgroundSetter.setBottomLeftBackgroundRadius(component, (double)newVal * (value / 100));
+                        };
+                        listenersManager.add(component, ListenerID.WIDTH_BG_BL_RADIUS, MainProps.WIDTH, listener);
+                        valuesManager.set(MainProps.BG_BL_RADIUS, bgRadiusValue);
+                    });
+                }
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_BL_RADIUS, hoverAnimation, FAnimations.BG_BL_RADIUS, value, parser.getDuration(0));
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(initRadius, initialValues, MainProps.BG_BL_RADIUS, clickAnimation, FAnimations.BG_BL_RADIUS, value, parser.getDuration(0));
-            } else {
-                if (parser.getDuration(0) == 0) {
-                    BackgroundSetter.setBottomLeftBackgroundRadius(component, value);
+            else{
+                propertyHelper.setProperty(MainProps.BG_BL_RADIUS);
+                propertyHelper.setAnimationsTypes(FAnimations.BG_BL_RADIUS, StaticAnimations.BG_BL_RADIUS);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BG_BL_RADIUS), value);
+                propertyHelper.setDuration(duration);
+                propertyHelper.setInterpolator(interpolator);
+                if (setPropertiesOnHover) {
+                    propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
+                } else if (setPropertiesOnClick) {
+                    propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                    propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
                 } else {
-                    PropertyUtil.setTempAnimation(component, initRadius, initialValues, MainProps.BG_BL_RADIUS, FAnimations.BG_BL_RADIUS, value, parser.getDuration(0));
+                    propertyHelper.stopTempAnimation(FAnimations.BG_BL_RADIUS);
+                    pendingTaskManager.removeTaskById(ListenerID.WIDTH_BG_BL_RADIUS);
+                    listenersManager.remove(ListenerID.WIDTH_BG_BL_RADIUS);
+                    if (duration == 0) {
+                        BackgroundSetter.setBottomLeftBackgroundRadius(component, value);
+                    } else {
+                        propertyHelper.addTempAnimation(FAnimations.BG_BL_RADIUS, PropertyHelper.NUMBER_ANIMATION);
+                    }
+                    propertyHelper.updateAnimationStartValue(hoverAnimation, FAnimations.BG_BL_RADIUS, value);
+                    propertyHelper.updateAnimationStartValue(clickAnimation, FAnimations.BG_BL_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticHoverAnimation, StaticAnimations.BG_BL_RADIUS, value);
+                    propertyHelper.updateStaticAnimationStartValue(staticClickAnimation, StaticAnimations.BG_BL_RADIUS, value);
+                    valuesManager.set(MainProps.BG_BL_RADIUS, value);
                 }
             }
         }
@@ -1950,8 +2194,29 @@ public class PropertyManager2 {
         parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
         if (parser.isValid()) {
             this.rawBgInsets = rawValue;
-            parser.spreadDoubleValues();
-            BackgroundSetter.setInsets(component, parser.getDoubleValue(0), parser.getDoubleValue(1), parser.getDoubleValue(2), parser.getDoubleValue(3));
+            if (setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_INSETS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_INSETS);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
+                propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_INSETS, MainProps.BG_INSETS);
+            }
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BG_INSETS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BG_INSETS);
+                parser.spreadDoubleValues();
+                parser.spreadUnits(); // Maybe for removal
+                parser.spreadDurations();
+                parser.spreadInterpolators();
+                propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BG_INSETS, MainProps.BG_INSETS);
+            }
+            else{
+                propertyHelper.addBgInsetsProperty(parent == null);
+            }
         }
     }
 
@@ -1968,7 +2233,7 @@ public class PropertyManager2 {
     }
 
     public double getTopBgInset () {
-        return 0;
+        return BackgroundSetter.getBackgroundInsets(component).getTop();
     }
 
     public void rightBgInset (double inset) {
@@ -1976,7 +2241,7 @@ public class PropertyManager2 {
     }
 
     public double getRightBgInset () {
-        return 0;
+        return BackgroundSetter.getBackgroundInsets(component).getRight();
     }
 
     public void bottomBgInset (double inset) {
@@ -1984,7 +2249,7 @@ public class PropertyManager2 {
     }
 
     public double getBottomBgInset () {
-        return 0;
+        return BackgroundSetter.getBackgroundInsets(component).getBottom();
     }
 
     public void leftBgInset (double inset) {
@@ -1992,7 +2257,7 @@ public class PropertyManager2 {
     }
 
     public double getLeftBgInset () {
-        return 0;
+        return BackgroundSetter.getBackgroundInsets(component).getLeft();
     }
     // ******************************************
     //            Background properties         *
@@ -2010,106 +2275,43 @@ public class PropertyManager2 {
         BorderSetter.setBorder(component, colorValue, borderStyle, radius, borderWidth);
     }
 
-    public void border (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateBorderValue(values);
-        if(validated){
-            this.rawBorder = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterBorderValue(values);
-            String color = filteredValues[0].split("\\s+")[0];
-            String currentColor = BorderSetter.getBorderHexColor(component);
-            long colorDuration = 1;
-            String borderStyle = filteredValues[1];
-            String currentStyle = BorderSetter.getTopBorderStyle(component);
-            double radius = 0;
-            double currentRadius = 0;
-            String radiusUnit = FUnit.PIXELS;
-            long radiusDuration = 1;
-            double width = 0;
-            double currentWidth = 0;
-            String widthUnit = FUnit.PIXELS;
-            long widthDuration = 1;
-            if(currentColor != null){
-                currentColor = "#" + currentColor;
-            }
-            else{
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BR_COLOR, currentColor);
-            }
-            if(filteredValues[0].contains(" ")){
-                colorDuration = PropertyValidatorFilter.getDuration(filteredValues[0].split("\\s+")[1]);
-            }
-            if(currentStyle == null){
-                currentStyle = "solid";
-                initialValues.put(MainProps.BR_STYLE, currentStyle);
-            }
-            if(BorderSetter.getBorderRadius(component) != null){
-                currentRadius = BorderSetter.getBorderRadius(component).getTopLeftHorizontalRadius();
-            }
-            if(BorderSetter.getBorderWidths(component) != null){
-                currentWidth = BorderSetter.getBorderWidths(component).getTop();
-            }
-            if(filteredValues.length > 2){
-                String radiusProp = filteredValues[2].split("\\s+")[0];
-                radius = PropertyValidatorFilter.getDoubleValue(radiusProp);
-                radiusUnit = PropertyValidatorFilter.getUnit(radiusProp);
-                if(filteredValues[2].contains(" ")){
-                    radiusDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
-                }
-                String widthProp = filteredValues[3].split("\\s+")[0];
-                width = PropertyValidatorFilter.getDoubleValue(widthProp);
-                widthUnit = PropertyValidatorFilter.getUnit(widthProp);
-                if(filteredValues[3].contains(" ")){
-                    widthDuration = PropertyValidatorFilter.getDuration(filteredValues[3].split("\\s+")[1]);
-                }
-            }
-            if(radiusUnit.equals(FUnit.PERCENTAGE)){
-                brRadiusProperty.bind(component.prefWidthProperty().multiply(radius / 100));
-                brRadiusProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setBorderRadius(component, (double) newVal);
-                });
-                radius = (radius / 100) * component.getPrefWidth();
-            }
-            if(widthUnit.equals(FUnit.PERCENTAGE)){
-                brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
-                brWidthProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setBorderWidth(component, (double) newVal);
-                });
-                width = (width / 100) * component.getPrefWidth();
-            }
+    public void border(String rawValue){
+        parser.parse(PropertyParser.BORDER_PROPERTY, rawValue);
+        if(parser.isValid()){
+            parser.spreadColorValues();
+            parser.spreadBorderStyles();
+            parser.spreadDoubleValues();
+            parser.spreadUnits();
+            parser.spreadDurations();
+            parser.spreadInterpolators();
             if(setPropertiesOnHover){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_COLOR, hoverAnimation, FAnimations.BR_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_STYLE, staticHoverAnimation, MainProps.BR_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentRadius, initialValues, MainProps.BR_RADIUS, hoverAnimation, FAnimations.BR_RADIUS, radius, radiusDuration);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_WIDTH, hoverAnimation, FAnimations.BR_WIDTH, width, widthDuration);
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
             }
             else if(setPropertiesOnClick){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_COLOR, clickAnimation, FAnimations.BR_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_STYLE, staticClickAnimation, MainProps.BR_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentRadius, initialValues, MainProps.BR_RADIUS, clickAnimation, FAnimations.BR_RADIUS, radius, radiusDuration);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_WIDTH, clickAnimation, FAnimations.BR_WIDTH, width, widthDuration);
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(setPropertiesOnHover || setPropertiesOnClick){
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_COLOR);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_RADIUS);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_WIDTH);
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_INSETS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_COLOR);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_STYLE);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_RADIUS);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_WIDTH);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_INSETS);
+                propertyHelper.addBorderColorAnimation(true);
+                propertyHelper.addMultipleSidesSizeAnimation(FAnimations.BR_RADIUS, MainProps.BR_RADIUS);
+                propertyHelper.addBorderWidthAnimation(true);
+                propertyHelper.addBorderStyleStaticAnimation();
             }
             else{
-                if(colorDuration == 1){
-                    BorderSetter.setBorderColor(component, color);
-                    initialValues.put(MainProps.BR_COLOR, color);
-                }
-                else{
-                    PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_COLOR, FAnimations.BR_COLOR, color, colorDuration);
-                }
-                BorderSetter.setBorderStyle(component, borderStyle);
-                if(radiusDuration == 1){
-                    BorderSetter.setBorderRadius(component, radius);
-                }
-                else{
-                    PropertyUtil.setTempAnimation(component, currentRadius, initialValues, MainProps.BR_RADIUS, FAnimations.BR_RADIUS, radius, radiusDuration);
-                }
-                if(widthDuration == 1){
-                    BorderSetter.setBorderWidth(component, width);
-                }
-                else{
-                    PropertyUtil.setTempAnimation(component, currentWidth, initialValues, MainProps.BR_WIDTH, FAnimations.BR_WIDTH, width, widthDuration);
-                }
+                propertyHelper.addBorderColorProperty(true);
+                propertyHelper.addBorderStyleProperty();
+                propertyHelper.updateBorderStyleStaticAnimationStartValue(staticClickAnimation);
+                propertyHelper.updateBorderStyleStaticAnimationStartValue(staticHoverAnimation);
+                propertyHelper.addBorderRadiusProperty(parent == null);
+                propertyHelper.addBorderWidthProperty(parent == null, true);
             }
         }
     }
@@ -2122,72 +2324,84 @@ public class PropertyManager2 {
         BorderSetter.setTopBorder(component, colorValue, borderStyle, borderWidth);
     }
 
-    public void topBorder (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateOneSideBorderValue(values);
-        if(validated){
+    public void topBorder(String rawValue){
+        parser.parse(PropertyParser.ONE_SIDE_BORDER_PROPERTY, rawValue);
+        if(parser.isValid()){
             this.rawTopBorder = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterOneSideBorderValue(values);
-            String color = filteredValues[0].split("\\s+")[0];
-            String currentColor = BorderSetter.getTopBorderColor(component);
-            long colorDuration = 1;
-            String borderStyle = filteredValues[1];
-            String currentStyle = BorderSetter.getTopBorderStyle(component);
-            double width = 0;
-            double currentWidth = BorderSetter.getTopBorderWidth(component);
-            String widthUnit = FUnit.PIXELS;
-            long widthDuration = 1;
-            if(currentColor != null){
-                currentColor = color;
-            }
-            else{
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BR_TOP_COLOR, currentColor);
-            }
-            if(filteredValues[0].contains(" ")) {
-                colorDuration = PropertyValidatorFilter.getDuration(filteredValues[0].split("\\s+")[1]);
-            }
-            if(currentStyle == null){
-                currentStyle = "solid";
-                initialValues.put(MainProps.BR_TOP_STYLE, currentStyle);
-            }
-            if(filteredValues[1] != null){
-                borderStyle = filteredValues[1];
-            }
-            if(filteredValues.length > 2){
-                String widthProp = filteredValues[2].split("\\s+")[0];
-                width = PropertyValidatorFilter.getDoubleValue(widthProp);
-                widthUnit = PropertyValidatorFilter.getUnit(widthProp);
-                if(filteredValues[2].contains(" ")){
-                    widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
-                }
-            }
-            if(widthUnit.equals(FUnit.PERCENTAGE)){
-                brWidthProperty.bind(component.prefHeightProperty().multiply(width / 100));
-                brWidthProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setTopBorderWidth(component, (double) newVal);
-                });
-                width = (width / 100) * component.getPrefWidth();
-            }
-            if(setPropertiesOnHover){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_TOP_COLOR, hoverAnimation, FAnimations.BR_TOP_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_TOP_STYLE, staticHoverAnimation, MainProps.BR_TOP_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_TOP_WIDTH, hoverAnimation, FAnimations.BR_TOP_WIDTH, width, widthDuration);
-            }
-            else if(setPropertiesOnClick){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_TOP_COLOR, clickAnimation, FAnimations.BR_TOP_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_TOP_STYLE, staticClickAnimation, MainProps.BR_TOP_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_TOP_WIDTH, clickAnimation, FAnimations.BR_TOP_WIDTH, width, widthDuration);
-            }
-            else{
-                PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_TOP_COLOR, FAnimations.BR_TOP_COLOR, color, colorDuration);
-                BorderSetter.setTopBorderStyle(component, borderStyle);
-                if(widthDuration == 1){
-                    BorderSetter.setTopBorderWidth(component, width);
+            String color = parser.getColorValue(0);
+            long colorDuration = parser.getBorderColorDuration();
+            String colorInterpolator = parser.getBorderColorInterpolator();
+            String style = parser.getBorderStyle(0);
+            double width = parser.getDoubleValue(0);
+            String widthUnit = parser.getUnit(0);
+            long widthDuration = parser.getDuration(0);
+            String widthInterpolator = parser.getInterpolator(0);
+            if(!setPropertiesOnHover && !setPropertiesOnClick){
+                propertyHelper.stopTempAnimation(FAnimations.BR_TOP_COLOR);
+                if(colorDuration > 0){
+                    propertyHelper.setProperty(MainProps.BR_TOP_COLOR);
+                    propertyHelper.setAnimationType(FAnimations.BR_TOP_COLOR);
+                    String initialTopBrColor = BorderSetter.getTopBorderColor(component);
+                    propertyHelper.setColors(initialTopBrColor, color);
+                    propertyHelper.setDuration(colorDuration);
+                    propertyHelper.setInterpolator(colorInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_TOP_COLOR, PropertyHelper.COLOR_ANIMATION);
                 }
                 else{
-                    PropertyUtil.setTempAnimation(component, currentWidth, initialValues, MainProps.BR_TOP_WIDTH, FAnimations.BR_TOP_WIDTH, width, widthDuration);
+                    BorderSetter.setTopBorderColor(component, color);
                 }
+                valuesManager.set(MainProps.BR_TOP_COLOR, color);
+
+                BorderSetter.setTopBorderStyle(component, style);
+                valuesManager.set(MainProps.BR_TOP_STYLE, style);
+
+                listenersManager.remove(ListenerID.HEIGHT_BR_TOP_WIDTH);
+                propertyHelper.stopTempAnimation(FAnimations.BR_TOP_WIDTH);
+                double brTopWidthValue = width;
+                if(widthUnit.equals(FUnit.PERCENTAGE)){
+                    brTopWidthValue = component.getPrefHeight() * (width / 100);
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BR_TOP_WIDTH);
+                        BorderSetter.setTopBorderWidth(component, (double)newVal * (width / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_BR_TOP_WIDTH, MainProps.HEIGHT, listener);
+                }
+                if(widthDuration > 0) {
+                    propertyHelper.setAnimationType(FAnimations.BR_TOP_WIDTH);
+                    double initialTopBrWidth = BorderSetter.getTopBorderWidth(component);
+                    propertyHelper.setValues(initialTopBrWidth, brTopWidthValue);
+                    propertyHelper.setDuration(widthDuration);
+                    propertyHelper.setInterpolator(widthInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_TOP_WIDTH, PropertyHelper.NUMBER_ANIMATION);
+                }
+                else{
+                    BorderSetter.setTopBorderWidth(component, brTopWidthValue);
+                }
+                valuesManager.set(MainProps.BR_TOP_WIDTH, brTopWidthValue);
+            }
+            else if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+            }
+            else {
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(!widthUnit.equals(FUnit.PERCENTAGE) && (setPropertiesOnHover || setPropertiesOnClick)){
+                propertyHelper.setProperty(MainProps.BR_TOP_COLOR);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_TOP_COLOR, StaticAnimations.BR_TOP_COLOR);
+                propertyHelper.setColors(valuesManager.getString(MainProps.BR_TOP_COLOR), color);
+                propertyHelper.setDuration(colorDuration);
+                propertyHelper.setInterpolator(colorInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
+
+                String initialStyle = BorderSetter.getTopBorderStyle(component);
+                propertyHelper.addOneSideBorderStyleStaticAnimation(StaticAnimations.BR_TOP_STYLE, initialStyle, style);
+
+                propertyHelper.setProperty(MainProps.BR_TOP_WIDTH);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_TOP_WIDTH, StaticAnimations.BR_TOP_WIDTH);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BR_TOP_WIDTH), width);
+                propertyHelper.setDuration(widthDuration);
+                propertyHelper.setInterpolator(widthInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
             }
         }
     }
@@ -2201,71 +2415,83 @@ public class PropertyManager2 {
     }
 
     public void rightBorder (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateOneSideBorderValue(values);
-        if(validated){
+        parser.parse(PropertyParser.ONE_SIDE_BORDER_PROPERTY, rawValue);
+        if(parser.isValid()){
             this.rawRightBorder = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterOneSideBorderValue(values);
-            String color = filteredValues[0].split("\\s+")[0];
-            String currentColor = BorderSetter.getRightBorderColor(component);
-            long colorDuration = 1;
-            String borderStyle = filteredValues[1];
-            String currentStyle = BorderSetter.getRightBorderStyle(component);
-            double width = 0;
-            double currentWidth = BorderSetter.getRightBorderWidth(component);
-            String widthUnit = FUnit.PIXELS;
-            long widthDuration = 1;
-            if(currentColor != null){
-                currentColor = "#" + currentColor;
-            }
-            else{
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BR_RIGHT_COLOR, currentColor);
-            }
-            if(filteredValues[0].contains(" ")) {
-                colorDuration = PropertyValidatorFilter.getDuration(filteredValues[0].split("\\s+")[1]);
-            }
-            if(currentStyle == null){
-                currentStyle = "solid";
-                initialValues.put(MainProps.BR_RIGHT_STYLE, currentStyle);
-            }
-            if(filteredValues[1] != null){
-                borderStyle = filteredValues[1];
-            }
-            if(filteredValues.length > 2){
-                String widthProp = filteredValues[2].split("\\s+")[0];
-                width = PropertyValidatorFilter.getDoubleValue(widthProp);
-                widthUnit = PropertyValidatorFilter.getUnit(widthProp);
-                if(filteredValues[2].contains(" ")){
-                    widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
-                }
-            }
-            if(widthUnit.equals(FUnit.PERCENTAGE)){
-                brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
-                brWidthProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setRightBorderWidth(component, (double) newVal);
-                });
-                width = (width / 100) * component.getPrefWidth();
-            }
-            if(setPropertiesOnHover){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_RIGHT_COLOR, hoverAnimation, FAnimations.BR_RIGHT_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_RIGHT_STYLE, staticHoverAnimation, MainProps.BR_RIGHT_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_RIGHT_WIDTH, hoverAnimation, FAnimations.BR_RIGHT_WIDTH, width, widthDuration);
-            }
-            else if(setPropertiesOnClick){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_RIGHT_COLOR, clickAnimation, FAnimations.BR_RIGHT_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_RIGHT_STYLE, staticClickAnimation, MainProps.BR_RIGHT_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_RIGHT_WIDTH, clickAnimation, FAnimations.BR_RIGHT_WIDTH, width, widthDuration);
-            }
-            else{
-                PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_RIGHT_COLOR, FAnimations.BR_RIGHT_COLOR, color, colorDuration);
-                BorderSetter.setRightBorderStyle(component, borderStyle);
-                if(widthDuration == 1){
-                    BorderSetter.setRightBorderWidth(component, width);
+            String color = parser.getColorValue(0);
+            long colorDuration = parser.getBorderColorDuration();
+            String colorInterpolator = parser.getBorderColorInterpolator();
+            String style = parser.getBorderStyle(0);
+            double width = parser.getDoubleValue(0);
+            String widthUnit = parser.getUnit(0);
+            long widthDuration = parser.getDuration(0);
+            String widthInterpolator = parser.getInterpolator(0);
+            if(!setPropertiesOnHover && !setPropertiesOnClick){
+                propertyHelper.stopTempAnimation(FAnimations.BR_RIGHT_COLOR);
+                if(colorDuration > 0){
+                    propertyHelper.setProperty(MainProps.BR_RIGHT_COLOR);
+                    propertyHelper.setAnimationType(FAnimations.BR_RIGHT_COLOR);
+                    String initialRightBrColor = BorderSetter.getRightBorderColor(component);
+                    propertyHelper.setColors(initialRightBrColor, color);
+                    propertyHelper.setDuration(colorDuration);
+                    propertyHelper.setInterpolator(colorInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_RIGHT_COLOR, PropertyHelper.COLOR_ANIMATION);
                 }
                 else{
-                    PropertyUtil.setTempAnimation(component, currentWidth, initialValues, MainProps.BR_RIGHT_WIDTH, FAnimations.BR_RIGHT_WIDTH, width, widthDuration);
+                    BorderSetter.setRightBorderColor(component, color);
                 }
+                valuesManager.set(MainProps.BR_RIGHT_COLOR, color);
+
+                BorderSetter.setRightBorderStyle(component, style);
+                valuesManager.set(MainProps.BR_RIGHT_STYLE, style);
+
+                listenersManager.remove(ListenerID.WIDTH_BR_RIGHT_WIDTH);
+                propertyHelper.stopTempAnimation(FAnimations.BR_RIGHT_WIDTH);
+                double brRightWidthValue = width;
+                if(widthUnit.equals(FUnit.PERCENTAGE)){
+                    brRightWidthValue = component.getPrefWidth() * (width / 100);
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BR_RIGHT_WIDTH);
+                        BorderSetter.setRightBorderWidth(component, (double)newVal * (width / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BR_RIGHT_WIDTH, MainProps.WIDTH, listener);
+                }
+                if(widthDuration > 0) {
+                    propertyHelper.setAnimationType(FAnimations.BR_RIGHT_WIDTH);
+                    double initialRightBrWidth = BorderSetter.getRightBorderWidth(component);
+                    propertyHelper.setValues(initialRightBrWidth, brRightWidthValue);
+                    propertyHelper.setDuration(widthDuration);
+                    propertyHelper.setInterpolator(widthInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_RIGHT_WIDTH, PropertyHelper.NUMBER_ANIMATION);
+                }
+                else{
+                    BorderSetter.setRightBorderWidth(component, brRightWidthValue);
+                }
+                valuesManager.set(MainProps.BR_RIGHT_WIDTH, brRightWidthValue);
+            }
+            else if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+            }
+            else {
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(!widthUnit.equals(FUnit.PERCENTAGE) && (setPropertiesOnHover || setPropertiesOnClick)){
+                propertyHelper.setProperty(MainProps.BR_RIGHT_COLOR);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_RIGHT_COLOR, StaticAnimations.BR_RIGHT_COLOR);
+                propertyHelper.setColors(valuesManager.getString(MainProps.BR_RIGHT_COLOR), color);
+                propertyHelper.setDuration(colorDuration);
+                propertyHelper.setInterpolator(colorInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
+
+                String initialStyle = BorderSetter.getRightBorderStyle(component);
+                propertyHelper.addOneSideBorderStyleStaticAnimation(StaticAnimations.BR_RIGHT_STYLE, initialStyle, style);
+
+                propertyHelper.setProperty(MainProps.BR_RIGHT_WIDTH);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_RIGHT_WIDTH, StaticAnimations.BR_RIGHT_WIDTH);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BR_RIGHT_WIDTH), width);
+                propertyHelper.setDuration(widthDuration);
+                propertyHelper.setInterpolator(widthInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
             }
         }
     }
@@ -2279,71 +2505,83 @@ public class PropertyManager2 {
     }
 
     public void bottomBorder (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateOneSideBorderValue(values);
-        if(validated){
+        parser.parse(PropertyParser.ONE_SIDE_BORDER_PROPERTY, rawValue);
+        if(parser.isValid()){
             this.rawBottomBorder = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterOneSideBorderValue(values);
-            String color = filteredValues[0].split("\\s+")[0];
-            String currentColor = BorderSetter.getBottomBorderColor(component);
-            long colorDuration = 1;
-            String borderStyle = filteredValues[1];
-            String currentStyle = BorderSetter.getBottomBorderStyle(component);
-            double width = 0;
-            double currentWidth = BorderSetter.getBottomBorderWidth(component);
-            String widthUnit = FUnit.PIXELS;
-            long widthDuration = 1;
-            if(currentColor != null){
-                currentColor = "#" + currentColor;
-            }
-            else{
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BR_BOTTOM_COLOR, currentColor);
-            }
-            if(filteredValues[0].contains(" ")) {
-                colorDuration = PropertyValidatorFilter.getDuration(filteredValues[0].split("\\s+")[1]);
-            }
-            if(currentStyle == null){
-                currentStyle = "solid";
-                initialValues.put(MainProps.BR_BOTTOM_STYLE, currentStyle);
-            }
-            if(filteredValues[1] != null){
-                borderStyle = filteredValues[1];
-            }
-            if(filteredValues.length > 2){
-                String widthProp = filteredValues[2].split("\\s+")[0];
-                width = PropertyValidatorFilter.getDoubleValue(widthProp);
-                widthUnit = PropertyValidatorFilter.getUnit(widthProp);
-                if(filteredValues[2].contains(" ")){
-                    widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
-                }
-            }
-            if(widthUnit.equals(FUnit.PERCENTAGE)){
-                brWidthProperty.bind(component.prefHeightProperty().multiply(width / 100));
-                brWidthProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setBottomBorderWidth(component, (double) newVal);
-                });
-                width = (width / 100) * component.getPrefWidth();
-            }
-            if(setPropertiesOnHover){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_BOTTOM_COLOR, hoverAnimation, FAnimations.BR_BOTTOM_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_BOTTOM_STYLE, staticHoverAnimation, MainProps.BR_BOTTOM_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_BOTTOM_WIDTH, hoverAnimation, FAnimations.BR_BOTTOM_WIDTH, width, widthDuration);
-            }
-            else if(setPropertiesOnClick){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_BOTTOM_COLOR, clickAnimation, FAnimations.BR_BOTTOM_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_BOTTOM_STYLE, staticClickAnimation, MainProps.BR_BOTTOM_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_BOTTOM_WIDTH, clickAnimation, FAnimations.BR_BOTTOM_WIDTH, width, widthDuration);
-            }
-            else{
-                PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_BOTTOM_COLOR, FAnimations.BR_BOTTOM_COLOR, color, colorDuration);
-                BorderSetter.setBottomBorderStyle(component, borderStyle);
-                if(widthDuration == 1){
-                    BorderSetter.setBottomBorderWidth(component, width);
+            String color = parser.getColorValue(0);
+            long colorDuration = parser.getBorderColorDuration();
+            String colorInterpolator = parser.getBorderColorInterpolator();
+            String style = parser.getBorderStyle(0);
+            double width = parser.getDoubleValue(0);
+            String widthUnit = parser.getUnit(0);
+            long widthDuration = parser.getDuration(0);
+            String widthInterpolator = parser.getInterpolator(0);
+            if(!setPropertiesOnHover && !setPropertiesOnClick){
+                propertyHelper.stopTempAnimation(FAnimations.BR_BOTTOM_COLOR);
+                if(colorDuration > 0){
+                    propertyHelper.setProperty(MainProps.BR_BOTTOM_COLOR);
+                    propertyHelper.setAnimationType(FAnimations.BR_BOTTOM_COLOR);
+                    String initialBottomBrColor = BorderSetter.getBottomBorderColor(component);
+                    propertyHelper.setColors(initialBottomBrColor, color);
+                    propertyHelper.setDuration(colorDuration);
+                    propertyHelper.setInterpolator(colorInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_BOTTOM_COLOR, PropertyHelper.COLOR_ANIMATION);
                 }
                 else{
-                    PropertyUtil.setTempAnimation(component, currentWidth, initialValues, MainProps.BR_BOTTOM_WIDTH, FAnimations.BR_BOTTOM_WIDTH, width, widthDuration);
+                    BorderSetter.setBottomBorderColor(component, color);
                 }
+                valuesManager.set(MainProps.BR_BOTTOM_COLOR, color);
+
+                BorderSetter.setBottomBorderStyle(component, style);
+                valuesManager.set(MainProps.BR_BOTTOM_STYLE, style);
+
+                listenersManager.remove(ListenerID.HEIGHT_BR_BOTTOM_WIDTH);
+                propertyHelper.stopTempAnimation(FAnimations.BR_BOTTOM_WIDTH);
+                double brBottomWidthValue = width;
+                if(widthUnit.equals(FUnit.PERCENTAGE)){
+                    brBottomWidthValue = component.getPrefWidth() * (width / 100);
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BR_BOTTOM_WIDTH);
+                        BorderSetter.setBottomBorderWidth(component, (double)newVal * (width / 100));
+                    };
+                    listenersManager.add(component, ListenerID.HEIGHT_BR_BOTTOM_WIDTH, MainProps.HEIGHT, listener);
+                }
+                if(widthDuration > 0) {
+                    propertyHelper.setAnimationType(FAnimations.BR_BOTTOM_WIDTH);
+                    double initialBottomBrWidth = BorderSetter.getBottomBorderWidth(component);
+                    propertyHelper.setValues(initialBottomBrWidth, brBottomWidthValue);
+                    propertyHelper.setDuration(widthDuration);
+                    propertyHelper.setInterpolator(widthInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_BOTTOM_WIDTH, PropertyHelper.NUMBER_ANIMATION);
+                }
+                else{
+                    BorderSetter.setBottomBorderWidth(component, brBottomWidthValue);
+                }
+                valuesManager.set(MainProps.BR_BOTTOM_WIDTH, brBottomWidthValue);
+            }
+            else if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+            }
+            else {
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(!widthUnit.equals(FUnit.PERCENTAGE) && (setPropertiesOnHover || setPropertiesOnClick)){
+                propertyHelper.setProperty(MainProps.BR_BOTTOM_COLOR);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_BOTTOM_COLOR, StaticAnimations.BR_BOTTOM_COLOR);
+                propertyHelper.setColors(valuesManager.getString(MainProps.BR_BOTTOM_COLOR), color);
+                propertyHelper.setDuration(colorDuration);
+                propertyHelper.setInterpolator(colorInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
+
+                String initialStyle = BorderSetter.getBottomBorderStyle(component);
+                propertyHelper.addOneSideBorderStyleStaticAnimation(StaticAnimations.BR_BOTTOM_STYLE, initialStyle, style);
+
+                propertyHelper.setProperty(MainProps.BR_BOTTOM_WIDTH);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_BOTTOM_WIDTH, StaticAnimations.BR_BOTTOM_WIDTH);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BR_BOTTOM_WIDTH), width);
+                propertyHelper.setDuration(widthDuration);
+                propertyHelper.setInterpolator(widthInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
             }
         }
     }
@@ -2357,71 +2595,83 @@ public class PropertyManager2 {
     }
 
     public void leftBorder (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateOneSideBorderValue(values);
-        if(validated){
+        parser.parse(PropertyParser.ONE_SIDE_BORDER_PROPERTY, rawValue);
+        if(parser.isValid()){
             this.rawLeftBorder = rawValue;
-            String[] filteredValues = PropertyValidatorFilter.filterOneSideBorderValue(values);
-            String color = filteredValues[0].split("\\s+")[0];
-            String currentColor = BorderSetter.getLeftBorderColor(component);
-            long colorDuration = 1;
-            String borderStyle = filteredValues[1];
-            String currentStyle = BorderSetter.getLeftBorderStyle(component);
-            double width = 0;
-            double currentWidth = BorderSetter.getLeftBorderWidth(component);
-            String widthUnit = FUnit.PIXELS;
-            long widthDuration = 1;
-            if(currentColor != null){
-                currentColor = "#" + currentColor;
-            }
-            else{
-                currentColor = "#00000000";
-                initialValues.put(MainProps.BR_LEFT_COLOR, currentColor);
-            }
-            if(filteredValues[0].contains(" ")) {
-                colorDuration = PropertyValidatorFilter.getDuration(filteredValues[0].split("\\s+")[1]);
-            }
-            if(currentStyle == null){
-                currentStyle = "solid";
-                initialValues.put(MainProps.BR_LEFT_STYLE, currentStyle);
-            }
-            if(filteredValues[1] != null){
-                borderStyle = filteredValues[1];
-            }
-            if(filteredValues.length > 2){
-                String widthProp = filteredValues[2].split("\\s+")[0];
-                width = PropertyValidatorFilter.getDoubleValue(widthProp);
-                widthUnit = PropertyValidatorFilter.getUnit(widthProp);
-                if(filteredValues[2].contains(" ")){
-                    widthDuration = PropertyValidatorFilter.getDuration(filteredValues[2].split("\\s+")[1]);
-                }
-            }
-            if(widthUnit.equals(FUnit.PERCENTAGE)){
-                brWidthProperty.bind(component.prefWidthProperty().multiply(width / 100));
-                brWidthProperty.addListener((valType, oldVal, newVal) -> {
-                    BorderSetter.setLeftBorderWidth(component, (double) newVal);
-                });
-                width = (width / 100) * component.getPrefWidth();
-            }
-            if(setPropertiesOnHover){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_LEFT_COLOR, hoverAnimation, FAnimations.BR_LEFT_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_LEFT_STYLE, staticHoverAnimation, MainProps.BR_LEFT_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_LEFT_WIDTH, hoverAnimation, FAnimations.BR_LEFT_WIDTH, width, widthDuration);
-            }
-            else if(setPropertiesOnClick){
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_LEFT_COLOR, clickAnimation, FAnimations.BR_LEFT_COLOR, color, colorDuration);
-                PropertyUtil.setStaticAnimation(currentStyle, initialValues, MainProps.BR_LEFT_STYLE, staticClickAnimation, MainProps.BR_LEFT_STYLE, borderStyle);
-                PropertyUtil.setOneDimensionAnimation(currentWidth, initialValues, MainProps.BR_LEFT_WIDTH, clickAnimation, FAnimations.BR_LEFT_WIDTH, width, widthDuration);
-            }
-            else{
-                PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_LEFT_COLOR, FAnimations.BR_LEFT_COLOR, color, colorDuration);
-                BorderSetter.setLeftBorderStyle(component, borderStyle);
-                if(widthDuration == 1){
-                    BorderSetter.setLeftBorderWidth(component, width);
+            String color = parser.getColorValue(0);
+            long colorDuration = parser.getBorderColorDuration();
+            String colorInterpolator = parser.getBorderColorInterpolator();
+            String style = parser.getBorderStyle(0);
+            double width = parser.getDoubleValue(0);
+            String widthUnit = parser.getUnit(0);
+            long widthDuration = parser.getDuration(0);
+            String widthInterpolator = parser.getInterpolator(0);
+            if(!setPropertiesOnHover && !setPropertiesOnClick){
+                propertyHelper.stopTempAnimation(FAnimations.BR_LEFT_COLOR);
+                if(colorDuration > 0){
+                    propertyHelper.setProperty(MainProps.BR_LEFT_COLOR);
+                    propertyHelper.setAnimationType(FAnimations.BR_LEFT_COLOR);
+                    String initialLeftBrColor = BorderSetter.getLeftBorderColor(component);
+                    propertyHelper.setColors(initialLeftBrColor, color);
+                    propertyHelper.setDuration(colorDuration);
+                    propertyHelper.setInterpolator(colorInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_LEFT_COLOR, PropertyHelper.COLOR_ANIMATION);
                 }
                 else{
-                    PropertyUtil.setTempAnimation(component, currentWidth, initialValues, MainProps.BR_LEFT_WIDTH, FAnimations.BR_LEFT_WIDTH, width, widthDuration);
+                    BorderSetter.setLeftBorderColor(component, color);
                 }
+                valuesManager.set(MainProps.BR_LEFT_COLOR, color);
+
+                BorderSetter.setLeftBorderStyle(component, style);
+                valuesManager.set(MainProps.BR_LEFT_STYLE, style);
+
+                listenersManager.remove(ListenerID.WIDTH_BR_LEFT_WIDTH);
+                propertyHelper.stopTempAnimation(FAnimations.BR_LEFT_WIDTH);
+                double brLeftWidthValue = width;
+                if(widthUnit.equals(FUnit.PERCENTAGE)){
+                    brLeftWidthValue = component.getPrefWidth() * (width / 100);
+                    ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                        propertyHelper.stopTempAnimation(FAnimations.BR_LEFT_WIDTH);
+                        BorderSetter.setLeftBorderWidth(component, (double)newVal * (width / 100));
+                    };
+                    listenersManager.add(component, ListenerID.WIDTH_BR_LEFT_WIDTH, MainProps.WIDTH, listener);
+                }
+                if(widthDuration > 0) {
+                    propertyHelper.setAnimationType(FAnimations.BR_LEFT_WIDTH);
+                    double initialLeftBrWidth = BorderSetter.getLeftBorderWidth(component);
+                    propertyHelper.setValues(initialLeftBrWidth, brLeftWidthValue);
+                    propertyHelper.setDuration(widthDuration);
+                    propertyHelper.setInterpolator(widthInterpolator);
+                    propertyHelper.addTempAnimation(FAnimations.BR_LEFT_WIDTH, PropertyHelper.NUMBER_ANIMATION);
+                }
+                else{
+                    BorderSetter.setLeftBorderWidth(component, brLeftWidthValue);
+                }
+                valuesManager.set(MainProps.BR_LEFT_WIDTH, brLeftWidthValue);
+            }
+            else if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+            }
+            else {
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(!widthUnit.equals(FUnit.PERCENTAGE) && (setPropertiesOnHover || setPropertiesOnClick)){
+                propertyHelper.setProperty(MainProps.BR_LEFT_COLOR);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_LEFT_COLOR, StaticAnimations.BR_LEFT_COLOR);
+                propertyHelper.setColors(valuesManager.getString(MainProps.BR_LEFT_COLOR), color);
+                propertyHelper.setDuration(colorDuration);
+                propertyHelper.setInterpolator(colorInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.COLOR_ANIMATION);
+
+                String initialStyle = BorderSetter.getLeftBorderStyle(component);
+                propertyHelper.addOneSideBorderStyleStaticAnimation(StaticAnimations.BR_LEFT_STYLE, initialStyle, style);
+
+                propertyHelper.setProperty(MainProps.BR_LEFT_WIDTH);
+                propertyHelper.setAnimationsTypes(FAnimations.BR_LEFT_WIDTH, StaticAnimations.BR_LEFT_WIDTH);
+                propertyHelper.setValues(valuesManager.getDouble(MainProps.BR_LEFT_WIDTH), width);
+                propertyHelper.setDuration(widthDuration);
+                propertyHelper.setInterpolator(widthInterpolator);
+                propertyHelper.addAnimation(PropertyHelper.NUMBER_ANIMATION);
             }
         }
     }
@@ -2430,8 +2680,25 @@ public class PropertyManager2 {
         return rawLeftBorder;
     }
 
-    public void borderStyle (String borderStyle) {
-        BorderSetter.setBorderStyle(component, borderStyle);
+    public void borderStyle (String rawValue) {
+        parser.parse(PropertyParser.BORDER_STYLE_PROPERTY, rawValue);
+        if(parser.isValid()){
+            parser.spreadBorderStyles();
+            if(setPropertiesOnHover){
+                propertyHelper.setStaticAnimation(staticHoverAnimation);
+                propertyHelper.addBorderStyleStaticAnimation();
+            }
+            else if(setPropertiesOnClick){
+                propertyHelper.setStaticAnimation(staticClickAnimation);
+                propertyHelper.addBorderStyleStaticAnimation();
+            }
+            else{
+                propertyHelper.setStaticAnimation(staticHoverAnimation);
+                propertyHelper.addBorderStyleProperty();
+                propertyHelper.updateBorderStyleStaticAnimationStartValue(staticHoverAnimation);
+                propertyHelper.updateBorderStyleStaticAnimationStartValue(staticClickAnimation);
+            }
+        }
     }
 
     public String getBorderStyle () {
@@ -2450,38 +2717,55 @@ public class PropertyManager2 {
         BorderSetter.setBorderWidth(component, top, right, bottom, left);
     }
 
-    public void borderWidth (String borderWidth) {
-        String[] values = borderWidth.split("\\s+");
+    public void borderWidth (String rawValue) {
+        parser.parse(PropertyParser.SIZE_PROPERTY, rawValue);
+        if (parser.isValid()) {
+            this.rawBorderWidth = rawValue;
+            parser.spreadDoubleValues();
+            parser.spreadUnits(); // Maybe for removal
+            parser.spreadDurations();
+            parser.spreadInterpolators();
+            if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
+            }
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(setPropertiesOnHover || setPropertiesOnClick){
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_WIDTH);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_WIDTH);
+                propertyHelper.addBorderWidthAnimation(false);
+            }
+            else{
+                propertyHelper.addBorderWidthProperty(parent == null, false);
+            }
+        }
     }
 
     public String getRawBorderWidth ()  {
         return rawBorderWidth;
     }
 
-    public void borderColor (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateColorValue(values);
-        if (validated) {
+    public void borderColor(String rawValue){
+        parser.parse(PropertyParser.COLOR_PROPERTY, rawValue);
+        if (parser.isValid()) {
             this.rawBorderColor = rawValue;
-            String value = values[0];
-            String currentColor = "#" + BorderSetter.getBorderHexColor(component);
-            long duration = 1;
-            if (values.length == 2) {
-                duration = PropertyValidatorFilter.getDuration(values[1]);
+            parser.spreadColorValues();
+            parser.spreadDurations();
+            parser.spreadInterpolators();
+            if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_COLOR, hoverAnimation, FAnimations.BR_COLOR, value, duration);
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
             }
-            else if (setPropertiesOnClick) {
-                PropertyUtil.setColorAnimation(currentColor, initialValues, MainProps.BR_COLOR, clickAnimation, FAnimations.BR_COLOR, value, duration);
+            if(setPropertiesOnHover || setPropertiesOnClick){
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_COLOR);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_COLOR);
+                propertyHelper.addBorderColorAnimation(false);
             }
-            else {
-                initialValues.put(MainProps.BR_COLOR, value);
-                if (duration == 1) {
-                    BorderSetter.setBorderColor(component, value);
-                } else {
-                    PropertyUtil.setTempColorAnimation(component, currentColor, initialValues, MainProps.BR_COLOR, FAnimations.BR_COLOR, value, duration);
-                }
+            else{
+                propertyHelper.addBorderColorProperty(false);
             }
         }
     }
@@ -2506,31 +2790,56 @@ public class PropertyManager2 {
         BorderSetter.setBorderOpacity(component, top, right, bottom, left);
     }
 
-    public void borderOpacity (String rawValue) {
-        String[] values = rawValue.split("\\s+");
-        boolean validated = PropertyValidatorFilter.validateOpacityValue(values);
-        double value = PropertyValidatorFilter.getDoubleValue(values[0]);
-        double currOpacity = BorderSetter.getBorderOpacity(component);
-        if (validated && value >= 0 && value <= 1) {
+    public void borderOpacity(String rawValue){
+        parser.parse(PropertyParser.NUMBER_PROPERTY, rawValue);
+        if (parser.isValid()) {
             this.rawBorderOpacity = rawValue;
-            long duration = 1;
-            if (values.length == 2) {
-                duration = PropertyValidatorFilter.getDuration(values[1]);
+            parser.spreadDoubleValues();
+            parser.spreadColorValues();
+            parser.spreadDurations();
+            parser.spreadInterpolators();
+            if(setPropertiesOnHover){
+                propertyHelper.setAnimations(hoverAnimation, staticHoverAnimation);
             }
-            if (setPropertiesOnHover) {
-                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BR_OPACITY, hoverAnimation, FAnimations.BR_OPACITY, value, duration);
-            } else if (setPropertiesOnClick) {
-                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BR_OPACITY, clickAnimation, FAnimations.BR_OPACITY, value, duration);
-            } else {
-                if (duration == 1) {
-                    BorderSetter.setBorderOpacity(component, value);
-                } else {
-                    initialValues.put(MainProps.BR_OPACITY, value + "");
-                    PropertyUtil.setTempAnimation(component, currOpacity, initialValues, MainProps.BR_OPACITY, FAnimations.BR_OPACITY, value, duration);
-                }
+            else if(setPropertiesOnClick){
+                propertyHelper.setAnimations(clickAnimation, staticClickAnimation);
+            }
+            if(setPropertiesOnHover || setPropertiesOnClick){
+                propertyHelper.removeMultipleSidesAnimation(FAnimations.BR_OPACITY);
+                propertyHelper.removeMultipleSidesStaticAnimation(StaticAnimations.BR_OPACITY);
+                propertyHelper.addBorderOpacityAnimation(false);
+            }
+            else{
+                propertyHelper.addBorderOpacityProperty(false);
             }
         }
     }
+
+//    public void borderOpacity (String rawValue) {
+//        String[] values = rawValue.split("\\s+");
+//        boolean validated = PropertyValidatorFilter.validateOpacityValue(values);
+//        double value = PropertyValidatorFilter.getDoubleValue(values[0]);
+//        double currOpacity = BorderSetter.getBorderOpacity(component);
+//        if (validated && value >= 0 && value <= 1) {
+//            this.rawBorderOpacity = rawValue;
+//            long duration = 1;
+//            if (values.length == 2) {
+//                duration = PropertyValidatorFilter.getDuration(values[1]);
+//            }
+//            if (setPropertiesOnHover) {
+//                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BR_OPACITY, hoverAnimation, FAnimations.BR_OPACITY, value, duration);
+//            } else if (setPropertiesOnClick) {
+//                PropertyUtil.setOneDimensionAnimation(currOpacity, initialValues, MainProps.BR_OPACITY, clickAnimation, FAnimations.BR_OPACITY, value, duration);
+//            } else {
+//                if (duration == 1) {
+//                    BorderSetter.setBorderOpacity(component, value);
+//                } else {
+//                    initialValues.put(MainProps.BR_OPACITY, value + "");
+//                    PropertyUtil.setTempAnimation(component, currOpacity, initialValues, MainProps.BR_OPACITY, FAnimations.BR_OPACITY, value, duration);
+//                }
+//            }
+//        }
+//    }
 
     public String getRawBorderOpacity () {
         return rawBorderOpacity;

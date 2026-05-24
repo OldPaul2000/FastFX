@@ -89,6 +89,10 @@ public class ValuesManager {
         return fComponentValues.containsKey(property);
     }
 
+    public Map<String, String> getValues(){
+        return fComponentValues;
+    }
+
     /**
      * Insert the initial values for the properties.
      */
@@ -122,5 +126,34 @@ public class ValuesManager {
         fComponentValues.put(MainProps.BG_TR_RADIUS, "0");
         fComponentValues.put(MainProps.BG_BR_RADIUS, "0");
         fComponentValues.put(MainProps.BG_BL_RADIUS, "0");
+        fComponentValues.put(MainProps.BG_INSETS, "0");
+        fComponentValues.put(MainProps.BG_TOP_INSET, "0");
+        fComponentValues.put(MainProps.BG_RIGHT_INSET, "0");
+        fComponentValues.put(MainProps.BG_BOTTOM_INSET, "0");
+        fComponentValues.put(MainProps.BG_LEFT_INSET, "0");
+        fComponentValues.put(MainProps.BR_TOP_OPACITY, "1");
+        fComponentValues.put(MainProps.BR_RIGHT_OPACITY, "1");
+        fComponentValues.put(MainProps.BR_BOTTOM_OPACITY, "1");
+        fComponentValues.put(MainProps.BR_LEFT_OPACITY, "1");
+        fComponentValues.put(MainProps.BR_TOP_COLOR, "#00000000");
+        fComponentValues.put(MainProps.BR_RIGHT_COLOR, "#00000000");
+        fComponentValues.put(MainProps.BR_BOTTOM_COLOR, "#00000000");
+        fComponentValues.put(MainProps.BR_LEFT_COLOR, "#00000000");
+        fComponentValues.put(MainProps.BR_TL_RADIUS, "0");
+        fComponentValues.put(MainProps.BR_TR_RADIUS, "0");
+        fComponentValues.put(MainProps.BR_BR_RADIUS, "0");
+        fComponentValues.put(MainProps.BR_BL_RADIUS, "0");
+        fComponentValues.put(MainProps.BR_TOP_WIDTH, "0");
+        fComponentValues.put(MainProps.BR_RIGHT_WIDTH, "0");
+        fComponentValues.put(MainProps.BR_BOTTOM_WIDTH, "0");
+        fComponentValues.put(MainProps.BR_LEFT_WIDTH, "0");
+        fComponentValues.put(MainProps.BR_TOP_INSET, "0");
+        fComponentValues.put(MainProps.BR_RIGHT_INSET, "0");
+        fComponentValues.put(MainProps.BR_BOTTOM_INSET, "0");
+        fComponentValues.put(MainProps.BR_LEFT_INSET, "0");
+        fComponentValues.put(MainProps.BR_TOP_STYLE, "solid");
+        fComponentValues.put(MainProps.BR_RIGHT_STYLE, "solid");
+        fComponentValues.put(MainProps.BR_BOTTOM_STYLE, "solid");
+        fComponentValues.put(MainProps.BR_LEFT_STYLE, "solid");
     }
 }

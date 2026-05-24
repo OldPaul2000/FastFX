@@ -16,16 +16,20 @@ import com.example.fastfx.src.utility.style.BorderSetter;
 public class PropertyParser {
     public static final String COLOR_PROPERTY = "colorProperty";
     public static final String BORDER_PROPERTY = "borderProperty";
+    public static final String ONE_SIDE_BORDER_PROPERTY = "oneSideBorderProperty";
+    public static final String BORDER_STYLE_PROPERTY = "borderStyle";
     public static final String SIZE_PROPERTY = "sizeProperty";
     public static final String NUMBER_PROPERTY = "numberProperty";
 
+    private static final String INFINITE_DURATION = "inf";
     private static final String COLOR_REGEX = "#[a-fA-F0-9]{6}|#[a-fA-F0-9]{8}|[a-zA-Z]+";
     private static final String HEX_COLOR_REGEX = "#[a-fA-F0-9]{6}|#[a-fA-F0-9]{8}";
     private static final String SIZE_REGEX = "(-?(\\d+|\\d+\\.\\d+))(%?(px)?)?";
     private static final String ONLY_NUMBER_REGEX = "-?(\\d+|\\d+\\.\\d+)";
     private static final String DURATION_REGEX = "(\\d+|\\d+\\.\\d+)(s)";
     private static final String INTERPOLATOR_REGEX = "linear|ease-in|ease-out|ease-both|discrete";
-    public static final String CYCLE_COUNT_REGEX = "\\d+c|inf";
+    private static final String BORDER_STYLE_REGEX = "solid|dotted|dashed";
+    private static final String CYCLE_COUNT_REGEX = "\\d+c|" + INFINITE_DURATION;
 
     private boolean valid;
     private int parametersCount;
@@ -59,6 +63,12 @@ public class PropertyParser {
         else if (property.equals(BORDER_PROPERTY)) {
             parseBorderProperty(values);
         }
+        else if (property.equals(ONE_SIDE_BORDER_PROPERTY)){
+            parseOneSideBorderProperty(values);
+        }
+        else if(property.equals(BORDER_STYLE_PROPERTY)){
+            parseBorderStyle(values);
+        }
         else if (property.equals(SIZE_PROPERTY)) {
             parseSizeProperty(values);
         }
@@ -73,7 +83,7 @@ public class PropertyParser {
         boolean interpolatorFound = false;
         for (int i = 0; i < values.length; i++) {
             String currEl = values[i];
-            if (!currEl.equals("inf") && currEl.matches(COLOR_REGEX)) {
+            if (!currEl.equals(INFINITE_DURATION) && currEl.matches(COLOR_REGEX)) {
                 indexAfterColorProp = 0;
                 durationFound = false;
                 interpolatorFound = false;
@@ -196,6 +206,110 @@ public class PropertyParser {
         }
     }
 
+    private void parseOneSideBorderProperty(String[] values){
+        int startCountingIndex = 0;
+        int indexAfterProperty = 0;
+        boolean durationFound = false;
+        boolean interpolatorFound = false;
+        if (values[0].matches(COLOR_REGEX)) {
+            setColor(1, values[0]);
+            startCountingIndex++;
+            for (int i = 1; i < values.length; i++) {
+                String currEl = values[i];
+                if (currEl.matches(DURATION_REGEX)) {
+                    durationFound = true;
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    setBorderColorDuration(currEl);
+                } else if (currEl.matches(INTERPOLATOR_REGEX) && durationFound && indexAfterProperty == 1) {
+                    interpolatorFound = true;
+                    durationFound = false;
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    setBorderColorInterpolator(currEl);
+                } else if (currEl.matches(CYCLE_COUNT_REGEX) && (durationFound || interpolatorFound)) {
+                    indexAfterProperty++;
+                    startCountingIndex++;
+                    durationFound = false;
+                    interpolatorFound = false;
+                    setBorderColorCyclesCount(currEl);
+                } else if (BorderSetter.BORDER_STYLES.containsKey(currEl.toLowerCase()) || currEl.matches(SIZE_REGEX)) {
+                    break;
+                } else {
+                    valid = false;
+                    break;
+                }
+            }
+        } else {
+            valid = false;
+        }
+        if (BorderSetter.BORDER_STYLES.containsKey(values[startCountingIndex].toLowerCase())) {
+            setBorderStyle(1, values[startCountingIndex].toLowerCase());
+            startCountingIndex++;
+        } else {
+            setBorderStyle(1, "solid");
+        }
+        if (valid) {
+            indexAfterProperty = 0;
+            durationFound = false;
+            interpolatorFound = false;
+            for (int i = startCountingIndex; i < values.length; i++) {
+                String currEl = values[i];
+                if (currEl.matches(SIZE_REGEX)) {
+                    indexAfterProperty = 0;
+                    durationFound = false;
+                    interpolatorFound = false;
+                    parametersCount++;
+                    if (parametersCount > 1) {
+                        break;
+                    }
+                    setDoubleValue(parametersCount, currEl);
+                    setUnit(parametersCount, currEl);
+                } else if (parametersCount == 1) {
+                    if (currEl.matches(DURATION_REGEX) && indexAfterProperty == 0) {
+                        durationFound = true;
+                        indexAfterProperty++;
+                        setDuration(parametersCount, currEl);
+                    } else if (currEl.matches(INTERPOLATOR_REGEX) && durationFound && indexAfterProperty == 1) {
+                        interpolatorFound = true;
+                        durationFound = false;
+                        indexAfterProperty++;
+                        setInterpolator(parametersCount, currEl);
+                    } else if (currEl.matches(CYCLE_COUNT_REGEX) && (durationFound || interpolatorFound)) {
+                        indexAfterProperty++;
+                        setCycleCount(parametersCount, currEl);
+                    } else {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (indexAfterProperty > 3) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        if (parametersCount != 1) {
+            valid = false;
+        }
+    }
+
+    private void parseBorderStyle(String[] values){
+        for(int i = 0; i < values.length; i++) {
+            String currEl = values[i].toLowerCase();
+            if (currEl.matches(BORDER_STYLE_REGEX)) {
+                setBorderStyle(i + 1, currEl);
+                parametersCount++;
+            } else {
+                valid = false;
+                break;
+            }
+        }
+        if(parametersCount == 0 || parametersCount == 3 || parametersCount > 4){
+            valid = false;
+        }
+    }
+
     private void parseSizeProperty (String[] values) {
         int indexAfterSizeProp = 0;
         boolean durationFound = false;
@@ -286,64 +400,175 @@ public class PropertyParser {
      * This method is helpful to avoid if checks when setting properties where there are multiple sides to style.<br>
      * For example for border insets.
      */
-    
     public void spreadDoubleValues () {
-        if (parametersCount == 1) {
-            doubleValues[1] = doubleValues[0];
-            doubleValues[2] = doubleValues[1];
-            doubleValues[3] = doubleValues[2];
+        if(doubleValues.length == 4){
+            if (parametersCount == 1) {
+                doubleValues[1] = doubleValues[0];
+                doubleValues[2] = doubleValues[0];
+                doubleValues[3] = doubleValues[0];
+            }
+            else if (parametersCount == 2) {
+                doubleValues[2] = doubleValues[0];
+                doubleValues[3] = doubleValues[1];
+            }
         }
-        if (parametersCount == 2) {
-            doubleValues[2] = doubleValues[0];
-            doubleValues[3] = doubleValues[1];
+        else if(doubleValues.length == 8){
+            if(parametersCount == 2){
+                doubleValues[4] = doubleValues[1];
+                doubleValues[5] = doubleValues[1];
+                doubleValues[6] = doubleValues[1];
+                doubleValues[7] = doubleValues[1];
+                doubleValues[1] = doubleValues[0];
+                doubleValues[2] = doubleValues[0];
+                doubleValues[3] = doubleValues[0];
+            }
+            else if(parametersCount == 4){
+                doubleValues[4] = doubleValues[2];
+                doubleValues[5] = doubleValues[3];
+                doubleValues[6] = doubleValues[2];
+                doubleValues[7] = doubleValues[3];
+                doubleValues[2] = doubleValues[0];
+                doubleValues[3] = doubleValues[1];
+            }
         }
     }
 
     public void spreadUnits () {
-        if (parametersCount == 1) {
-            units[1] = units[0];
-            units[2] = units[1];
-            units[3] = units[2];
+        if(units.length == 4){
+            if (parametersCount == 1) {
+                units[1] = units[0];
+                units[2] = units[0];
+                units[3] = units[0];
+            }
+            else if (parametersCount == 2) {
+                units[2] = units[0];
+                units[3] = units[1];
+            }
         }
-        if (parametersCount == 2) {
-            units[2] = units[0];
-            units[3] = units[1];
+        else if(units.length == 8){
+            if(parametersCount == 2){
+                units[4] = units[1];
+                units[5] = units[1];
+                units[6] = units[1];
+                units[7] = units[1];
+                units[1] = units[0];
+                units[2] = units[0];
+                units[3] = units[0];
+            }
+            else if(parametersCount == 4){
+                units[4] = units[2];
+                units[5] = units[3];
+                units[6] = units[2];
+                units[7] = units[3];
+                units[2] = units[0];
+                units[3] = units[1];
+            }
         }
     }
 
     public void spreadColorValues () {
-        if (parametersCount == 1) {
-            colorValues[1] = colorValues[0];
-            colorValues[2] = colorValues[1];
-            colorValues[3] = colorValues[2];
+        if(doubleValues.length == 4){
+            if (parametersCount == 1) {
+                colorValues[1] = colorValues[0];
+                colorValues[2] = colorValues[0];
+                colorValues[3] = colorValues[0];
+            }
+            else if (parametersCount == 2) {
+                colorValues[2] = colorValues[0];
+                colorValues[3] = colorValues[1];
+            }
         }
-        if (parametersCount == 2) {
+        // When parsing border style
+        else if(doubleValues.length == 8){
+            colorValues[1] = colorValues[0];
             colorValues[2] = colorValues[0];
-            colorValues[3] = colorValues[1];
+            colorValues[3] = colorValues[0];
         }
     }
 
     public void spreadDurations () {
-        if (parametersCount == 1) {
-            durations[1] = durations[0];
-            durations[2] = durations[1];
-            durations[3] = durations[2];
+        if(durations.length == 4){
+            if (parametersCount == 1) {
+                durations[1] = durations[0];
+                durations[2] = durations[0];
+                durations[3] = durations[0];
+            }
+            else if (parametersCount == 2) {
+                durations[2] = durations[0];
+                durations[3] = durations[1];
+            } 
         }
-        if (parametersCount == 2) {
-            durations[2] = durations[0];
-            durations[3] = durations[1];
+        else if(durations.length == 8){
+            if(parametersCount == 2) {
+                durations[4] = durations[1];
+                durations[5] = durations[1];
+                durations[6] = durations[1];
+                durations[7] = durations[1];
+                durations[1] = durations[0];
+                durations[2] = durations[0];
+                durations[3] = durations[0];
+            }
+            else if(parametersCount == 4){
+                durations[4] = durations[2];
+                durations[5] = durations[3];
+                durations[6] = durations[2];
+                durations[7] = durations[3];
+                durations[2] = durations[0];
+                durations[3] = durations[1];
+            }
         }
     }
 
     public void spreadInterpolators () {
-        if (parametersCount == 1) {
-            interpolators[1] = interpolators[0];
-            interpolators[2] = interpolators[1];
-            interpolators[3] = interpolators[2];
+        if(interpolators.length == 4){
+            if (parametersCount == 1) {
+                interpolators[1] = interpolators[0];
+                interpolators[2] = interpolators[0];
+                interpolators[3] = interpolators[0];
+            }
+            else if (parametersCount == 2) {
+                interpolators[2] = interpolators[0];
+                interpolators[3] = interpolators[1];
+            }
         }
-        if (parametersCount == 2) {
-            interpolators[2] = interpolators[0];
-            interpolators[3] = interpolators[1];
+        else if(interpolators.length == 8){
+            if(parametersCount == 2){
+                interpolators[4] = interpolators[1];
+                interpolators[5] = interpolators[1];
+                interpolators[6] = interpolators[1];
+                interpolators[7] = interpolators[1];
+                interpolators[1] = interpolators[0];
+                interpolators[2] = interpolators[0];
+                interpolators[3] = interpolators[0];
+            }
+            else if(parametersCount == 4){
+                interpolators[4] = interpolators[2];
+                interpolators[5] = interpolators[3];
+                interpolators[6] = interpolators[2];
+                interpolators[7] = interpolators[3];
+                interpolators[2] = interpolators[0];
+                interpolators[3] = interpolators[1];
+            }
+        }
+    }
+
+    public void spreadBorderStyles(){
+        if(doubleValues.length == 4){
+            if (parametersCount == 1) {
+                borderStyles[1] = borderStyles[0];
+                borderStyles[2] = borderStyles[0];
+                borderStyles[3] = borderStyles[0];
+            }
+            else if (parametersCount == 2) {
+                borderStyles[2] = borderStyles[0];
+                borderStyles[3] = borderStyles[1];
+            }
+        }
+        // When parsing border style
+        else if(doubleValues.length == 8){
+            borderStyles[1] = borderStyles[0];
+            borderStyles[2] = borderStyles[0];
+            borderStyles[3] = borderStyles[0];
         }
     }
 
@@ -455,7 +680,7 @@ public class PropertyParser {
     }
 
     private void setCycleCount (int index, String value) {
-        if (value.equals("inf")) {
+        if (value.equals(INFINITE_DURATION)) {
             value = "-1";
         } else {
             value = value.replace("c", "");
@@ -472,7 +697,7 @@ public class PropertyParser {
     }
 
     private void setBorderColorCyclesCount (String value) {
-        if (value.equals("inf")) {
+        if (value.equals(INFINITE_DURATION)) {
             value = "-1";
         } else {
             value = value.replace("c", "");

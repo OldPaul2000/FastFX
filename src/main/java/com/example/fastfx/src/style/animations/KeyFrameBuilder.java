@@ -51,9 +51,14 @@ public class KeyFrameBuilder {
     private DoubleProperty bgTopRightRadiusProperty;
     private DoubleProperty bgBottomRightRadiusProperty;
     private DoubleProperty bgBottomLeftRadiusProperty;
-    private DoubleProperty paddingProperty;
+    private DoubleProperty bgInsetsProperty;
+    private DoubleProperty bgTopInsetProperty;
+    private DoubleProperty bgRightInsetProperty;
+    private DoubleProperty bgBottomInsetProperty;
+    private DoubleProperty bgLeftInsetProperty;
 
     // Padding properties
+    private DoubleProperty paddingProperty;
     private DoubleProperty topPaddingProperty;
     private DoubleProperty rightPaddingProperty;
     private DoubleProperty bottomPaddingProperty;
@@ -66,6 +71,10 @@ public class KeyFrameBuilder {
     private ObjectProperty<Color> brBottomColorProperty;
     private ObjectProperty<Color> brLeftColorProperty;
     private DoubleProperty brOpacityProperty;
+    private DoubleProperty brTopOpacityProperty;
+    private DoubleProperty brRightOpacityProperty;
+    private DoubleProperty brBottomOpacityProperty;
+    private DoubleProperty brLeftOpacityProperty;
     private DoubleProperty brWidthProperty;
     private DoubleProperty brTopWidthProperty;
     private DoubleProperty brRightWidthProperty;
@@ -101,12 +110,6 @@ public class KeyFrameBuilder {
                 colorProperties.get(animationType).removeListener(listener);
             }
             colorPropertyListeners.remove(animationType);
-        }
-    }
-
-    private void addNumberPropertyListener(String animationType, ChangeListener<Number> listener){
-        if(!numberPropertyListeners.containsKey(animationType)){
-            numberPropertyListeners.put(animationType, listener);
         }
     }
 
@@ -308,7 +311,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    PaddingUtil.setPadding(element, paddingProperty.get());
+                    PaddingUtil.setPadding(element, (double)newVal);
                 };
                 paddingProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -322,7 +325,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    PaddingUtil.setTopPadding(element, topPaddingProperty.get());
+                    PaddingUtil.setTopPadding(element, (double)newVal);
                 };
                 topPaddingProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -336,7 +339,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    PaddingUtil.setTopPadding(element, topPaddingProperty.get());
+                    PaddingUtil.setRightPadding(element, (double)newVal);
                 };
                 rightPaddingProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -350,7 +353,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    PaddingUtil.setBottomPadding(element, bottomPaddingProperty.get());
+                    PaddingUtil.setBottomPadding(element, (double)newVal);
                 };
                 bottomPaddingProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -364,7 +367,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    PaddingUtil.setLeftPadding(element, leftPaddingProperty.get());
+                    PaddingUtil.setLeftPadding(element, (double)newVal);
                 };
                 leftPaddingProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -381,7 +384,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setBackgroundOpacity(element, bgOpacityProperty.get());
+                    BackgroundSetter.setBackgroundOpacity(element, (double)newVal);
                 };
                 bgOpacityProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -395,7 +398,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setBackgroundRadius(element, bgRadiusProperty.get());
+                    BackgroundSetter.setBackgroundRadius(element, (double)newVal);
                 };
                 bgRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -409,7 +412,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setTopLeftBackgroundRadius(element, bgTopLeftRadiusProperty.get());
+                    BackgroundSetter.setTopLeftBackgroundRadius(element, (double)newVal);
                 };
                 bgTopLeftRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -423,7 +426,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setTopRightBackgroundRadius(element, bgTopRightRadiusProperty.get());
+                    BackgroundSetter.setTopRightBackgroundRadius(element, (double)newVal);
                 };
                 bgTopRightRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -437,7 +440,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setBottomRightBackgroundRadius(element, bgBottomRightRadiusProperty.get());
+                    BackgroundSetter.setBottomRightBackgroundRadius(element, (double)newVal);
                 };
                 bgBottomRightRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -451,13 +454,83 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BackgroundSetter.setBottomLeftBackgroundRadius(element, bgBottomLeftRadiusProperty.get());
+                    BackgroundSetter.setBottomLeftBackgroundRadius(element, (double)newVal);
                 };
                 bgBottomLeftRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
             }
             addDoubleProperty(animation, bgBottomLeftRadiusProperty);
             return new KeyValue(bgBottomLeftRadiusProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BG_INSETS)){
+            if(bgInsetsProperty == null){
+                bgInsetsProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setInsets(element, (double)newVal);
+                };
+                bgInsetsProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, bgInsetsProperty);
+            return new KeyValue(bgInsetsProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BG_TOP_INSET)){
+            if(bgTopInsetProperty == null){
+                bgTopInsetProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setTopInset(element, (double)newVal);
+                };
+                bgTopInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, bgTopInsetProperty);
+            return new KeyValue(bgTopInsetProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BG_RIGHT_INSET)){
+            if(bgRightInsetProperty == null){
+                bgRightInsetProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setRightInset(element, (double)newVal);
+                };
+                bgRightInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, bgRightInsetProperty);
+            return new KeyValue(bgRightInsetProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BG_BOTTOM_INSET)){
+            if(bgBottomInsetProperty == null){
+                bgBottomInsetProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setBottomInset(element, (double)newVal);
+                };
+                bgBottomInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, bgBottomInsetProperty);
+            return new KeyValue(bgBottomInsetProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BG_LEFT_INSET)){
+            if(bgLeftInsetProperty == null){
+                bgLeftInsetProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BackgroundSetter.setLeftInset(element, (double)newVal);
+                };
+                bgLeftInsetProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, bgLeftInsetProperty);
+            return new KeyValue(bgLeftInsetProperty, value, interpolator);
         }
 
         // Border animations
@@ -468,7 +541,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBorderOpacity(element, brOpacityProperty.get());
+                    BorderSetter.setBorderOpacity(element, (double)newVal);
                 };
                 brOpacityProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -476,13 +549,73 @@ public class KeyFrameBuilder {
             addDoubleProperty(animation, brOpacityProperty);
             return new KeyValue(brOpacityProperty, value, interpolator);
         }
+        else if (animation.equals(FAnimations.BR_TOP_OPACITY)) {
+            value = Math.max(0, Math.min(1, value));
+            if (brTopOpacityProperty == null) {
+                brTopOpacityProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setTopBorderOpacity(element, (double)newVal);
+                };
+                brTopOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, brTopOpacityProperty);
+            return new KeyValue(brTopOpacityProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BR_RIGHT_OPACITY)) {
+            value = Math.max(0, Math.min(1, value));
+            if (brRightOpacityProperty == null) {
+                brRightOpacityProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setRightBorderOpacity(element, (double)newVal);
+                };
+                brRightOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, brRightOpacityProperty);
+            return new KeyValue(brRightOpacityProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BR_BOTTOM_OPACITY)) {
+            value = Math.max(0, Math.min(1, value));
+            if (brBottomOpacityProperty == null) {
+                brBottomOpacityProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setBottomBorderOpacity(element, (double)newVal);
+                };
+                brBottomOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, brBottomOpacityProperty);
+            return new KeyValue(brBottomOpacityProperty, value, interpolator);
+        }
+        else if (animation.equals(FAnimations.BR_LEFT_OPACITY)) {
+            value = Math.max(0, Math.min(1, value));
+            if (brLeftOpacityProperty == null) {
+                brLeftOpacityProperty = new SimpleDoubleProperty();
+            }
+            if(!numberPropertyListeners.containsKey(animation)){
+                ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
+                    BorderSetter.setLeftBorderOpacity(element, (double)newVal);
+                };
+                brLeftOpacityProperty.addListener(listener);
+                numberPropertyListeners.put(animation, listener);
+            }
+            addDoubleProperty(animation, brLeftOpacityProperty);
+            return new KeyValue(brLeftOpacityProperty, value, interpolator);
+        }
         else if (animation.equals(FAnimations.BR_WIDTH)) {
             if (brWidthProperty == null) {
                 brWidthProperty = new SimpleDoubleProperty();
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBorderWidth(element, brWidthProperty.get());
+                    BorderSetter.setBorderWidth(element, (double)newVal);
                 };
                 brWidthProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -496,7 +629,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setTopBorderWidth(element, brTopWidthProperty.get());
+                    BorderSetter.setTopBorderWidth(element, (double)newVal);
                 };
                 brTopWidthProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -510,7 +643,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setRightBorderWidth(element, brRightWidthProperty.get());
+                    BorderSetter.setRightBorderWidth(element, (double)newVal);
                 };
                 brRightWidthProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -524,7 +657,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBottomBorderWidth(element, brBottomWidthProperty.get());
+                    BorderSetter.setBottomBorderWidth(element, (double)newVal);
                 };
                 brBottomWidthProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -538,7 +671,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setLeftBorderWidth(element, brLeftWidthProperty.get());
+                    BorderSetter.setLeftBorderWidth(element, (double)newVal);
                 };
                 brLeftWidthProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -552,7 +685,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBorderRadius(element, brRadiusProperty.get());
+                    BorderSetter.setBorderRadius(element, (double)newVal);
                 };
                 brRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -566,7 +699,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setTopLeftBorderRadius(element, brTopLeftRadiusProperty.get());
+                    BorderSetter.setTopLeftBorderRadius(element, (double)newVal);
                 };
                 brTopLeftRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -580,7 +713,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setTopRightBorderRadius(element, brTopRightRadiusProperty.get());
+                    BorderSetter.setTopRightBorderRadius(element, (double)newVal);
                 };
                 brTopRightRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -594,7 +727,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBottomRightBorderRadius(element, brBottomRightRadiusProperty.get());
+                    BorderSetter.setBottomRightBorderRadius(element, (double)newVal);
                 };
                 brBottomRightRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -608,7 +741,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBottomLeftBorderRadius(element, brBottomLeftRadiusProperty.get());
+                    BorderSetter.setBottomLeftBorderRadius(element, (double)newVal);
                 };
                 brBottomLeftRadiusProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -622,7 +755,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBorderInsets(element, brInsetsProperty.get());
+                    BorderSetter.setBorderInsets(element, (double)newVal);
                 };
                 brInsetsProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -636,7 +769,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setTopBorderInset(element, topBrInsetProperty.get());
+                    BorderSetter.setTopBorderInset(element, (double)newVal);
                 };
                 topBrInsetProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -650,7 +783,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setRightBorderInset(element, rightBrInsetProperty.get());
+                    BorderSetter.setRightBorderInset(element, (double)newVal);
                 };
                 rightBrInsetProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -664,7 +797,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setBottomBorderInset(element, bottomBrInsetProperty.get());
+                    BorderSetter.setBottomBorderInset(element, (double)newVal);
                 };
                 bottomBrInsetProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
@@ -678,7 +811,7 @@ public class KeyFrameBuilder {
             }
             if(!numberPropertyListeners.containsKey(animation)){
                 ChangeListener<Number> listener = (prop, oldVal, newVal) -> {
-                    BorderSetter.setLeftBorderInset(element, leftBrInsetProperty.get());
+                    BorderSetter.setLeftBorderInset(element, (double)newVal);
                 };
                 leftBrInsetProperty.addListener(listener);
                 numberPropertyListeners.put(animation, listener);
