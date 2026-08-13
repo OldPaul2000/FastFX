@@ -92,7 +92,7 @@ public class UI {
     }
 
     /**
-     * Add a new child at the end of the children list of the specified parent
+     * Add a new child at the end of the children list of the specified AnchorPane parent
      */
     public static void add(AnchorPane parent, Region child){
         if(parent != null && child != null){
@@ -101,9 +101,70 @@ public class UI {
     }
 
     /**
-     * Remove child from the specified location from the specified parent
+     * Remove child from the specified location from the specified AnchorPane parent
      */
     public static Node remove(String position, AnchorPane parent){
+        Node child = null;
+        if(parent != null){
+            if(POSITIONS.contains(position) && !parent.getChildren().isEmpty()){
+                if(position.equals("first")){
+                    child = parent.getChildren().get(0);
+                    parent.getChildren().remove(child);
+                }
+                if(position.equals("last")){
+                    child  = parent.getChildren().get(parent.getChildren().size() - 1);
+                    parent.getChildren().remove(child);
+                }
+            }
+        }
+        return child;
+    }
+
+    /**
+     * Remove child from the specified index from the specified AnchorPane parent
+     * and returns the removed child
+     */
+    public static Node remove(AnchorPane parent, int nthChild){
+        Node child = null;
+        if(parent != null){
+            List<Node> children = parent.getChildren();
+            if(children.size() > 0 && nthChild >= 0 && nthChild < children.size()){
+                child = children.get(nthChild);
+                children.remove(nthChild);
+            }
+        }
+        return child;
+    }
+
+    /**
+     * Remove child which has the specified id from the specified AnchorPane parent
+     */
+    public static Node remove(AnchorPane parent, String id){
+        Node child = null;
+        if(parent != null){
+             child = getChildById(parent, id);
+            if(child != null){
+                remove(parent, child);
+            }
+        }
+        return child;
+    }
+
+    /**
+     * Remove specified child from the specified AnchorPane parent
+     */
+    public static boolean remove(AnchorPane parent, Node child){
+        if(parent != null && child != null){
+            parent.getChildren().remove(child);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove child from the specified location from the specified Pane parent
+     */
+    public static Node remove(String position, Pane parent){
         Node child = null;
         if(parent != null){
             if(POSITIONS.contains(position) && !parent.getChildren().isEmpty()){
@@ -124,7 +185,7 @@ public class UI {
      * Remove child from the specified index from the specified parent
      * and returns the removed child
      */
-    public static Node remove(AnchorPane parent, int nthChild){
+    public static Node remove(Pane parent, int nthChild){
         Node child = null;
         if(parent != null){
             List<Node> children = parent.getChildren();
@@ -137,12 +198,12 @@ public class UI {
     }
 
     /**
-     * Remove child which has the specified id from the specified parent
+     * Remove child which has the specified id from the specified Pane parent
      */
-    public static Node remove(AnchorPane parent, String id){
+    public static Node remove(Pane parent, String id){
         Node child = null;
         if(parent != null){
-             child = getChildById(parent, id);
+            child = getChildById(parent, id);
             if(child != null){
                 remove(parent, child);
             }
@@ -151,9 +212,9 @@ public class UI {
     }
 
     /**
-     * Remove specified child from the specified parent
+     * Remove specified child from the specified Pane parent
      */
-    public static boolean remove(AnchorPane parent, Node child){
+    public static boolean remove(Pane parent, Node child){
         if(parent != null && child != null){
             parent.getChildren().remove(child);
             return true;

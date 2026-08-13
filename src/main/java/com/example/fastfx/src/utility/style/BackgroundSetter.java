@@ -269,6 +269,46 @@ public class BackgroundSetter {
         return null;
     }
 
+    public static double getTopLeftBackgroundRadius(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getRadii().getTopLeftHorizontalRadius();
+        }
+        return 0;
+    }
+
+    public static double getTopRightBackgroundRadius(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getRadii().getTopRightHorizontalRadius();
+        }
+        return 0;
+    }
+
+    public static double getBottomRightBackgroundRadius(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getRadii().getBottomRightHorizontalRadius();
+        }
+        return 0;
+    }
+
+    public static double getBottomLeftBackgroundRadius(Region element){
+        Background background = element.getBackground();
+        BackgroundFill backgroundFill;
+        if(background != null){
+            backgroundFill = background.getFills().get(0);
+            return backgroundFill.getRadii().getBottomLeftHorizontalRadius();
+        }
+        return 0;
+    }
+
     /**
      * Set insets for every side individually
      */
@@ -467,11 +507,13 @@ public class BackgroundSetter {
     }
 
     public static Insets getBackgroundInsets(Region element){
-        Background background = element.getBackground();
-        BackgroundFill backgroundFill;
-        if(background != null){
-            backgroundFill = background.getFills().get(0);
-            return backgroundFill.getInsets();
+        if(element != null){
+            Background background = element.getBackground();
+            BackgroundFill backgroundFill;
+            if(background != null){
+                backgroundFill = background.getFills().get(0);
+                return backgroundFill.getInsets();
+            }
         }
         return null;
     }

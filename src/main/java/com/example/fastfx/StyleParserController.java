@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-public class HelloController {
+public class StyleParserController {
 
     @FXML
     public AnchorPane mainContainer;

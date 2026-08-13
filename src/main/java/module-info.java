@@ -18,6 +18,5 @@ module com.example.fastfx {
     exports com.example.fastfx.src.fcomponents;
     exports com.example.fastfx.src.fcomponents.pseudoclass;
     exports com.example.fastfx.src.style.layouts;
-
-
+    exports com.example.fastfx.src.simplecomponents;
 }

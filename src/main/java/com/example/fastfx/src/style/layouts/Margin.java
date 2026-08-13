@@ -14,6 +14,29 @@ public class Margin {
         this.left = left;
     }
 
+    public Margin(double topBottom, double rightLeft){
+        this(topBottom, rightLeft, topBottom, rightLeft);
+    }
+
+    public Margin(double value){
+        this(value, value, value, value);
+    }
+
+    public void setMargin(double top, double right, double bottom, double left){
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
+    }
+
+    public void setMargin(double topBottom, double rightLeft) {
+        setMargin(topBottom, rightLeft, topBottom, rightLeft);
+    }
+
+    public void setMargin(double value){
+        setMargin(value, value, value, value);
+    }
+
     public double getTop() {
         return top;
     }

@@ -1,5 +1,6 @@
 package com.example.fastfx;
 
+import com.example.fastfx.src.simplecomponents.SPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,15 +12,23 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("animations-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 300);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("scomponents-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
 
-        AnimationsController controller = fxmlLoader.getController();
-        controller.getMainContainer().prefWidthProperty().bind(stage.widthProperty());
-        controller.getMainContainer().prefHeightProperty().bind(stage.heightProperty());
+        SComponentsController controller = fxmlLoader.getController();
+        SPane mainContainer = controller.getMainContainer();
+        mainContainer.width(stage.getWidth());
+        mainContainer.height(stage.getHeight());
+
+        stage.widthProperty().addListener((val, oldVal, newVal) -> {
+            mainContainer.width((double) newVal);
+        });
+        stage.heightProperty().addListener((val, oldVal, newVal) -> {
+            mainContainer.height((double) newVal);
+        });
     }
 
     public static void main(String[] args) {

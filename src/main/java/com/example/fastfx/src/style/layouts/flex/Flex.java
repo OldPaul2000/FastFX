@@ -1,15 +1,15 @@
 package com.example.fastfx.src.style.layouts.flex;
 
-import com.example.fastfx.src.utility.ui.UI;
 import com.example.fastfx.src.style.layouts.Alignment;
 import com.example.fastfx.src.style.layouts.Justify;
 import com.example.fastfx.src.style.layouts.Margin;
 import com.example.fastfx.src.style.layouts.Padding;
 import com.example.fastfx.src.utility.style.MarginListener;
 import com.example.fastfx.src.utility.style.MarginSetter;
+import com.example.fastfx.src.utility.ui.UI;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 import java.util.*;
@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class Flex {
 
-    private AnchorPane container;
+    private Pane container;
     private double width;
     private double height;
     private double maxWidthChild;
@@ -39,7 +39,7 @@ public class Flex {
     private Map<Region, ChangeListener<Number>> heightListeners;
     private Map<Region, MarginListener> marginListeners;
 
-    public Flex(AnchorPane container) {
+    public Flex(Pane container) {
         this.container = container;
         this.width = 0;
         this.height = 0;
@@ -62,7 +62,7 @@ public class Flex {
     /**
      * Return the container of this flex.
      */
-    public AnchorPane getContainer(){
+    public Pane getContainer(){
         return container;
     }
 

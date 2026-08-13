@@ -70,6 +70,8 @@ public class Grid {
         this.columnSpaceAllocator = new ColumnSpaceAllocator();
         this.justifyManager = new GridJustifyManager();
         this.alignmentManager = new GridAlignmentManager();
+        justifyManager.setGridItemsJustify(Justify.CENTER.justify());
+        alignmentManager.setGridItemsAlignment(Alignment.CENTER.alignment());
         this.gridTemplateRows = "";
         this.gridTemplateColumns = "";
         this.rows = 0;
@@ -245,6 +247,7 @@ public class Grid {
                 contentWidth += columnGap;
             }
         }
+        System.out.println("Calculate content width: " + contentWidth);
     }
 
     /**
