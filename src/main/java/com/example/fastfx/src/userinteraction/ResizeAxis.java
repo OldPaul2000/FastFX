@@ -26,19 +26,13 @@ public class ResizeAxis {
      */
     public static final String BOTH = "both";
 
-    private final static Set<String> RESIZE_AXES = new HashSet<>(
-            Set.of(
-                    WIDTH,
-                    HEIGHT,
-                    BOTH
-            )
-    );
+    private final static Set<String> RESIZE_AXES = new HashSet<>(Set.of(WIDTH, HEIGHT, BOTH));
 
     /**
      * Helps to prevent usage of non-existing resize axes by returning
      * null by default if the input is wrong;
      */
-    public static String get(String resizeAxis) {
+    public static String get (String resizeAxis) {
         if (RESIZE_AXES.contains(resizeAxis)) {
             return resizeAxis;
         }

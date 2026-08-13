@@ -30,7 +30,7 @@ public class ElementMover {
     private EventHandler<MouseEvent> mousePressedEvent;
     private EventHandler<MouseEvent> mouseReleasedEvent;
 
-    public ElementMover(Pane parent) {
+    public ElementMover (Pane parent) {
         this.parent = parent;
         this.movableElements = new HashMap<>();
         this.initialX = 0;
@@ -45,14 +45,14 @@ public class ElementMover {
         initialize();
     }
 
-    public void addElement(Region element){
+    public void addElement (Region element) {
         addElement(element, null);
     }
 
-    public void addElement(Region element, Region permittedChild){
-        if(!movableElements.containsKey(element)){
+    public void addElement (Region element, Region permittedChild) {
+        if (!movableElements.containsKey(element)) {
             Set<EventTarget> permittedChildren = new HashSet<>();
-            if(permittedChild != null){
+            if (permittedChild != null) {
                 permittedChildren.add(permittedChild);
             }
             movableElements.put(element, permittedChildren);
@@ -65,7 +65,7 @@ public class ElementMover {
         }
     }
 
-    public void removeElement(Region element){
+    public void removeElement (Region element) {
         movableElements.remove(element);
         boundOffsets.remove(element);
         edgeLimits.remove(element);
@@ -78,8 +78,8 @@ public class ElementMover {
      * Adds a child on which the movable action of the movableElement can happen
      * if it's interacted with.
      */
-    public void addPermittedChild(Region element, Node node) {
-        if(movableElements.containsKey(element)){
+    public void addPermittedChild (Region element, Node node) {
+        if (movableElements.containsKey(element)) {
             movableElements.get(element).add(node);
         }
     }
@@ -87,8 +87,8 @@ public class ElementMover {
     /**
      * Removes a permitted child.
      */
-    public void removePermittedChild(Region element, Node node) {
-        if(movableElements.containsKey(element)){
+    public void removePermittedChild (Region element, Node node) {
+        if (movableElements.containsKey(element)) {
             movableElements.get(element).remove(node);
         }
     }
@@ -96,8 +96,8 @@ public class ElementMover {
     /**
      * Permits all children contained by the movableElement.
      */
-    public void permitAllChildren(Region element) {
-        if(movableElements.containsKey(element)){
+    public void permitAllChildren (Region element) {
+        if (movableElements.containsKey(element)) {
             Set<EventTarget> permittedChildren = movableElements.get(element);
             permittedChildren.add(element);
             List<Node> children = element.getChildrenUnmodifiable();
@@ -111,7 +111,7 @@ public class ElementMover {
     /**
      * Helper recursive method which helps to find all children from every child from the movableElement.
      */
-    private void findChildren(Region movableElement, Node node) {
+    private void findChildren (Region movableElement, Node node) {
         if (node instanceof Pane) {
             List<Node> children = ((Pane) node).getChildren();
             children.forEach((child) -> {
@@ -121,9 +121,9 @@ public class ElementMover {
         }
     }
 
-    public void setBoundsOffset(Region element, double offset){
+    public void setBoundsOffset (Region element, double offset) {
         BoundOffset boundOffset = boundOffsets.get(element);
-        if(boundOffset != null){
+        if (boundOffset != null) {
             boundOffset.setTop(offset);
             boundOffset.setRight(-offset);
             boundOffset.setBottom(-offset);
@@ -134,8 +134,8 @@ public class ElementMover {
     /**
      * Represents the top offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void setTopOffset(Region element, double top) {
-        if(boundOffsets.containsKey(element)){
+    public void setTopOffset (Region element, double top) {
+        if (boundOffsets.containsKey(element)) {
             boundOffsets.get(element).setTop(top);
         }
     }
@@ -143,8 +143,8 @@ public class ElementMover {
     /**
      * Represents the right offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void setRightOffset(Region element, double right) {
-        if(boundOffsets.containsKey(element)){
+    public void setRightOffset (Region element, double right) {
+        if (boundOffsets.containsKey(element)) {
             boundOffsets.get(element).setRight(-right);
         }
     }
@@ -152,8 +152,8 @@ public class ElementMover {
     /**
      * Represents the bottom offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void setBottomOffset(Region element, double bottom) {
-        if(boundOffsets.containsKey(element)){
+    public void setBottomOffset (Region element, double bottom) {
+        if (boundOffsets.containsKey(element)) {
             boundOffsets.get(element).setBottom(-bottom);
         }
     }
@@ -161,8 +161,8 @@ public class ElementMover {
     /**
      * Represents the left offset limit in pixels by which the movable element can be moved inside its parent.
      */
-    public void setLeftOffset(Region element, double left) {
-        if(boundOffsets.containsKey(element)){
+    public void setLeftOffset (Region element, double left) {
+        if (boundOffsets.containsKey(element)) {
             boundOffsets.get(element).setLeft(left);
         }
     }
@@ -172,8 +172,8 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setEdgeLimits(Region element, double limit){
-        if(edgeLimits.containsKey(element)){
+    public void setEdgeLimits (Region element, double limit) {
+        if (edgeLimits.containsKey(element)) {
             EdgeLimit edgeLimit = edgeLimits.get(element);
             edgeLimit.setTop(limit);
             edgeLimit.setRight(limit);
@@ -187,8 +187,8 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setTopEdgeLimit(Region element, double top) {
-        if(edgeLimits.containsKey(element)){
+    public void setTopEdgeLimit (Region element, double top) {
+        if (edgeLimits.containsKey(element)) {
             edgeLimits.get(element).setTop(top);
         }
     }
@@ -198,8 +198,8 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setRightEdgeLimit(Region element, double right) {
-        if(edgeLimits.containsKey(element)){
+    public void setRightEdgeLimit (Region element, double right) {
+        if (edgeLimits.containsKey(element)) {
             edgeLimits.get(element).setRight(right);
         }
     }
@@ -209,8 +209,8 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setBottomEdgeLimit(Region element, double bottom) {
-        if(edgeLimits.containsKey(element)){
+    public void setBottomEdgeLimit (Region element, double bottom) {
+        if (edgeLimits.containsKey(element)) {
             edgeLimits.get(element).setBottom(bottom);
         }
     }
@@ -220,33 +220,33 @@ public class ElementMover {
      * be unresponsive for movement. Is used if this element is set to be
      * resizable by dragging edges and to not interfere with that event.
      */
-    public void setLeftEdgeLimit(Region element, double left) {
-        if(edgeLimits.containsKey(element)){
+    public void setLeftEdgeLimit (Region element, double left) {
+        if (edgeLimits.containsKey(element)) {
             edgeLimits.get(element).setLeft(left);
         }
     }
 
-    public void resetEdgeLimits(Region element) {
+    public void resetEdgeLimits (Region element) {
         setEdgeLimits(element, 0);
     }
 
-    public EventHandler<MouseEvent> getMousePressedEvent() {
+    public EventHandler<MouseEvent> getMousePressedEvent () {
         return mousePressedEvent;
     }
 
-    public EventHandler<MouseEvent> getMouseDragEvent() {
+    public EventHandler<MouseEvent> getMouseDragEvent () {
         return moveDragEvent;
     }
 
-    public EventHandler<MouseEvent> getMouseReleasedEvent() {
+    public EventHandler<MouseEvent> getMouseReleasedEvent () {
         return mouseReleasedEvent;
     }
 
     /**
      * The cursor to appear on mouse press.
      */
-    public void setCursor(Region element, Cursor cursor) {
-        if(cursors.containsKey(element)){
+    public void setCursor (Region element, Cursor cursor) {
+        if (cursors.containsKey(element)) {
             cursors.put(element, cursor);
         }
     }
@@ -254,8 +254,8 @@ public class ElementMover {
     /**
      * Adds a mouse button which can be used to move the element.
      */
-    public void addMouseButton(Region element, MouseButton mouseButton) {
-        if(mouseButtons.containsKey(element)){
+    public void addMouseButton (Region element, MouseButton mouseButton) {
+        if (mouseButtons.containsKey(element)) {
             mouseButtons.get(element).add(mouseButton);
         }
     }
@@ -263,7 +263,7 @@ public class ElementMover {
     /**
      * Removes a mouse button.
      */
-    public void removeMouseButton(Region element, MouseButton mouseButton) {
+    public void removeMouseButton (Region element, MouseButton mouseButton) {
         if (mouseButtons.containsKey(element)) {
             mouseButtons.get(element).remove(mouseButton);
         }
@@ -282,7 +282,7 @@ public class ElementMover {
     double calculatedRightBoundOffset;
     double calculatedBottomBoundOffset;
 
-    public void initialize() {
+    public void initialize () {
         mousePressedEvent = e -> {
             currElement = findCurrentElement(e);
             validTarget = validateTarget(currElement, e);
@@ -299,8 +299,7 @@ public class ElementMover {
                 currRightBoundOffset = boundOffset.getRight();
                 currBottomBoundOffset = boundOffset.getBottom();
                 currLeftBoundOffset = boundOffset.getLeft();
-                if (x > currLeftEdgeLimit && x < currElement.getPrefWidth() - currRightEdgeLimit
-                        && y > currTopEdgeLimit && y < currElement.getPrefHeight() - currBottomEdgeLimit) {
+                if (x > currLeftEdgeLimit && x < currElement.getPrefWidth() - currRightEdgeLimit && y > currTopEdgeLimit && y < currElement.getPrefHeight() - currBottomEdgeLimit) {
                     calculatedRightBoundOffset = parent.getPrefWidth() - currElement.getPrefWidth() + currRightBoundOffset;
                     calculatedBottomBoundOffset = parent.getPrefHeight() - currElement.getPrefHeight() + currBottomBoundOffset;
                     initialX = x;
@@ -316,8 +315,7 @@ public class ElementMover {
 
         moveDragEvent = e -> {
             if (mouseButtons.containsKey(currElement) && mouseButtons.get(currElement).contains(e.getButton()) && validTarget) {
-                if (initialX > currLeftEdgeLimit && initialX < currElement.getPrefWidth() - currRightEdgeLimit
-                        && initialY > currTopEdgeLimit && initialY < currElement.getPrefHeight() - currBottomEdgeLimit) {
+                if (initialX > currLeftEdgeLimit && initialX < currElement.getPrefWidth() - currRightEdgeLimit && initialY > currTopEdgeLimit && initialY < currElement.getPrefHeight() - currBottomEdgeLimit) {
                     double x = e.getSceneX() - parent.getLayoutX() - initialX;
                     double y = e.getSceneY() - parent.getLayoutY() - initialY;
                     currElement.setLayoutX(Math.max(currLeftBoundOffset, Math.min(x, calculatedRightBoundOffset)));
@@ -342,21 +340,21 @@ public class ElementMover {
      * If it's true then the algorithm will return the element
      * else it will return null.
      */
-    private Region findCurrentElement(Event event){
+    private Region findCurrentElement (Event event) {
         Node currTarget = (Node) event.getTarget();
         Region currEl;
-        if(currTarget instanceof Text){
+        if (currTarget instanceof Text) {
             currEl = (Region) currTarget.getParent();
         }
-        else{
+        else {
             currEl = (Region) currTarget;
         }
-        while (currEl != null){
-            if(movableElements.containsKey(currEl)){
+        while (currEl != null) {
+            if (movableElements.containsKey(currEl)) {
                 return currEl;
             }
             currEl = (Region) currEl.getParent();
-            if(currEl == null || currEl.equals(parent)){
+            if (currEl == null || currEl.equals(parent)) {
                 return null;
             }
         }
@@ -366,8 +364,8 @@ public class ElementMover {
     /**
      * Returns true if the current target is present in the permittedChildren(movableElements element hashset).
      */
-    private boolean validateTarget(Region element, Event e) {
-        if(element == null){
+    private boolean validateTarget (Region element, Event e) {
+        if (element == null) {
             return false;
         }
         boolean valid = false;
@@ -376,7 +374,7 @@ public class ElementMover {
         if (permittedChildren.contains(nodeTarget)) {
             valid = true;
         }
-        if(nodeTarget instanceof Text){
+        if (nodeTarget instanceof Text) {
             valid = true;
         }
         return valid;

@@ -48,24 +48,13 @@ public class ResizeSide {
      */
     public static final String TL_CORNER = "tlCorner";
 
-    private static final Set<String> RESIZE_SIDES = new HashSet<>(
-            Set.of(
-                    TOP,
-                    TR_CORNER,
-                    RIGHT,
-                    BR_CORNER,
-                    BOTTOM,
-                    BL_CORNER,
-                    LEFT,
-                    TL_CORNER
-            )
-    );
+    private static final Set<String> RESIZE_SIDES = new HashSet<>(Set.of(TOP, TR_CORNER, RIGHT, BR_CORNER, BOTTOM, BL_CORNER, LEFT, TL_CORNER));
 
     /**
      * Helps to prevent usage of non-existing resize modes by returning
      * null by default if the input is wrong;
      */
-    public static String get(String resizeSide) {
+    public static String get (String resizeSide) {
         if (RESIZE_SIDES.contains(resizeSide)) {
             return resizeSide;
         }

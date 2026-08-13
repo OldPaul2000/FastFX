@@ -1,6 +1,6 @@
 package com.example.fastfx;
 
-import com.example.fastfx.src.simplecomponents.SPane;
+import com.example.fastfx.src.fastfxcomponents.FPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,14 +12,14 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("scomponents-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("fcomponents-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
 
-        SComponentsController controller = fxmlLoader.getController();
-        SPane mainContainer = controller.getMainContainer();
+        FComponentsController controller = fxmlLoader.getController();
+        FPane mainContainer = controller.getMainContainer();
         mainContainer.width(stage.getWidth());
         mainContainer.height(stage.getHeight());
 

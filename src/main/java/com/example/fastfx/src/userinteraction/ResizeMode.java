@@ -25,19 +25,13 @@ public class ResizeMode {
      */
     public static final String BOTH = "both";
 
-    private static final Set<String> RESIZE_MODES = new HashSet<>(
-            Set.of(
-                    MOUSE_WHEEL,
-                    DRAG_EDGES,
-                    BOTH
-            )
-    );
+    private static final Set<String> RESIZE_MODES = new HashSet<>(Set.of(MOUSE_WHEEL, DRAG_EDGES, BOTH));
 
     /**
      * Helps to prevent usage of non-existing resize modes by returning
      * MOUSE_WHEEL by default if the input is wrong;
      */
-    public static String get(String resizeMode) {
+    public static String get (String resizeMode) {
         if (RESIZE_MODES.contains(resizeMode)) {
             return resizeMode;
         }

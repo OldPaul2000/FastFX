@@ -36,7 +36,7 @@ public class ElementResizer {
     private final double DEFAULT_RESIZE_FACTOR = 7;
     private final double DEFAULT_RESIZE_EDGE_LIMIT = 7;
 
-    public ElementResizer(Region parent) {
+    public ElementResizer (Region parent) {
         this.parent = parent;
         this.resizableElements = new HashSet<>();
         this.dragResizableElements = new HashSet<>();
@@ -50,7 +50,7 @@ public class ElementResizer {
         this.mouseWheelEvents = new HashMap<>();
     }
 
-    public void addElement(Region element, String resizeMode) {
+    public void addElement (Region element, String resizeMode) {
         if (!resizableElements.contains(element)) {
             String mode = ResizeMode.get(resizeMode);
             if (mode != null) {
@@ -66,14 +66,14 @@ public class ElementResizer {
         }
     }
 
-    public void removeElement(Region element) {
+    public void removeElement (Region element) {
         if (resizableElements.contains(element)) {
             removeMouseWheelEvent(element);
             removeProperties(element);
         }
     }
 
-    private void removeProperties(Region element) {
+    private void removeProperties (Region element) {
         resizableElements.remove(element);
         dragResizableElements.remove(element);
         resizeModes.remove(element);
@@ -89,7 +89,7 @@ public class ElementResizer {
         }
     }
 
-    public void setResizeMode(Region element, String resizeMode) {
+    public void setResizeMode (Region element, String resizeMode) {
         String mode = ResizeMode.get(resizeMode);
         if (mode != null) {
             resizeModes.put(element, mode);
@@ -97,7 +97,7 @@ public class ElementResizer {
         }
     }
 
-    public void setResizeFactor(Region element, double resizeFactor) {
+    public void setResizeFactor (Region element, double resizeFactor) {
         resizeFactors.put(element, Math.abs(resizeFactor));
     }
 
@@ -106,11 +106,11 @@ public class ElementResizer {
      * to the position of the mouse cursor when resize by mouse wheel.
      * It's true by default.
      */
-    public void keepPosition(Region element, boolean keepPosition) {
+    public void keepPosition (Region element, boolean keepPosition) {
         this.keepPositions.put(element, keepPosition);
     }
 
-    public void setResizeAxis(Region element, String resizeAxis) {
+    public void setResizeAxis (Region element, String resizeAxis) {
         String axis = ResizeAxis.get(resizeAxis);
         if (axis != null) {
             if (axis.equals(ResizeAxis.BOTH)) {
@@ -120,30 +120,30 @@ public class ElementResizer {
         }
     }
 
-    private void calculateDimensionsRatio(Region element) {
+    private void calculateDimensionsRatio (Region element) {
         double ratio = element.getPrefWidth() / element.getPrefHeight();
         dimensionsRatios.put(element, ratio);
     }
 
-    public EventHandler<ScrollEvent> getMouseWheelEvent(Region element) {
+    public EventHandler<ScrollEvent> getMouseWheelEvent (Region element) {
         if (mouseWheelEvents.containsKey(element)) {
             return mouseWheelEvents.get(element);
         }
         return null;
     }
 
-    public EventHandler<MouseEvent> getMouseMoveEvent() {
+    public EventHandler<MouseEvent> getMouseMoveEvent () {
         return mouseMoveEvent;
     }
 
-    public EventHandler<MouseEvent> getMouseDragEvent() {
+    public EventHandler<MouseEvent> getMouseDragEvent () {
         return mouseDragEvent;
     }
 
     /**
      * Choose the logic for resizing the element.
      */
-    private void setElementEvents(Region element) {
+    private void setElementEvents (Region element) {
         String resizeMode = resizeModes.get(element);
         if (resizableElements.contains(element)) {
             removeMouseWheelEvent(element);
@@ -180,7 +180,7 @@ public class ElementResizer {
     /**
      * Adds the event for resizing by mouse wheel.
      */
-    private void addMouseWheelEvent(Region element) {
+    private void addMouseWheelEvent (Region element) {
         EventHandler<ScrollEvent> event = e -> {
             double deltaY = e.getDeltaY();
             double x = e.getX();
@@ -241,7 +241,7 @@ public class ElementResizer {
         mouseWheelEvents.put(element, event);
     }
 
-    public void removeMouseWheelEvent(Region element) {
+    public void removeMouseWheelEvent (Region element) {
         EventHandler<ScrollEvent> event = mouseWheelEvents.get(element);
         if (event != null) {
             element.removeEventHandler(ScrollEvent.SCROLL, event);
@@ -259,7 +259,7 @@ public class ElementResizer {
     private boolean bottomLeft = false;
     private Region currTarget = null;
 
-    private void addMouseMoveEvent() {
+    private void addMouseMoveEvent () {
         if (mouseMoveEvent == null) {
             mouseMoveEvent = e -> {
                 addResizeCursor(e);
@@ -268,61 +268,49 @@ public class ElementResizer {
         }
     }
 
-    private void addResizeCursor(MouseEvent e) {
+    private void addResizeCursor (MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
         currTarget = filterTarget(e);
         boolean validated = validateTarget(currTarget);
         if (validated) {
             double resizeRangeOffset = resizeEdgeLimits.get(currTarget);
-            if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
-                    && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
-                    && resizeSides.get(currTarget).contains(ResizeSide.TR_CORNER)) {
+            if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth() && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset && resizeSides.get(currTarget).contains(ResizeSide.TR_CORNER)) {
                 currTarget.setCursor(Cursor.NE_RESIZE);
                 resetResizeSides();
                 topRight = true;
             }
-            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
-                    && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
-                    && resizeSides.get(currTarget).contains(ResizeSide.BR_CORNER)) {
+            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth() && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight() && resizeSides.get(currTarget).contains(ResizeSide.BR_CORNER)) {
                 currTarget.setCursor(Cursor.SE_RESIZE);
                 resetResizeSides();
                 bottomRight = true;
             }
-            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
-                    && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
-                    && resizeSides.get(currTarget).contains(ResizeSide.BL_CORNER)) {
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset && y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight() && resizeSides.get(currTarget).contains(ResizeSide.BL_CORNER)) {
                 currTarget.setCursor(Cursor.SW_RESIZE);
                 resetResizeSides();
                 bottomLeft = true;
             }
-            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
-                    && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
-                    && resizeSides.get(currTarget).contains(ResizeSide.TL_CORNER)) {
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset && y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset && resizeSides.get(currTarget).contains(ResizeSide.TL_CORNER)) {
                 currTarget.setCursor(Cursor.NW_RESIZE);
                 resetResizeSides();
                 topLeft = true;
             }
-            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth()
-                    && resizeSides.get(currTarget).contains(ResizeSide.RIGHT)) {
+            else if (x >= currTarget.getLayoutX() + currTarget.getPrefWidth() - resizeRangeOffset && x <= currTarget.getLayoutX() + currTarget.getPrefWidth() && resizeSides.get(currTarget).contains(ResizeSide.RIGHT)) {
                 currTarget.setCursor(Cursor.H_RESIZE);
                 resetResizeSides();
                 right = true;
             }
-            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset
-                    && resizeSides.get(currTarget).contains(ResizeSide.LEFT)) {
+            else if (x >= currTarget.getLayoutX() && x <= currTarget.getLayoutX() + resizeRangeOffset && resizeSides.get(currTarget).contains(ResizeSide.LEFT)) {
                 currTarget.setCursor(Cursor.H_RESIZE);
                 resetResizeSides();
                 left = true;
             }
-            else if (y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight()
-                    && resizeSides.get(currTarget).contains(ResizeSide.BOTTOM)) {
+            else if (y >= currTarget.getLayoutY() + currTarget.getPrefHeight() - resizeRangeOffset && y <= currTarget.getLayoutY() + currTarget.getPrefHeight() && resizeSides.get(currTarget).contains(ResizeSide.BOTTOM)) {
                 currTarget.setCursor(Cursor.V_RESIZE);
                 resetResizeSides();
                 bottom = true;
             }
-            else if (y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset
-                    && resizeSides.get(currTarget).contains(ResizeSide.TOP)) {
+            else if (y >= currTarget.getLayoutY() && y <= currTarget.getLayoutY() + resizeRangeOffset && resizeSides.get(currTarget).contains(ResizeSide.TOP)) {
                 currTarget.setCursor(Cursor.V_RESIZE);
                 resetResizeSides();
                 top = true;
@@ -335,7 +323,7 @@ public class ElementResizer {
         }
     }
 
-    public void removeMouseMoveEvent() {
+    public void removeMouseMoveEvent () {
         if (mouseMoveEvent != null) {
             parent.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveEvent);
             mouseMoveEvent = null;
@@ -345,7 +333,7 @@ public class ElementResizer {
     /**
      * Filter the parent element from the current target
      */
-    private Region filterTarget(MouseEvent e) {
+    private Region filterTarget (MouseEvent e) {
         Node currTarget = (Node) e.getTarget();
         Region currEl;
         if (currTarget instanceof Text) {
@@ -371,7 +359,7 @@ public class ElementResizer {
      * and if the resizing logic can be triggered when the current event target
      * is the child element
      */
-    private boolean validateTarget(Region currTarget) {
+    private boolean validateTarget (Region currTarget) {
         boolean contains = false;
         if (currTarget != null) {
             contains = dragResizableElements.contains(currTarget);
@@ -379,7 +367,7 @@ public class ElementResizer {
         return contains;
     }
 
-    private void resetResizeSides() {
+    private void resetResizeSides () {
         top = false;
         right = false;
         bottom = false;
@@ -390,7 +378,7 @@ public class ElementResizer {
         bottomLeft = false;
     }
 
-    private void addMouseDragEvent() {
+    private void addMouseDragEvent () {
         if (mouseDragEvent == null) {
             mouseDragEvent = e -> {
                 if (currTarget != null) {
@@ -436,14 +424,14 @@ public class ElementResizer {
         }
     }
 
-    public void removeMouseDragEvent() {
+    public void removeMouseDragEvent () {
         if (mouseDragEvent != null) {
             parent.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragEvent);
             mouseDragEvent = null;
         }
     }
 
-    public void addResizeSide(Region element, String resizeSide) {
+    public void addResizeSide (Region element, String resizeSide) {
         if (resizableElements.contains(element)) {
             String side = ResizeSide.get(resizeSide);
             if (side != null) {
@@ -452,7 +440,7 @@ public class ElementResizer {
         }
     }
 
-    public void removeResizeSide(Region element, String resizeSide) {
+    public void removeResizeSide (Region element, String resizeSide) {
         if (resizableElements.contains(element)) {
             String side = ResizeSide.get(resizeSide);
             if (side != null) {
@@ -461,7 +449,7 @@ public class ElementResizer {
         }
     }
 
-    public void addAllResizeSides(Region element) {
+    public void addAllResizeSides (Region element) {
         if (!resizeSides.containsKey(element)) {
             Set<String> elementResizeSides = new HashSet<>();
             elementResizeSides.add(ResizeSide.TOP);
@@ -480,7 +468,7 @@ public class ElementResizer {
      * Sets the edge offset by which the resize cursor will appear and make
      * resizable by drag possible.
      */
-    public void setResizeEdgeLimit(Region element, double limit) {
+    public void setResizeEdgeLimit (Region element, double limit) {
         this.resizeEdgeLimits.put(element, Math.abs(limit));
     }
 }

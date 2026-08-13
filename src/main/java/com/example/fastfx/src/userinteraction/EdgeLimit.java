@@ -15,46 +15,46 @@ public class EdgeLimit {
     private double bottom;
     private double left;
 
-    public EdgeLimit(double edgeLimit) {
+    public EdgeLimit (double edgeLimit) {
         this(edgeLimit, edgeLimit, edgeLimit, edgeLimit);
     }
 
-    public EdgeLimit(double top, double right, double bottom, double left) {
+    public EdgeLimit (double top, double right, double bottom, double left) {
         this.top = top;
         this.right = right;
         this.bottom = bottom;
         this.left = left;
     }
 
-    public double getTop() {
+    public double getTop () {
         return top;
     }
 
-    public void setTop(double top) {
+    public void setTop (double top) {
         this.top = top;
     }
 
-    public double getRight() {
+    public double getRight () {
         return right;
     }
 
-    public void setRight(double rightEdgeLimit) {
+    public void setRight (double rightEdgeLimit) {
         this.right = rightEdgeLimit;
     }
 
-    public double getBottom() {
+    public double getBottom () {
         return bottom;
     }
 
-    public void setBottom(double bottomEdgeLimit) {
+    public void setBottom (double bottomEdgeLimit) {
         this.bottom = bottomEdgeLimit;
     }
 
-    public double getLeft() {
+    public double getLeft () {
         return left;
     }
 
-    public void setLeft(double leftEdgeLimit) {
+    public void setLeft (double leftEdgeLimit) {
         this.left = leftEdgeLimit;
     }
 }

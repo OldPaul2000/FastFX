@@ -13,46 +13,46 @@ public class BoundOffset {
     private double bottom;
     private double left;
 
-    public BoundOffset(double boundOffset) {
+    public BoundOffset (double boundOffset) {
         this(boundOffset, boundOffset, boundOffset, boundOffset);
     }
 
-    public BoundOffset(double top, double right, double bottom, double left) {
+    public BoundOffset (double top, double right, double bottom, double left) {
         this.top = top;
         this.right = right;
         this.bottom = bottom;
         this.left = left;
     }
 
-    public double getTop() {
+    public double getTop () {
         return top;
     }
 
-    public void setTop(double topBoundOffset) {
+    public void setTop (double topBoundOffset) {
         this.top = topBoundOffset;
     }
 
-    public double getRight() {
+    public double getRight () {
         return right;
     }
 
-    public void setRight(double rightBoundOffset) {
+    public void setRight (double rightBoundOffset) {
         this.right = rightBoundOffset;
     }
 
-    public double getBottom() {
+    public double getBottom () {
         return bottom;
     }
 
-    public void setBottom(double bottomBoundOffset) {
+    public void setBottom (double bottomBoundOffset) {
         this.bottom = bottomBoundOffset;
     }
 
-    public double getLeft() {
+    public double getLeft () {
         return left;
     }
 
-    public void setLeft(double leftBoundOffset) {
+    public void setLeft (double leftBoundOffset) {
         this.left = leftBoundOffset;
     }
 }
