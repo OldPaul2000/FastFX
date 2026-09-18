@@ -5,6 +5,7 @@ import com.example.fastfx.src.util.style.BackgroundUtil;
 import com.example.fastfx.src.util.style.BorderUtil;
 import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
@@ -551,6 +552,12 @@ public class FSpinner<T> extends Spinner<T> implements FComponent {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FSpinner<T> alignment(Pos pos){
+        // do nothing
+        return this;
     }
 
     @Override

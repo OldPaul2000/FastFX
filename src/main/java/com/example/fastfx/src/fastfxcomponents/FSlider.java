@@ -6,6 +6,7 @@ import com.example.fastfx.src.util.style.BorderUtil;
 import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Slider;
 import javafx.scene.control.skin.SliderSkin;
@@ -431,6 +432,12 @@ public class FSlider extends Slider implements FComponent {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FSlider alignment(Pos pos){
+        // do nothing
+        return this;
     }
 
     @Override

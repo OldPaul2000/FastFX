@@ -13,11 +13,12 @@ import java.util.Set;
  * Utility class for simplifying adding and removing children from the UIUtil
  */
 public class UIUtil {
+    private static final Set<String> POSITIONS = new HashSet<>(Set.of("first", "last"));
 
     /**
      * Add a new child at the specified location in the specified parent
      */
-    public static void add (String position, Pane parent, Region child) {
+    public static void add (String position, Pane parent, Node child) {
         if (parent != null && child != null) {
             if (POSITIONS.contains(position)) {
                 if (position.equals("first")) {
@@ -33,7 +34,7 @@ public class UIUtil {
     /**
      * Add a new child at the specified index in the specified parent
      */
-    public static void add (int indexPosition, Pane parent, Region child) {
+    public static void add (int indexPosition, Pane parent, Node child) {
         if (parent != null && child != null) {
             List<Node> children = parent.getChildren();
             if (indexPosition > children.size() - 1) {
@@ -51,7 +52,7 @@ public class UIUtil {
     /**
      * Add a new child at the end of the children list of the specified parent
      */
-    public static void add (Pane parent, Region child) {
+    public static void add (Pane parent, Node child) {
         if (parent != null && child != null) {
             add("last", parent, child);
         }
@@ -60,7 +61,7 @@ public class UIUtil {
     /**
      * Add a new child at the specified location in the specified parent
      */
-    public static void add (String position, AnchorPane parent, Region child) {
+    public static void add (String position, AnchorPane parent, Node child) {
         if (parent != null && child != null) {
             if (POSITIONS.contains(position)) {
                 if (position.equals("first")) {
@@ -76,7 +77,7 @@ public class UIUtil {
     /**
      * Add a new child at the specified index in the specified parent
      */
-    public static void add (int indexPosition, AnchorPane parent, Region child) {
+    public static void add (int indexPosition, AnchorPane parent, Node child) {
         if (parent != null && child != null) {
             List<Node> children = parent.getChildren();
             if (indexPosition > children.size() - 1) {
@@ -94,7 +95,7 @@ public class UIUtil {
     /**
      * Add a new child at the end of the children list of the specified AnchorPane parent
      */
-    public static void add (AnchorPane parent, Region child) {
+    public static void add (AnchorPane parent, Node child) {
         if (parent != null && child != null) {
             add("last", parent, child);
         }
@@ -212,6 +213,15 @@ public class UIUtil {
     }
 
     /**
+     * Removes all children from the specified parent
+     */
+    public static void removeAll(Pane parent){
+        if(parent != null){
+            parent.getChildren().clear();
+        }
+    }
+
+    /**
      * Remove specified child from the specified Pane parent
      */
     public static boolean remove (Pane parent, Node child) {
@@ -285,6 +295,14 @@ public class UIUtil {
         return -1;
     }
 
+    public static Node getParent(Node child){
+        return child.getParent();
+    }
+
+    public static boolean contains(Pane parent, Node child){
+        return parent.getChildren().contains(child);
+    }
+
     /**
      * Switch the elements places in the parent nodes list
      */
@@ -313,7 +331,4 @@ public class UIUtil {
             }
         }
     }
-
-    private static final Set<String> POSITIONS = new HashSet<>(Set.of("first", "last"));
-
 }

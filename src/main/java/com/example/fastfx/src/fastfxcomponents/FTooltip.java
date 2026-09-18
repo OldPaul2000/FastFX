@@ -1,13 +1,12 @@
 package com.example.fastfx.src.fastfxcomponents;
 
-import com.example.fastfx.src.cssstylehelpers.CSSStyleManager;
+import com.example.fastfx.src.stylehelpers.CSSStyleManager;
 import com.example.fastfx.src.util.color.ColorUtil;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class FTooltip extends Tooltip {
-
     private CSSStyleManager cssStyleManager;
 
     public FTooltip () {

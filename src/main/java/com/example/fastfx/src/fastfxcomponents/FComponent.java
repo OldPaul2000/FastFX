@@ -2,6 +2,7 @@ package com.example.fastfx.src.fastfxcomponents;
 
 import com.example.fastfx.src.layouts.Margin;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
@@ -159,6 +160,8 @@ public interface FComponent {
     double getBottomInset ();
 
     double getLeftInset ();
+
+    FComponent alignment(Pos pos);
 
     // ******************************************
     //            Background properties         *

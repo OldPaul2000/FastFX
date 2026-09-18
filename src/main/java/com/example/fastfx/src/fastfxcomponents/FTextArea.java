@@ -1,8 +1,8 @@
 package com.example.fastfx.src.fastfxcomponents;
 
-import com.example.fastfx.src.cssstylehelpers.CSSStyleManager;
-import com.example.fastfx.src.cssstylehelpers.ComponentStyleTracker;
-import com.example.fastfx.src.cssstylehelpers.MainProps;
+import com.example.fastfx.src.stylehelpers.CSSStyleManager;
+import com.example.fastfx.src.stylehelpers.ComponentStyleTracker;
+import com.example.fastfx.src.stylehelpers.MainProps;
 import com.example.fastfx.src.layouts.Margin;
 import com.example.fastfx.src.util.color.ColorUtil;
 import com.example.fastfx.src.util.style.BackgroundUtil;
@@ -12,6 +12,7 @@ import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -28,6 +29,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -705,6 +707,12 @@ public class FTextArea extends TextArea implements FLabeled {
     }
 
     @Override
+    public FTextArea alignment(Pos pos){
+        // do nothing
+        return this;
+    }
+
+    @Override
     public FTextArea border (String colorValue, String borderStyle, double topLeftRadius, double topRightRadius, double bottomRightRadius, double bottomLeftRadius, double topWidth, double rightWidth, double bottomWidth, double leftWidth) {
         BorderUtil.setBorder(styleTracker.getCurrentComponent(), colorValue, borderStyle, topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius, topWidth, rightWidth, bottomWidth, leftWidth);
         return this;
@@ -1340,6 +1348,12 @@ public class FTextArea extends TextArea implements FLabeled {
     @Override
     public double getFontSize () {
         return getFont().getSize();
+    }
+
+    @Override
+    public FTextArea textAlignment(TextAlignment textAlignment){
+        // do nothing
+        return this;
     }
 
     // TextArea-related methods

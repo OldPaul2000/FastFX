@@ -16,9 +16,10 @@ module com.example.fastfx {
     opens com.example.fastfx to javafx.fxml;
     exports com.example.fastfx;
     exports com.example.fastfx.src.animations;
-    exports com.example.fastfx.src.cssstylehelpers;
+    exports com.example.fastfx.src.stylehelpers;
     exports com.example.fastfx.src.fastfxcomponents;
     exports com.example.fastfx.src.layouts;
     exports com.example.fastfx.src.responsiveness;
     exports com.example.fastfx.src.userinteraction;
+    exports com.example.fastfx.src.fastfxcomponents.fdropdownlist;
 }

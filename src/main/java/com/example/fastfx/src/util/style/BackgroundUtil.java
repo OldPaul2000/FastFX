@@ -73,7 +73,12 @@ public class BackgroundUtil {
             Background background = element.getBackground();
             BackgroundFill backgroundFill;
             if (background == null) {
-                backgroundFill = new BackgroundFill(Color.valueOf("e2e2e2"), null, null);
+                int intOpacity = (int)(opacity * 255);
+                String hexOpacity = Integer.toHexString(intOpacity);
+                if(intOpacity < 16){
+                    hexOpacity = "0" + hexOpacity;
+                }
+                backgroundFill = new BackgroundFill(Color.valueOf("e2e2e2" + hexOpacity), null, null);
                 element.setBackground(new Background(backgroundFill));
             }
             else {

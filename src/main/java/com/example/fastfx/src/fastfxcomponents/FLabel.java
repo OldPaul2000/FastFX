@@ -6,6 +6,7 @@ import com.example.fastfx.src.util.style.BorderUtil;
 import com.example.fastfx.src.util.style.FontUtil;
 import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
@@ -13,6 +14,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 public class FLabel extends Label implements FLabeled {
     private Margin margin;
@@ -384,6 +386,12 @@ public class FLabel extends Label implements FLabeled {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FLabel alignment(Pos pos){
+        setAlignment(pos);
+        return this;
     }
 
     @Override
@@ -1014,5 +1022,11 @@ public class FLabel extends Label implements FLabeled {
     @Override
     public double getFontSize () {
         return getFont().getSize();
+    }
+
+    @Override
+    public FLabel textAlignment(TextAlignment textAlignment){
+        setTextAlignment(textAlignment);
+        return this;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.fastfx.src.fastfxcomponents;
 
-import com.example.fastfx.src.cssstylehelpers.ComponentStyleTracker;
-import com.example.fastfx.src.cssstylehelpers.MainProps;
+import com.example.fastfx.src.stylehelpers.ComponentStyleTracker;
+import com.example.fastfx.src.stylehelpers.MainProps;
 import com.example.fastfx.src.layouts.Margin;
 import com.example.fastfx.src.util.style.BackgroundUtil;
 import com.example.fastfx.src.util.style.BorderUtil;
@@ -9,6 +9,7 @@ import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -61,8 +62,8 @@ public class FScrollPane extends ScrollPane implements FComponent {
                 this.horizontalScrollBar = currScrollBar;
             }
         });
-        verticalScrollBar.setSkin(new ScrollBarSkin(verticalScrollBar));
-        horizontalScrollBar.setSkin(new ScrollBarSkin(horizontalScrollBar));
+        this.verticalScrollBar.setSkin(new ScrollBarSkin(verticalScrollBar));
+        this.horizontalScrollBar.setSkin(new ScrollBarSkin(horizontalScrollBar));
         this.verticalThumb = (Region) verticalScrollBar.lookup(".thumb");
         this.horizontalThumb = (Region) horizontalScrollBar.lookup(".thumb");
         this.incrementVButton = (Region) verticalScrollBar.lookup(".increment-button");
@@ -681,6 +682,12 @@ public class FScrollPane extends ScrollPane implements FComponent {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FScrollPane alignment(Pos pos){
+        // do nothing
+        return this;
     }
 
     @Override

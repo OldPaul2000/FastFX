@@ -5,6 +5,7 @@ import com.example.fastfx.src.util.style.BackgroundUtil;
 import com.example.fastfx.src.util.style.BorderUtil;
 import com.example.fastfx.src.util.style.PaddingUtil;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -377,6 +378,12 @@ public class FPane extends Pane implements FComponent {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FPane alignment(Pos pos){
+        // do nothing
+        return this;
     }
 
     @Override

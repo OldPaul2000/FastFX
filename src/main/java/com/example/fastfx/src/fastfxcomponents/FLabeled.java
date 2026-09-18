@@ -3,6 +3,7 @@ package com.example.fastfx.src.fastfxcomponents;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Represents the components which contains text(Label, Button etc.) and
@@ -38,4 +39,6 @@ public interface FLabeled extends FComponent {
     FLabeled fontSize (double fontSize);
 
     double getFontSize ();
+
+    FLabeled textAlignment(TextAlignment textAlignment);
 }

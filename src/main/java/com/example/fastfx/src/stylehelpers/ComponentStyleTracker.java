@@ -1,8 +1,8 @@
-package com.example.fastfx.src.cssstylehelpers;
+package com.example.fastfx.src.stylehelpers;
 
 import javafx.scene.layout.Region;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +16,8 @@ public class ComponentStyleTracker {
     private Map<Region, Set<String>> componentsToStyle;
 
     public ComponentStyleTracker () {
-        this.componentsToStyle = new HashMap<>();
+        currComponentToStyle = null;
+        this.componentsToStyle = new LinkedHashMap<>();
     }
 
     public void setCurrentComponent (Region currComponent) {
@@ -37,6 +38,10 @@ public class ComponentStyleTracker {
 
     public boolean isAllowedProperty (String propertyName) {
         return componentsToStyle.containsKey(currComponentToStyle) && !componentsToStyle.get(currComponentToStyle).contains(propertyName);
+    }
+
+    public void removeComponent(Region component){
+        componentsToStyle.remove(component);
     }
 
     public Region getCurrentComponent () {

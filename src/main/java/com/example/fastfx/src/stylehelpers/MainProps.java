@@ -1,4 +1,4 @@
-package com.example.fastfx.src.cssstylehelpers;
+package com.example.fastfx.src.stylehelpers;
 
 import java.util.HashSet;
 import java.util.Set;

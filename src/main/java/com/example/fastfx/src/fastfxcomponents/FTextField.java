@@ -1,6 +1,6 @@
 package com.example.fastfx.src.fastfxcomponents;
 
-import com.example.fastfx.src.cssstylehelpers.CSSStyleManager;
+import com.example.fastfx.src.stylehelpers.CSSStyleManager;
 import com.example.fastfx.src.layouts.Margin;
 import com.example.fastfx.src.util.color.ColorUtil;
 import com.example.fastfx.src.util.style.BackgroundUtil;
@@ -18,6 +18,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class FTextField extends TextField implements FLabeled {
     private Margin margin;
@@ -412,6 +413,12 @@ public class FTextField extends TextField implements FLabeled {
     @Override
     public double getLeftInset () {
         return BackgroundUtil.getBackgroundInsets(this).getLeft();
+    }
+
+    @Override
+    public FTextField alignment(Pos pos){
+        setAlignment(pos);
+        return this;
     }
 
     @Override
@@ -1050,6 +1057,12 @@ public class FTextField extends TextField implements FLabeled {
     @Override
     public double getFontSize () {
         return getFont().getSize();
+    }
+
+    @Override
+    public FTextField textAlignment(TextAlignment textAlignment){
+        // do nothing;
+        return this;
     }
 
     // TextField-related methods
