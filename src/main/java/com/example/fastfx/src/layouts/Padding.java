@@ -38,6 +38,27 @@ public class Padding {
         this.right = right;
     }
 
+    public void set (double value) {
+        this.top = value;
+        this.right = value;
+        this.bottom = value;
+        this.left = value;
+    }
+
+    public void set (double topBottom, double rightLeft){
+        this.top = topBottom;
+        this.right = rightLeft;
+        this.bottom = topBottom;
+        this.left = rightLeft;
+    }
+
+    public void set (double top, double right, double bottom, double left){
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
+    }
+
     public double getBottom () {
         return bottom;
     }

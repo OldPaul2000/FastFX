@@ -4,6 +4,7 @@ import com.example.fastfx.src.fastfxcomponents.FLabeled;
 import com.example.fastfx.src.fastfxcomponents.PseudoElement;
 import com.example.fastfx.src.fastfxcomponents.PseudoElements;
 import com.example.fastfx.src.layouts.Margin;
+import com.example.fastfx.src.layouts.Padding;
 import com.example.fastfx.src.stylehelpers.ComponentStyleTracker;
 import com.example.fastfx.src.stylehelpers.MainProps;
 import com.example.fastfx.src.util.color.ColorUtil;
@@ -49,7 +50,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private Margin margin;
     private static final double DEFAULT_WIDTH = 120;
     private static final double DEFAULT_HEADER_HEIGHT = 20;
-    private static final double DEFAULT_LIST_ITEM_HEIGHT = 20;
+    private static final double DEFAULT_LIST_ITEMS_HEIGHT = 20;
     private static final double DEFAULT_ICONS_DIMENSION_PERCENTAGE = 0.75;
 
     private BooleanProperty displayCurrentSelectedItemProperty;
@@ -62,9 +63,11 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private double itemsSpacing;
     private DoubleProperty contentHeightProperty;
     private double headerIconDimensionPercent;
+    private double openButtonIconDimensionPercent;
     private double selectedItemIconDimensionPercent;
     private double itemIconDimensionPercent;
     private double expandHeight;
+    private Padding headerPadding;
 
     private String promptText;
     private String listHeaderButtonText;
@@ -76,7 +79,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private ImageView imageViewHeaderIcon;
     private Pane selectedItemPane;
     private Pane openButtonPane;
-    private Pane openButtonIcon;
+    private Pane openButtonPaneIcon;
+    private ImageView openButtonImageViewIcon;
     private Label listHeaderSelectedItemLabel;
     private Label promptLabel;
 
@@ -84,7 +88,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private ObjectProperty<T> selectedValueProperty;
     private ScrollPane listContentPane;
     private Pane listContent;
-    private List<T> valueItems;
+    private List<T> itemsValues;
     private List<Pane> listItemPanes;
     private List<Node> nodeItems;
     private List<Pane> selectedItemIconPanes;
@@ -126,11 +130,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         this.itemsSpacing = 0;
         this.contentHeightProperty = new SimpleDoubleProperty(0);
         this.headerIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
+        this.openButtonIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
         this.selectedItemIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
         this.itemIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
         this.expandHeight = 0;
+        this.headerPadding = new Padding(0);
 
-        this.valueItems = new ArrayList<>();
+        this.itemsValues = new ArrayList<>();
         this.nodeItems = new ArrayList<>();
         this.listItemPanes = new ArrayList<>();
         this.selectedItemIconPanes = new ArrayList<>();
@@ -151,7 +157,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         this.imageViewHeaderIcon = null;
         this.selectedItemPane = new Pane();
         this.openButtonPane = new Pane();
-        this.openButtonIcon = new Pane();
+        this.openButtonPaneIcon = new Pane();
+        this.openButtonImageViewIcon = null;
         this.listHeaderSelectedItemLabel = new Label();
         this.promptLabel = new Label();
         this.listContentPane = new ScrollPane();
@@ -184,19 +191,19 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         UIUtil.add(listHeader, headerIconPane);
         UIUtil.add(listHeader, selectedItemPane);
         UIUtil.add(listHeader, openButtonPane);
-
         UIUtil.add(selectedItemPane, listHeaderSelectedItemLabel);
         UIUtil.add(selectedItemPane, promptLabel);
-        UIUtil.add(openButtonPane, openButtonIcon);
-
+        UIUtil.add(openButtonPane, openButtonPaneIcon);
         UIUtil.add(this, listHeader);
         UIUtil.add(this, listContentPane);
         listContentPane.setContent(listContent);
+
+        BackgroundUtil.setBackgroundColor(this, Color.TRANSPARENT);
     }
 
     /**
-     * Initializes the elements layout behavior on changing the entire component width<br>
-     * and the list header elements layout behavior
+     * Initializes the elements layout behavior based on changing the entire component width<br>
+     * and the list header elements layout behavior based on changing the listHeader height.
      */
     private void initElementsConfiguration () {
         prefWidthProperty().addListener((prop, oldVal, newVal) -> {
@@ -214,14 +221,21 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             else {
                 selectedItemPaneWidth = Math.abs((double) newVal);
             }
+            selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
             selectedItemPane.setPrefWidth(selectedItemPaneWidth);
             listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
             promptLabel.setPrefWidth(selectedItemPaneWidth);
-            openButtonPane.setLayoutX(Math.abs((double) newVal - openButtonPane.getPrefWidth()));
+            openButtonPane.setLayoutX(selectedItemPane.getLayoutX() + selectedItemPane.getPrefWidth());
+
             listContentPane.setPrefWidth((double) newVal);
-            listContent.setPrefWidth((double) newVal);
+            if (verticalScrollBar.isVisible()) {
+                listContent.setPrefWidth((double) newVal - getVScrollBar().getPrefWidth());
+            }
+            else {
+                listContent.setPrefWidth((double) newVal);
+            }
             listItemPanes.forEach(itemPane -> {
-                itemPane.setPrefWidth((double) newVal);
+                itemPane.setPrefWidth(listContent.getPrefWidth());
             });
         });
         listHeader.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
@@ -230,8 +244,14 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             selectedItemPane.setPrefHeight((double) newVal);
             openButtonPane.setPrefWidth((double) newVal);
             openButtonPane.setPrefHeight((double) newVal);
-            openButtonIcon.setLayoutX(Math.abs((double) newVal / 2 - openButtonPane.getPrefWidth() / 2));
-            openButtonIcon.setLayoutY(Math.abs((double) newVal / 2 - openButtonPane.getPrefHeight() / 2));
+            if (openButtonPaneIcon != null) {
+                openButtonPaneIcon.setLayoutX(Math.abs((double) newVal / 2 - openButtonPane.getPrefWidth() / 2));
+                openButtonPaneIcon.setLayoutY(Math.abs((double) newVal / 2 - openButtonPane.getPrefHeight() / 2));
+            }
+            else if (openButtonImageViewIcon != null) {
+                openButtonImageViewIcon.setLayoutX(Math.abs((double) newVal / 2 - openButtonPane.getPrefWidth() / 2));
+                openButtonImageViewIcon.setLayoutY(Math.abs((double) newVal / 2 - openButtonPane.getPrefHeight() / 2));
+            }
             double selectedItemPaneWidth;
             if (headerIconPane.isVisible() && openButtonPane.isVisible()) {
                 selectedItemPaneWidth = Math.abs((double) newVal - headerIconPane.getPrefWidth() - openButtonPane.getPrefWidth());
@@ -245,9 +265,10 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             else {
                 selectedItemPaneWidth = Math.abs((double) newVal);
             }
+            selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
             selectedItemPane.setPrefWidth(selectedItemPaneWidth);
             selectedItemPane.setLayoutX(headerIconPane.getPrefWidth());
-            openButtonPane.setLayoutX(listContentPane.getPrefWidth() - openButtonPane.getPrefWidth());
+            openButtonPane.setLayoutX(selectedItemPane.getLayoutX() + selectedItemPane.getPrefWidth());
             listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
             listHeaderSelectedItemLabel.setPrefHeight((double) newVal);
             promptLabel.setPrefWidth(selectedItemPaneWidth);
@@ -268,14 +289,25 @@ public class FDropdownList<T> extends Pane implements FLabeled {
                 headerPaneIcon.setLayoutX(headerIconPane.getPrefWidth() / 2 - iconWidth / 2);
                 headerPaneIcon.setLayoutY(headerIconPane.getPrefHeight() / 2 - iconHeight / 2);
             }
+            if (this.openButtonImageViewIcon != null) {
+                double iconWidth = openButtonPane.getPrefWidth() * openButtonIconDimensionPercent;
+                double iconHeight = openButtonPane.getPrefHeight() * openButtonIconDimensionPercent;
+                openButtonImageViewIcon.setFitWidth(iconWidth);
+                openButtonImageViewIcon.setFitHeight(iconHeight);
+                openButtonImageViewIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - iconWidth / 2);
+                openButtonImageViewIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - iconHeight / 2);
+            }
+            else if (this.openButtonPaneIcon != null) {
+                double iconWidth = openButtonPane.getPrefWidth() * openButtonIconDimensionPercent;
+                double iconHeight = openButtonPane.getPrefHeight() * openButtonIconDimensionPercent;
+                openButtonPaneIcon.setPrefWidth(iconWidth);
+                openButtonPaneIcon.setPrefHeight(iconHeight);
+                openButtonPaneIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - iconWidth / 2);
+                openButtonPaneIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - iconHeight / 2);
+            }
             listContentPane.setLayoutY((double) newVal);
         });
-        openButtonIcon.prefWidthProperty().addListener((prop, oldVal, newVal) -> {
-            openButtonIcon.setLayoutX(Math.abs((double) newVal / 2 - openButtonPane.getPrefWidth() / 2));
-        });
-        openButtonIcon.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
-            openButtonIcon.setLayoutY(Math.abs((double) newVal / 2 - openButtonPane.getPrefHeight() / 2));
-        });
+
         setPrefWidth(DEFAULT_WIDTH);
         setPrefHeight(DEFAULT_HEADER_HEIGHT);
 
@@ -289,12 +321,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         listHeaderSelectedItemLabel.setLayoutY(0);
         promptLabel.setLayoutX(0);
         promptLabel.setLayoutY(0);
-
         openButtonPane.setLayoutY(0);
+
         listContentPane.setLayoutX(0);
         listContentPane.setLayoutY(listHeader.getPrefHeight());
 
-        vBarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        initListContentResizeBasedOnVScrollBar();
+        vBarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         hBarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         verticalScrollBar.setPrefWidth(20);
         horizontalScrollBar.setPrefHeight(20);
@@ -302,39 +335,62 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         listContentPane.setPrefHeight(0);
     }
 
+    /**
+     * Initializes the list content width resizing based on vertical scroll bar visibility.
+     */
+    private void initListContentResizeBasedOnVScrollBar () {
+        verticalScrollBar.visibleProperty().addListener((prop, oldVal, newVal) -> {
+            if (newVal) {
+                listContent.setPrefWidth(listContentPane.getPrefWidth() - verticalScrollBar.getPrefWidth());
+            }
+            else {
+                listContent.setPrefWidth(listContentPane.getPrefWidth());
+            }
+            listItemPanes.forEach(itemPane -> {
+                itemPane.setPrefWidth(listContent.getPrefWidth());
+            });
+        });
+        verticalScrollBar.prefWidthProperty().addListener((prop, oldVal, newVal) -> {
+            if (verticalScrollBar.isVisible()) {
+                listContent.setPrefWidth(listContentPane.getPrefWidth() - (double) newVal);
+            }
+            listItemPanes.forEach(itemPane -> {
+                itemPane.setPrefWidth(listContent.getPrefWidth());
+            });
+        });
+    }
+
     private void initElementsBehavior () {
         headerIconPane.visibleProperty().addListener((prop, oldVal, newVal) -> {
-            placeElementsBasedOnIconPaneVisibility(newVal);
+            arrangeHeaderComponentsBasedOnIconPaneVisibility(newVal);
         });
         openButtonPane.visibleProperty().addListener((prop, oldVal, newVal) -> {
-            placeElementsBasedOnOpenButtonVisibility(newVal);
+            arrangeHeaderComponentsBasedOnOpenButtonVisibility(newVal);
         });
         displaySelectedItemIconProperty.addListener((prop, oldVal, newVal) -> {
-            placeListItemChildrenBasedOnSelectedItemIconVisibility(newVal);
+            arrangeListItemChildrenBasedOnSelectedItemIconVisibility(newVal);
         });
         displayItemsIconProperty.addListener((prop, oldVal, newVal) -> {
-            placeListItemChildrenBasedOnItemIconVisibility(newVal);
+            arrangeListItemChildrenBasedOnItemIconVisibility(newVal);
         });
         headerIconPane.setVisible(false);
         openButtonPane.setVisible(true);
-        placeElementsBasedOnIconPaneVisibility(headerIconPane.isVisible());
-        placeElementsBasedOnOpenButtonVisibility(openButtonPane.isVisible());
-        placeListItemChildrenBasedOnSelectedItemIconVisibility(displaySelectedItemIconProperty.get());
-        placeListItemChildrenBasedOnItemIconVisibility(displayItemsIconProperty.get());
+        arrangeHeaderComponentsBasedOnIconPaneVisibility(headerIconPane.isVisible());
+        arrangeHeaderComponentsBasedOnOpenButtonVisibility(openButtonPane.isVisible());
+        arrangeListItemChildrenBasedOnSelectedItemIconVisibility(displaySelectedItemIconProperty.get());
+        arrangeListItemChildrenBasedOnItemIconVisibility(displayItemsIconProperty.get());
     }
 
     /**
      * Arranges the elements in the list header taking into account if the<br>
-     * icon pane is visible or not
-     *
-     * @param isVisible set the icon pane visibility
+     * icon pane is visible or not.
      */
     // FINISHED
-    private void placeElementsBasedOnIconPaneVisibility (boolean isVisible) {
+    private void arrangeHeaderComponentsBasedOnIconPaneVisibility (boolean isVisible) {
         double selectedItemPaneWidth;
         double openButtonPaneLayoutX;
         if (!isVisible) {
-            selectedItemPane.setLayoutX(0);
+            selectedItemPane.setLayoutX(headerPadding.getLeft());
             if (openButtonPane.isVisible()) {
                 selectedItemPaneWidth = listHeader.getPrefWidth() - openButtonPane.getPrefWidth();
                 openButtonPaneLayoutX = listHeader.getPrefWidth() - openButtonPane.getPrefWidth();
@@ -343,17 +399,19 @@ public class FDropdownList<T> extends Pane implements FLabeled {
                 selectedItemPaneWidth = listHeader.getPrefWidth();
                 openButtonPaneLayoutX = listHeader.getPrefWidth();
             }
+            openButtonPaneLayoutX = Math.abs(openButtonPaneLayoutX - headerPadding.getRight());
         }
         else {
-            selectedItemPane.setLayoutX(headerIconPane.getPrefWidth());
+            selectedItemPane.setLayoutX(headerIconPane.getLayoutX() + headerIconPane.getPrefWidth());
             if (openButtonPane.isVisible()) {
                 selectedItemPaneWidth = listHeader.getPrefWidth() - headerIconPane.getPrefWidth() - openButtonPane.getPrefWidth();
             }
             else {
                 selectedItemPaneWidth = listHeader.getPrefWidth() - headerIconPane.getPrefWidth();
             }
-            openButtonPaneLayoutX = listHeader.getPrefWidth() - openButtonPane.getPrefWidth();
+            openButtonPaneLayoutX = listHeader.getPrefWidth() - openButtonPane.getPrefWidth() - headerPadding.getRight();
         }
+        selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
         selectedItemPane.setPrefWidth(selectedItemPaneWidth);
         openButtonPane.setLayoutX(openButtonPaneLayoutX);
         listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
@@ -361,13 +419,11 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     /**
-     * Arranges the elements in the list header taking into account if the<br>
-     * open button is visible or not
-     *
-     * @param isVisible set the button visibility
+     * Arranges the list header elements taking into account the<br>
+     * open button pane visibility.
      */
     // FINISHED
-    private void placeElementsBasedOnOpenButtonVisibility (boolean isVisible) {
+    private void arrangeHeaderComponentsBasedOnOpenButtonVisibility (boolean isVisible) {
         double selectedItemPaneWidth;
         double openButtonPaneLayoutX;
         if (!isVisible) {
@@ -381,6 +437,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
                 selectedItemPaneWidth = listHeader.getPrefWidth();
                 openButtonPaneLayoutX = listHeader.getPrefWidth();
             }
+            openButtonPaneLayoutX = Math.abs(openButtonPaneLayoutX - headerPadding.getRight());
         }
         else {
             openButtonPane.addEventHandler(MouseEvent.MOUSE_CLICKED, openListEvent);
@@ -391,8 +448,9 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             else {
                 selectedItemPaneWidth = listHeader.getPrefWidth() - openButtonPane.getPrefWidth();
             }
-            openButtonPaneLayoutX = listHeader.getPrefWidth() - openButtonPane.getPrefWidth();
+            openButtonPaneLayoutX = Math.abs(listHeader.getPrefWidth() - openButtonPane.getPrefWidth() - headerPadding.getRight());
         }
+        selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
         selectedItemPane.setPrefWidth(selectedItemPaneWidth);
         openButtonPane.setLayoutX(openButtonPaneLayoutX);
         listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
@@ -400,7 +458,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
-    private void placeListItemChildrenBasedOnSelectedItemIconVisibility (boolean isVisible) {
+    private void arrangeListItemChildrenBasedOnSelectedItemIconVisibility (boolean isVisible) {
         if (!isVisible && !displayItemsIconProperty.get()) {
             nodeItems.forEach(element -> {
                 if (element instanceof ImageView) {
@@ -460,7 +518,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
-    private void placeListItemChildrenBasedOnItemIconVisibility (boolean isVisible) {
+    private void arrangeListItemChildrenBasedOnItemIconVisibility (boolean isVisible) {
         if (!isVisible && !displaySelectedItemIconProperty.get()) {
             nodeItems.forEach(element -> {
                 if (element instanceof ImageView) {
@@ -520,36 +578,45 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     /**
-     * Adds a new item in the list
+     * Adds a new item in the list.
      *
      * @param item the item to be added
      */
     public FDropdownList<T> addItem (T item) {
-        if (!valueItems.contains(item)) {
-            valueItems.add(item);
+        if (!itemsValues.contains(item)) {
+            itemsValues.add(item);
             if (item instanceof Node) {
                 Pane listItem = createNodeListItem((Region) item);
                 listItem.setLayoutX(0);
                 listItem.setLayoutY(contentHeightProperty.get());
-                contentHeightProperty.set(contentHeightProperty.get() + DEFAULT_LIST_ITEM_HEIGHT + itemsSpacing);
+                contentHeightProperty.set(contentHeightProperty.get() + DEFAULT_LIST_ITEMS_HEIGHT + itemsSpacing);
+                double minHeightValue = Math.max(contentHeightProperty.get() - itemsSpacing, expandHeight - 2);
+                listContent.setPrefHeight(minHeightValue);
                 UIUtil.add(listContent, listItem);
             }
             else if (item instanceof Integer || item instanceof Double || item instanceof String || item instanceof Character) {
                 Pane listItem = createBasicValueListItem(item);
                 listItem.setLayoutX(0);
                 listItem.setLayoutY(contentHeightProperty.get());
-                contentHeightProperty.set(contentHeightProperty.get() + DEFAULT_LIST_ITEM_HEIGHT + itemsSpacing);
+                contentHeightProperty.set(contentHeightProperty.get() + DEFAULT_LIST_ITEMS_HEIGHT + itemsSpacing);
+                double minHeightValue = Math.max(contentHeightProperty.get() - itemsSpacing, expandHeight - 2);
+                listContent.setPrefHeight(minHeightValue);
                 UIUtil.add(listContent, listItem);
             }
         }
         return this;
     }
 
+    /**
+     * Initializes selection behavior for the new added element.
+     *
+     * @param item The pane which represents visually the item in the list
+     */
     private void addSelectItemEvent (Pane item) {
         item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 int itemIndex = listItemPanes.indexOf((Pane) e.getSource());
-                T currValue = valueItems.get(itemIndex);
+                T currValue = itemsValues.get(itemIndex);
                 if (selectedItemPaneIcon != null) {
                     if (selectedValueProperty.get() != null) {
                         Pane selectedItemIconParent = (Pane) UIUtil.getParent(selectedItemPaneIcon);
@@ -587,6 +654,11 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         });
     }
 
+    /**
+     * Initializes the positioning and resizing behavior for the item icon.
+     *
+     * @param itemIconPane The container which contains the icon itself
+     */
     private void addItemIconPositioningEvent (Pane itemIconPane) {
         int iconPaneIndex = itemIconPanes.indexOf(itemIconPane);
         Pane paneIcon = itemPaneIcons.get(iconPaneIndex);
@@ -614,6 +686,12 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Initializes the positioning and resizing behavior for the selected item icon.
+     *
+     * @param selectedItemIconPane The container which contains the icon itself
+     */
     private void addSelectedItemIconPositioningEvent (Pane selectedItemIconPane) {
         selectedItemIconPane.prefWidthProperty().addListener((prop, oldVal, newVal) -> {
             if (UIUtil.contains(selectedItemIconPane, selectedItemPaneIcon)) {
@@ -638,7 +716,9 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     /**
-     * Creates a list item from scratch when T is a type of Integer or Double or String or Character.
+     * Creates a list item when T is a type of Integer, Double, String or Character.
+     *
+     * @param item The value which will be visible in the list item container
      */
     // FINISHED
     private Pane createBasicValueListItem (T item) {
@@ -694,7 +774,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         addSelectedItemIconPositioningEvent(selectedItemIconPane);
 
         listItemPane.setPrefWidth(listContentPane.getPrefWidth());
-        listItemPane.setPrefHeight(DEFAULT_LIST_ITEM_HEIGHT);
+        listItemPane.setPrefHeight(DEFAULT_LIST_ITEMS_HEIGHT);
         listItemPanes.add(listItemPane);
         selectedItemIconPanes.add(selectedItemIconPane);
         itemIconPanes.add(itemIconPane);
@@ -716,7 +796,9 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     /**
-     * Adds the Node in the list as an item when T is a type of Node(an actual JavaFX element)
+     * Creates a list item when T is a type of Node.
+     *
+     * @param region The component which will be visible in the list item container
      */
     private Pane createNodeListItem (Region region) {
         Pane listItemPane = new Pane();
@@ -769,7 +851,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         addSelectedItemIconPositioningEvent(selectedItemIconPane);
 
         listItemPane.setPrefWidth(listContentPane.getPrefWidth());
-        listItemPane.setPrefHeight(DEFAULT_LIST_ITEM_HEIGHT);
+        listItemPane.setPrefHeight(DEFAULT_LIST_ITEMS_HEIGHT);
+        listItemPanes.add(listItemPane);
         listItemPanes.add(listItemPane);
         selectedItemIconPanes.add(selectedItemIconPane);
         itemIconPanes.add(itemIconPane);
@@ -789,19 +872,31 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Returns the current selected value.
+     */
     public T getValue () {
         return selectedValueProperty.get();
     }
 
     // FINISHED
+
+    /**
+     * Removes the specified item.
+     */
     public FDropdownList<T> removeItem (T item) {
-        removeItem(valueItems.indexOf(item));
+        removeItem(itemsValues.indexOf(item));
         return this;
     }
 
     // FINISHED
+
+    /**
+     * Removes an item from the specified index.
+     */
     public FDropdownList<T> removeItem (int index) {
-        if (index >= 0 && index < valueItems.size()) {
+        if (index >= 0 && index < itemsValues.size()) {
             UIUtil.remove(listContent, listItemPanes.get(index));
             Pane listItemPane = listItemPanes.get(index);
             Region nodeItem = (Region) nodeItems.get(index);
@@ -819,14 +914,23 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             if (!itemPaneIcons.isEmpty() && index < itemPaneIcons.size()) {
                 itemPaneIcons.remove(index);
             }
-            if (index == valueItems.indexOf(selectedValueProperty.get())) {
+            if (index == itemsValues.indexOf(selectedValueProperty.get())) {
                 selectedValueProperty.set(null);
                 listHeaderSelectedItemLabel.setText("");
             }
-            valueItems.remove(index);
-            System.out.println("listContent height after remove: " + listContent.getHeight());
+            itemsValues.remove(index);
             rearrangeListItems();
+            double minHeightValue = Math.max(contentHeightProperty.get() - itemsSpacing, expandHeight - 2);
+            listContent.setPrefHeight(minHeightValue);
         }
+        return this;
+    }
+
+    /**
+     * Removes last item from the list.
+     */
+    public FDropdownList<T> removeLastItem () {
+        removeItem(itemsValues.size() - 1);
         return this;
     }
 
@@ -836,16 +940,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         }
     };
 
-    public void openList (boolean expand) {
-        System.out.println("expand: " + expand);
-        listIsOpenedProperty.set(expand);
+    /**
+     * Opens the list by changing the list content pane height.
+     */
+    public void openList (boolean open) {
+        listIsOpenedProperty.set(open);
         if (listIsOpenedProperty.get()) {
-            if (expandHeight > 0) {
-                listContentPane.setPrefHeight(expandHeight);
-            }
-            else {
-                listContentPane.setPrefHeight(contentHeightProperty.get());
-            }
+            listContentPane.setPrefHeight(expandHeight);
         }
         else {
             listContentPane.setPrefHeight(0);
@@ -886,6 +987,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         notAllowedProperties.add(MainProps.HEIGHT);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
+        styleTracker.addComponent(headerIconPane, notAllowedProperties);
+
+        notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(promptLabel, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
@@ -894,11 +1002,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(openButtonPane, notAllowedProperties);
-
-        notAllowedProperties = new HashSet<>();
-        notAllowedProperties.add(MainProps.X);
-        notAllowedProperties.add(MainProps.Y);
-        styleTracker.addComponent(openButtonIcon, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
@@ -1085,6 +1188,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
+    public FDropdownList<T> headerIconPane (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(headerIconPane);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
     public FDropdownList<T> listHeaderSelectedItemLabel (PseudoElement pseudoElement) {
         styleTracker.setCurrentComponent(listHeaderSelectedItemLabel);
         pseudoElement.apply();
@@ -1099,8 +1209,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    public FDropdownList<T> openButtonArrow (PseudoElement pseudoElement) {
-        styleTracker.setCurrentComponent(openButtonIcon);
+    public FDropdownList<T> openButtonPane (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(openButtonPane);
         pseudoElement.apply();
         styleTracker.setCurrentComponent(this);
         return this;
@@ -1302,6 +1412,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     private void setListContentPaneHeight (double value) {
+        value = Math.abs(value - listHeader.getPrefHeight());
         if (listIsOpenedProperty.get()) {
             listContentPane.setPrefHeight(value);
         }
@@ -1340,44 +1451,109 @@ public class FDropdownList<T> extends Pane implements FLabeled {
 
     @Override
     public FDropdownList<T> padding (double value) {
-        PaddingUtil.setPadding(styleTracker.getCurrentComponent(), value);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), value);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.set(value);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> padding (double topBottom, double rightLeft) {
-        PaddingUtil.setPadding(styleTracker.getCurrentComponent(), topBottom, rightLeft);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), topBottom, rightLeft);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.set(topBottom, rightLeft);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> padding (double top, double right, double bottom, double left) {
-        PaddingUtil.setPadding(styleTracker.getCurrentComponent(), top, right, bottom, left);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), top, right, bottom, left);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.set(top, right, bottom, left);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> topPadding (double value) {
-        PaddingUtil.setTopPadding(styleTracker.getCurrentComponent(), value);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setTopPadding(styleTracker.getCurrentComponent(), value);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.setTop(value);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> rightPadding (double value) {
-        PaddingUtil.setRightPadding(styleTracker.getCurrentComponent(), value);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setRightPadding(styleTracker.getCurrentComponent(), value);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.setRight(value);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> bottomPadding (double value) {
-        PaddingUtil.setBottomPadding(styleTracker.getCurrentComponent(), value);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setBottomPadding(styleTracker.getCurrentComponent(), value);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.setBottom(value);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> leftPadding (double value) {
-        PaddingUtil.setLeftPadding(styleTracker.getCurrentComponent(), value);
+        if (styleTracker.getCurrentComponent() == this) {
+            PaddingUtil.setLeftPadding(styleTracker.getCurrentComponent(), value);
+        }
+        else if (styleTracker.getCurrentComponent() == listHeader) {
+            headerPadding.setLeft(value);
+            rearrangeHeaderComponentsBasedOnPadding();
+        }
         return this;
+    }
+
+    private void rearrangeHeaderComponentsBasedOnPadding () {
+        double selectedItemPaneWidth;
+        if (headerIconPane.isVisible() && openButtonPane.isVisible()) {
+            selectedItemPaneWidth = Math.abs(getPrefWidth() - headerIconPane.getPrefWidth() - openButtonPane.getPrefWidth());
+        }
+        else if (headerIconPane.isVisible()) {
+            selectedItemPaneWidth = Math.abs(getPrefWidth() - headerIconPane.getPrefWidth());
+        }
+        else if (openButtonPane.isVisible()) {
+            selectedItemPaneWidth = Math.abs(getPrefWidth() - openButtonPane.getPrefWidth());
+        }
+        else {
+            selectedItemPaneWidth = Math.abs(getPrefWidth());
+        }
+        selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
+        selectedItemPane.setPrefWidth(selectedItemPaneWidth);
+        listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
+        promptLabel.setPrefWidth(selectedItemPaneWidth);
+        headerIconPane.setLayoutX(headerPadding.getLeft());
+        selectedItemPane.setLayoutX(headerIconPane.getLayoutX() + headerIconPane.getPrefWidth());
+        openButtonPane.setLayoutX(selectedItemPane.getLayoutX() + selectedItemPane.getPrefWidth());
     }
 
     @Override
@@ -2384,14 +2560,18 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     public FDropdownList<T> setSelectedItem (T item) {
-        setSelectedItem(valueItems.indexOf(item));
+        setSelectedItem(itemsValues.indexOf(item));
         return this;
     }
 
     // FINISHED
+
+    /**
+     * Gives the possibility to select an item externally from the specified index.
+     */
     public FDropdownList<T> setSelectedItem (int index) {
-        if (index >= 0 && index < valueItems.size()) {
-            T item = valueItems.get(index);
+        if (index >= 0 && index < itemsValues.size()) {
+            T item = itemsValues.get(index);
             Pane selectedIconParent;
             if (selectedItemPaneIcon != null) {
                 selectedIconParent = (Pane) selectedItemPaneIcon.getParent();
@@ -2431,6 +2611,12 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the header icon as a Pane component(can change the shape using SVG code).
+     *
+     * @param icon The Pane to be displayed
+     */
     public FDropdownList<T> setHeaderIcon (Pane icon) {
         UIUtil.removeAll(headerIconPane);
         UIUtil.add(headerIconPane, icon);
@@ -2446,12 +2632,18 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the header icon as an ImageView icon.
+     *
+     * @param iconImage The image to be displayed
+     */
     public FDropdownList<T> setHeaderIcon (Image iconImage) {
         ImageView icon = new ImageView();
         icon.setImage(iconImage);
+        imageViewHeaderIcon = icon;
         UIUtil.removeAll(headerIconPane);
         UIUtil.add(headerIconPane, imageViewHeaderIcon);
-        imageViewHeaderIcon = icon;
         headerPaneIcon = null;
         double width = headerIconPane.getPrefWidth() * headerIconDimensionPercent;
         double height = headerIconPane.getPrefHeight() * headerIconDimensionPercent;
@@ -2462,13 +2654,61 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
+    /**
+     * Sets the open button icon as a Pane component(can change the shape using SVG code).
+     *
+     * @param icon The Pane to be displayed
+     */
+    public FDropdownList<T> setOpenButtonIcon (Pane icon) {
+        UIUtil.removeAll(openButtonPane);
+        UIUtil.add(openButtonPane, icon);
+        openButtonImageViewIcon = null;
+        openButtonPaneIcon = icon;
+        double iconWidth = openButtonPane.getPrefWidth() * headerIconDimensionPercent;
+        double iconHeight = openButtonPane.getPrefHeight() * headerIconDimensionPercent;
+        openButtonPaneIcon.setPrefWidth(iconWidth);
+        openButtonPaneIcon.setPrefHeight(iconHeight);
+        openButtonPaneIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - iconWidth / 2);
+        openButtonPaneIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - iconHeight / 2);
+        return this;
+    }
+
+    /**
+     * Sets the open button icon as an ImageView icon.
+     *
+     * @param iconImage The image to be displayed
+     */
+    public FDropdownList<T> setOpenButtonIcon (Image iconImage) {
+        ImageView icon = new ImageView();
+        icon.setImage(iconImage);
+        openButtonImageViewIcon = icon;
+        UIUtil.removeAll(openButtonPane);
+        UIUtil.add(openButtonPane, openButtonImageViewIcon);
+        openButtonPaneIcon = null;
+        double width = openButtonPane.getPrefWidth() * openButtonIconDimensionPercent;
+        double height = openButtonPane.getPrefHeight() * openButtonIconDimensionPercent;
+        openButtonImageViewIcon.setFitWidth(width);
+        openButtonImageViewIcon.setFitHeight(height);
+        openButtonImageViewIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - width / 2);
+        openButtonImageViewIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - height / 2);
+        return this;
+    }
+
     // FINISHED
+
+    /**
+     * Sets the header icon to be visible or not.
+     */
     public FDropdownList<T> displayHeaderIcon (boolean display) {
         headerIconPane.setVisible(display);
         return this;
     }
 
     // FINISHED
+
+    /**
+     * Sets the selected item icon to be visible or not.
+     */
     public FDropdownList<T> displaySelectedItemIcon (boolean display) {
         displaySelectedItemIconProperty.set(display);
         selectedItemIconPanes.forEach(iconPane -> {
@@ -2478,6 +2718,10 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the item icon to be visible or not.
+     */
     public FDropdownList<T> displayItemIcon (boolean display) {
         displayItemsIconProperty.set(display);
         itemIconPanes.forEach(iconPane -> {
@@ -2487,6 +2731,12 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the selected item icon as a Pane component(can change the shape using SVG code).
+     *
+     * @param icon The Pane to be displayed
+     */
     public FDropdownList<T> setSelectedItemIcon (Pane icon) {
         selectedItemIconPanes.forEach(iconPane -> {
             UIUtil.removeAll(iconPane);
@@ -2494,7 +2744,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         Pane selectedItemIconPane;
         selectedItemPaneIcon = icon;
         if (selectedValueProperty.get() != null) {
-            int itemIndex = valueItems.indexOf(selectedValueProperty.get());
+            int itemIndex = itemsValues.indexOf(selectedValueProperty.get());
             selectedItemIconPane = selectedItemIconPanes.get(itemIndex);
             UIUtil.add(selectedItemIconPane, selectedItemPaneIcon);
             double iconWidth = selectedItemIconPane.getPrefWidth() * selectedItemIconDimensionPercent;
@@ -2508,6 +2758,12 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the selected item icon as an ImageView icon.
+     *
+     * @param icon The image to be displayed
+     */
     public FDropdownList<T> setSelectedItemIcon (Image icon) {
         selectedItemIconPanes.forEach(iconPane -> {
             UIUtil.removeAll(iconPane);
@@ -2516,7 +2772,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         selectedItemImageViewIcon = new ImageView();
         selectedItemImageViewIcon.setImage(icon);
         if (selectedValueProperty.get() != null) {
-            int itemIndex = valueItems.indexOf(selectedValueProperty.get());
+            int itemIndex = itemsValues.indexOf(selectedValueProperty.get());
             selectedItemIconPane = selectedItemIconPanes.get(itemIndex);
             UIUtil.add(selectedItemIconPane, selectedItemImageViewIcon);
             double iconWidth = selectedItemIconPane.getPrefWidth() * selectedItemIconDimensionPercent;
@@ -2530,6 +2786,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the item icon as a Pane component(can change the shape using SVG code).
+     *
+     * @param itemIndex Represents the item's index from the list
+     * @param icon      The Pane to be displayed
+     */
     public FDropdownList<T> setItemIcon (int itemIndex, Pane icon) {
         if (itemIndex >= 0 && itemIndex < itemIconPanes.size()) {
             Pane iconPane = itemIconPanes.get(itemIndex);
@@ -2556,6 +2819,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the item icon as an ImageView icon.
+     *
+     * @param itemIndex Represents the item's index from the list
+     * @param icon      The image to be displayed
+     */
     public FDropdownList<T> setItemIcon (int itemIndex, Image icon) {
         if (itemIndex >= 0 && itemIndex < itemIconPanes.size()) {
             Pane iconPane = itemIconPanes.get(itemIndex);
@@ -2584,6 +2854,10 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Sets the space between list items.
+     */
     public FDropdownList<T> itemsSpacing (double value) {
         if (value >= 0) {
             itemsSpacing = value;
@@ -2601,15 +2875,25 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             contentHeight += currItem.getPrefHeight() + itemsSpacing;
         }
         contentHeightProperty.set(contentHeight);
+        double minHeightValue = Math.max(contentHeightProperty.get() - itemsSpacing, expandHeight - 2);
+        listContent.setPrefHeight(minHeightValue);
     }
 
     // FINISHED
+
+    /**
+     * Sets the open button to be visible or not.
+     */
     public FDropdownList<T> displayOpenButton (boolean display) {
         openButtonPane.setVisible(display);
         return this;
     }
 
     // FINISHED
+
+    /**
+     * Sets the prompt text to be visible or not.
+     */
     public FDropdownList<T> displayPromptText (boolean display) {
         displayPromptTextProperty.set(display);
         displayCurrentSelectedItemProperty.set(!display);
@@ -2617,6 +2901,11 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     // FINISHED
+
+    /**
+     * Displays the current selected item in the list header if there is<br>
+     * and item selected.
+     */
     public FDropdownList<T> displayCurrentSelectedItem (boolean display) {
         displayCurrentSelectedItemProperty.set(display);
         displayPromptTextProperty.set(!display);
@@ -2669,6 +2958,25 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
+    public FDropdownList<T> setOpenButtonIconDimensionPercent (int value) {
+        if (value >= 0 && value <= 100) {
+            openButtonIconDimensionPercent = (double) value / 100;
+            if (openButtonPaneIcon != null) {
+                openButtonPaneIcon.setPrefWidth(openButtonPane.getPrefWidth() * openButtonIconDimensionPercent);
+                openButtonPaneIcon.setPrefHeight(openButtonPane.getPrefHeight() * openButtonIconDimensionPercent);
+                openButtonPaneIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - openButtonPaneIcon.getPrefWidth() / 2);
+                openButtonPaneIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - openButtonPaneIcon.getPrefHeight() / 2);
+            }
+            else if (openButtonImageViewIcon != null) {
+                openButtonImageViewIcon.setFitWidth(openButtonPane.getPrefWidth() * openButtonIconDimensionPercent);
+                openButtonImageViewIcon.setFitHeight(openButtonPane.getPrefHeight() * openButtonIconDimensionPercent);
+                openButtonImageViewIcon.setLayoutX(openButtonPane.getPrefWidth() / 2 - openButtonImageViewIcon.getFitWidth() / 2);
+                openButtonImageViewIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - openButtonImageViewIcon.getFitHeight() / 2);
+            }
+        }
+        return this;
+    }
+
     // FINISHED
     public FDropdownList<T> setItemIconDimensionPercent (int value) {
         if (value >= 0 && value <= 100) {
@@ -2708,5 +3016,17 @@ public class FDropdownList<T> extends Pane implements FLabeled {
 
     public DoubleProperty getContentHeightProperty () {
         return contentHeightProperty;
+    }
+
+    /**
+     * Returns the height value the listContentPane(ScrollPane) will have<br>
+     * when the list is opened. Useful for adding animation for opening the list.
+     */
+    public double getExpandHeight () {
+        return expandHeight;
+    }
+
+    public List<Pane> getListItemPanes () {
+        return List.copyOf(listItemPanes);
     }
 }
