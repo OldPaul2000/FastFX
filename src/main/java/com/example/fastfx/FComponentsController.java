@@ -39,33 +39,30 @@ public class FComponentsController {
         list.setOpenButtonIcon(openListImage);
         list.setSelectedItemIcon(selectedItemImage);
 
+        list.x(300).y(150).height(120).width(100);
 
-
+        list.listContent(() -> {
+            list.bgColor("#4a657d");
+            list.padding(3, 4, 3, 3);
+        });
+        list.listContentPane(() -> {
+            list.border("#00000000", "solid", 0, 0);
+        });
         for(int i = 1; i <= 10; i++){
             list.addItem("Item " + itemIndex);
             itemIndex++;
         }
-
-
-        list.x(300).y(150).height(120).width(100);
-
         list.itemsSpacing(3);
         list.listHeader(() -> {
             list.height(20);
-           list.bgColor(Color.BLACK);
-           list.bgOpacity(0.5);
-           list.bgRadius(6, 6, 0, 0);
+            list.bgColor("#5e6469");
+//            list.bgOpacity(0.5);
+            list.bgRadius(6, 6, 0, 0);
         });
         list.listItem(() -> {
             list.bgColor("#a4acb3");
             list.bgRadius(5);
-        });
-        list.listContent(() -> {
-            list.bgColor("#4a657d");
-            list.bgRadius(0, 0, 6, 6);
-        });
-        list.listContentPane(() -> {
-            list.bgRadius(0, 0, 6, 6);
+            list.border("#fafafa", "solid", 5, 1);
         });
         list.verticalScrollBar(() -> {
             list.width(8);
@@ -74,11 +71,11 @@ public class FComponentsController {
             list.rotate(180);
         });
 
+        FPane fPane = new FPane();
+        fPane.width(100).height(6).x(300).y(268).bgColor("#a4acb3").bgRadius(0, 0, 5, 5);
 
         mainContainer.add(list);
-
-
-
+//        mainContainer.add(fPane);
 
 
 
