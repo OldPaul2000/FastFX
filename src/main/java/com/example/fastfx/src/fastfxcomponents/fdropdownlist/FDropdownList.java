@@ -99,6 +99,9 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private Pane selectedItemPaneIcon;
     private ImageView selectedItemImageViewIcon;
 
+    // List footer
+    private Pane footer;
+
     // ScrollPane(listContentPane)-related elements
     private ScrollBar verticalScrollBar;
     private ScrollBar horizontalScrollBar;
@@ -165,6 +168,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         this.promptLabel = new Label();
         this.listContentPane = new ScrollPane();
         this.listContent = new Pane();
+        this.footer = new Pane();
         listContentPane.setSkin(new ScrollPaneSkin(listContentPane));
         Set<Node> scrollBars = listContentPane.lookupAll(".scroll-bar");
         scrollBars.forEach(el -> {
@@ -198,6 +202,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         UIUtil.add(openButtonPane, openButtonPaneIcon);
         UIUtil.add(this, listHeader);
         UIUtil.add(this, listContentPane);
+        UIUtil.add(this, footer);
         listContentPane.setContent(listContent);
 
         BackgroundUtil.setBackgroundColor(this, Color.TRANSPARENT);
@@ -239,6 +244,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             listItemPanes.forEach(itemPane -> {
                 itemPane.setPrefWidth(listContent.getPrefWidth() - listContentPadding.getLeft() - listContentPadding.getRight());
             });
+            footer.setPrefWidth((double) newVal);
         });
         listHeader.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
             headerIconPane.setPrefWidth((double) newVal);
@@ -256,21 +262,21 @@ public class FDropdownList<T> extends Pane implements FLabeled {
             }
             double selectedItemPaneWidth;
             if (headerIconPane.isVisible() && openButtonPane.isVisible()) {
-                selectedItemPaneWidth = Math.abs((double) newVal - headerIconPane.getPrefWidth() - openButtonPane.getPrefWidth());
+                selectedItemPaneWidth = Math.abs(listHeader.getPrefWidth() - headerIconPane.getPrefWidth() - openButtonPane.getPrefWidth());
             }
             else if (headerIconPane.isVisible()) {
-                selectedItemPaneWidth = Math.abs((double) newVal - headerIconPane.getPrefWidth());
+                selectedItemPaneWidth = Math.abs(listHeader.getPrefWidth() - headerIconPane.getPrefWidth());
             }
             else if (openButtonPane.isVisible()) {
-                selectedItemPaneWidth = Math.abs((double) newVal - openButtonPane.getPrefWidth());
+                selectedItemPaneWidth = Math.abs(listHeader.getPrefWidth() - openButtonPane.getPrefWidth());
             }
             else {
-                selectedItemPaneWidth = Math.abs((double) newVal);
+                selectedItemPaneWidth = Math.abs(listHeader.getPrefWidth());
             }
             selectedItemPaneWidth = Math.abs(selectedItemPaneWidth - headerPadding.getLeft() - headerPadding.getRight());
             selectedItemPane.setPrefWidth(selectedItemPaneWidth);
             selectedItemPane.setLayoutX(headerIconPane.getPrefWidth());
-            openButtonPane.setLayoutX(selectedItemPane.getLayoutX() + selectedItemPane.getPrefWidth());
+            openButtonPane.setLayoutX(listHeader.getPrefWidth() - openButtonPane.getPrefWidth() - headerPadding.getRight());
             listHeaderSelectedItemLabel.setPrefWidth(selectedItemPaneWidth);
             listHeaderSelectedItemLabel.setPrefHeight((double) newVal);
             promptLabel.setPrefWidth(selectedItemPaneWidth);
@@ -308,6 +314,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
                 openButtonPaneIcon.setLayoutY(openButtonPane.getPrefHeight() / 2 - iconHeight / 2);
             }
             listContentPane.setLayoutY((double) newVal);
+            footer.setLayoutY((double) newVal + listContentPane.getPrefHeight());
         });
 
         setPrefWidth(DEFAULT_WIDTH);
@@ -327,6 +334,7 @@ public class FDropdownList<T> extends Pane implements FLabeled {
 
         listContentPane.setLayoutX(0);
         listContentPane.setLayoutY(listHeader.getPrefHeight());
+        footer.setLayoutY(listHeader.getPrefHeight());
 
         initListContentResizeBasedOnVScrollBar();
         vBarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -387,7 +395,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
      * Arranges the elements in the list header taking into account if the<br>
      * icon pane is visible or not.
      */
-    // FINISHED
     private void arrangeHeaderComponentsBasedOnIconPaneVisibility (boolean isVisible) {
         double selectedItemPaneWidth;
         double openButtonPaneLayoutX;
@@ -424,7 +431,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
      * Arranges the list header elements taking into account the<br>
      * open button pane visibility.
      */
-    // FINISHED
     private void arrangeHeaderComponentsBasedOnOpenButtonVisibility (boolean isVisible) {
         double selectedItemPaneWidth;
         double openButtonPaneLayoutX;
@@ -459,7 +465,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         promptLabel.setPrefWidth(selectedItemPaneWidth);
     }
 
-    // FINISHED
     private void arrangeListItemChildrenBasedOnSelectedItemIconVisibility (boolean isVisible) {
         if (!isVisible && !displayItemsIconProperty.get()) {
             nodeItems.forEach(element -> {
@@ -519,7 +524,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         }
     }
 
-    // FINISHED
     private void arrangeListItemChildrenBasedOnItemIconVisibility (boolean isVisible) {
         if (!isVisible && !displaySelectedItemIconProperty.get()) {
             nodeItems.forEach(element -> {
@@ -687,8 +691,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         });
     }
 
-    // FINISHED
-
     /**
      * Initializes the positioning and resizing behavior for the selected item icon.
      *
@@ -722,7 +724,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
      *
      * @param item The value which will be visible in the list item container
      */
-    // FINISHED
     private Pane createBasicValueListItem (T item) {
         Pane listItemPane = new Pane();
         Pane selectedItemIconPane = new Pane();
@@ -873,16 +874,12 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return listItemPane;
     }
 
-    // FINISHED
-
     /**
      * Returns the current selected value.
      */
     public T getValue () {
         return selectedValueProperty.get();
     }
-
-    // FINISHED
 
     /**
      * Removes the specified item.
@@ -891,8 +888,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         removeItem(itemsValues.indexOf(item));
         return this;
     }
-
-    // FINISHED
 
     /**
      * Removes an item from the specified index.
@@ -949,16 +944,19 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         listIsOpenedProperty.set(open);
         if (listIsOpenedProperty.get()) {
             listContentPane.setPrefHeight(expandHeight);
+            footer.setLayoutY(listHeader.getPrefHeight() + expandHeight);
         }
         else {
             listContentPane.setPrefHeight(0);
+            footer.setLayoutY(listHeader.getPrefHeight());
         }
     }
 
-    // FINISHED
     private void addListItemToStyleTracker (Pane component) {
         Set<String> notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(component, notAllowedProperties);
@@ -967,6 +965,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     private void addItemLabelToStyleTracker (Label label) {
         Set<String> notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(label, notAllowedProperties);
@@ -980,6 +980,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
 
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(listHeader, notAllowedProperties);
@@ -987,6 +989,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(headerIconPane, notAllowedProperties);
@@ -994,6 +998,8 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(promptLabel, notAllowedProperties);
@@ -1001,48 +1007,70 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(openButtonPane, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(listContentPane, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.TRANSLATE_X);
+        notAllowedProperties.add(MainProps.TRANSLATE_Y);
         styleTracker.addComponent(listContent, notAllowedProperties);
+
+        notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.TRANSLATE_X);
+        notAllowedProperties.add(MainProps.TRANSLATE_Y);
+        styleTracker.addComponent(footer, notAllowedProperties);
 
         // ScrollPane(listContentPane)-related elements
         notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.HEIGHT);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
-        notAllowedProperties.add(MainProps.HEIGHT);
         styleTracker.addComponent(verticalScrollBar, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
-        notAllowedProperties.add(MainProps.WIDTH);
         styleTracker.addComponent(horizontalScrollBar, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         notAllowedProperties.add(MainProps.TRANSLATE_X);
         notAllowedProperties.add(MainProps.TRANSLATE_Y);
-        notAllowedProperties.add(MainProps.WIDTH);
-        notAllowedProperties.add(MainProps.HEIGHT);
         styleTracker.addComponent(verticalThumb, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
         notAllowedProperties.add(MainProps.X);
         notAllowedProperties.add(MainProps.Y);
         notAllowedProperties.add(MainProps.TRANSLATE_X);
         notAllowedProperties.add(MainProps.TRANSLATE_Y);
-        notAllowedProperties.add(MainProps.WIDTH);
-        notAllowedProperties.add(MainProps.HEIGHT);
         styleTracker.addComponent(horizontalThumb, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
@@ -1274,6 +1302,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
+    public FDropdownList<T> footer (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(footer);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
     // ScrollPane(listContentPane)-related pseudo-elements
     public FDropdownList<T> verticalScrollBar (PseudoElement pseudoElement) {
         styleTracker.setCurrentComponent(verticalScrollBar);
@@ -1404,7 +1439,13 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     public FDropdownList<T> height (double value) {
         if (styleTracker.isAllowedProperty(MainProps.HEIGHT)) {
             if (styleTracker.getCurrentComponent() == this) {
+                setPrefHeight(value);
                 setListContentPaneHeight(value);
+            }
+            else if (styleTracker.getCurrentComponent() == footer) {
+                footer.setPrefHeight(value);
+                setListContentPaneHeight(getPrefHeight());
+                footer.setLayoutY(listHeader.getPrefHeight() + expandHeight);
             }
             else {
                 styleTracker.getCurrentComponent().setPrefHeight(value);
@@ -1414,151 +1455,174 @@ public class FDropdownList<T> extends Pane implements FLabeled {
     }
 
     private void setListContentPaneHeight (double value) {
-        value = Math.abs(value - listHeader.getPrefHeight());
+        expandHeight = Math.abs(value - listHeader.getPrefHeight() - footer.getPrefHeight());
         if (listIsOpenedProperty.get()) {
-            listContentPane.setPrefHeight(value);
+            listContentPane.setPrefHeight(expandHeight);
         }
-        expandHeight = value;
     }
 
     @Override
     public FDropdownList<T> scaleX (double value) {
-        styleTracker.getCurrentComponent().setScaleX(value);
+        if (styleTracker.isAllowedProperty(MainProps.SCALE_X)) {
+            styleTracker.getCurrentComponent().setScaleX(value);
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> scaleY (double value) {
-        styleTracker.getCurrentComponent().setScaleY(value);
+        if (styleTracker.isAllowedProperty(MainProps.SCALE_Y)) {
+            styleTracker.getCurrentComponent().setScaleY(value);
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> translateX (double value) {
-        styleTracker.getCurrentComponent().setTranslateX(value);
+        if (styleTracker.isAllowedProperty(MainProps.X)) {
+            styleTracker.getCurrentComponent().setTranslateX(value);
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> translateY (double value) {
-        styleTracker.getCurrentComponent().setTranslateY(value);
+        if (styleTracker.isAllowedProperty(MainProps.Y)) {
+            styleTracker.getCurrentComponent().setTranslateY(value);
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> rotate (double value) {
-        styleTracker.getCurrentComponent().setRotate(value);
+        if (styleTracker.isAllowedProperty(MainProps.ROTATE)) {
+            styleTracker.getCurrentComponent().setRotate(value);
+        }
         return this;
     }
 
     @Override
     public FDropdownList<T> padding (double value) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), value);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.set(value);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.set(value);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setPadding(styleTracker.getCurrentComponent(), value);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.set(value);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.set(value);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> padding (double topBottom, double rightLeft) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), topBottom, rightLeft);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.set(topBottom, rightLeft);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.set(topBottom, rightLeft);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setPadding(styleTracker.getCurrentComponent(), topBottom, rightLeft);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.set(topBottom, rightLeft);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.set(topBottom, rightLeft);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> padding (double top, double right, double bottom, double left) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setPadding(styleTracker.getCurrentComponent(), top, right, bottom, left);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.set(top, right, bottom, left);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.set(top, right, bottom, left);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setPadding(styleTracker.getCurrentComponent(), top, right, bottom, left);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.set(top, right, bottom, left);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.set(top, right, bottom, left);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> topPadding (double value) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setTopPadding(styleTracker.getCurrentComponent(), value);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.setTop(value);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.setTop(value);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setTopPadding(styleTracker.getCurrentComponent(), value);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.setTop(value);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.setTop(value);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> rightPadding (double value) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setRightPadding(styleTracker.getCurrentComponent(), value);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.setRight(value);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.setRight(value);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setRightPadding(styleTracker.getCurrentComponent(), value);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.setRight(value);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.setRight(value);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> bottomPadding (double value) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setBottomPadding(styleTracker.getCurrentComponent(), value);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.setBottom(value);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.setBottom(value);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setBottomPadding(styleTracker.getCurrentComponent(), value);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.setBottom(value);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.setBottom(value);
+                rearrangeListItems();
+            }
         }
         return this;
     }
 
     @Override
     public FDropdownList<T> leftPadding (double value) {
-        if (styleTracker.getCurrentComponent() == this) {
-            PaddingUtil.setLeftPadding(styleTracker.getCurrentComponent(), value);
-        }
-        else if (styleTracker.getCurrentComponent() == listHeader) {
-            headerPadding.setLeft(value);
-            rearrangeHeaderComponentsBasedOnPadding();
-        }
-        else if (styleTracker.getCurrentComponent() == listContent) {
-            listContentPadding.setLeft(value);
-            rearrangeListItems();
+        if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
+            if (styleTracker.getCurrentComponent() == this) {
+                PaddingUtil.setLeftPadding(styleTracker.getCurrentComponent(), value);
+            }
+            else if (styleTracker.getCurrentComponent() == listHeader) {
+                headerPadding.setLeft(value);
+                rearrangeHeaderComponentsBasedOnPadding();
+            }
+            else if (styleTracker.getCurrentComponent() == listContent) {
+                listContentPadding.setLeft(value);
+                rearrangeListItems();
+            }
         }
         return this;
     }
@@ -2594,8 +2658,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Gives the possibility to select an item externally from the specified index.
      */
@@ -2640,8 +2702,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Sets the header icon as a Pane component(can change the shape using SVG code).
      *
@@ -2660,8 +2720,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         headerPaneIcon.setLayoutY(headerIconPane.getPrefHeight() / 2 - iconHeight / 2);
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the header icon as an ImageView icon.
@@ -2724,8 +2782,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Sets the header icon to be visible or not.
      */
@@ -2733,8 +2789,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         headerIconPane.setVisible(display);
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the selected item icon to be visible or not.
@@ -2747,8 +2801,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Sets the item icon to be visible or not.
      */
@@ -2759,8 +2811,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         });
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the selected item icon as a Pane component(can change the shape using SVG code).
@@ -2787,8 +2837,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Sets the selected item icon as an ImageView icon.
      *
@@ -2814,8 +2862,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         }
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the item icon as a Pane component(can change the shape using SVG code).
@@ -2847,8 +2893,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         }
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the item icon as an ImageView icon.
@@ -2883,8 +2927,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
-
     /**
      * Sets the space between list items.
      */
@@ -2896,7 +2938,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
     private void rearrangeListItems () {
         double contentHeight = listContentPadding.getTop();
         for (int i = 0; i < listItemPanes.size(); i++) {
@@ -2910,7 +2951,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         listContent.setPrefHeight(minHeightValue);
     }
 
-    // FINISHED
     /**
      * Sets the open button to be visible or not.
      */
@@ -2918,8 +2958,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         openButtonPane.setVisible(display);
         return this;
     }
-
-    // FINISHED
 
     /**
      * Sets the prompt text to be visible or not.
@@ -2929,8 +2967,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         displayCurrentSelectedItemProperty.set(!display);
         return this;
     }
-
-    // FINISHED
 
     /**
      * Displays the current selected item in the list header if there is<br>
@@ -2942,7 +2978,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
     public FDropdownList<T> setHeaderIconDimensionPercent (int value) {
         if (value >= 0 && value <= 100) {
             headerIconDimensionPercent = (double) value / 100;
@@ -2962,7 +2997,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
     public FDropdownList<T> setSelectedItemIconDimensionPercent (int value) {
         if (value >= 0 && value <= 100) {
             selectedItemIconDimensionPercent = (double) value / 100;
@@ -3007,7 +3041,6 @@ public class FDropdownList<T> extends Pane implements FLabeled {
         return this;
     }
 
-    // FINISHED
     public FDropdownList<T> setItemIconDimensionPercent (int value) {
         if (value >= 0 && value <= 100) {
             itemIconDimensionPercent = (double) value / 100;
