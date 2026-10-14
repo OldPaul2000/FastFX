@@ -8,7 +8,6 @@ import com.example.fastfx.tests.UITestingPanel;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class FComponentsController {
@@ -28,7 +27,12 @@ public class FComponentsController {
         mainContainer.add(testingPanel);
 
         FTabPane tabPane = new FTabPane();
-        tabPane.width(200).height(200).x(300).y(100);
+        tabPane.width(400).height(200).x(300).y(100);
+        tabPane.tabsSpacing(10);
+        tabPane.tabsBarHeight(16);
+        tabPane.tabsBarContent(() -> {
+            tabPane.padding(0, 4);
+        });
 
         FPane tab1 = new FPane();
         tab1.bgColor(Color.RED).width(200).height(200);
@@ -39,37 +43,10 @@ public class FComponentsController {
         FPane tab4 = new FPane();
         tab4.bgColor(Color.YELLOW).width(200).height(200);
 
-        tabPane.addTab("Tab 1", tab1);
-        tabPane.addTab("Tab 2", tab2);
-        tabPane.addTab("Tab 3", tab3);
-//        tabPane.addTab("Tab 4", tab4);
-
-
-        FPane pane = new FPane();
-        pane.x(550).y(100).width(200).height(200).bgColor(Color.rgb(23, 88, 44));
-        mainContainer.add(pane);
-
-        pane.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-            if(!mouseExited){
-                //            System.out.println("drag");
-                System.out.println("x: " + e.getX());
-                System.out.println("y: " + e.getY());
-            }
-        });
-        pane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            mouseExited = false;
-            System.out.println("pressed");
-        });
-        pane.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
-            System.out.println("released");
-        });
-        pane.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-            mouseExited = true;
-            System.out.println("exit");
-        });
-        pane.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-            mouseExited = false;
-        });
+        tabPane.addTab("Tab", tab1);
+        tabPane.addTab("Tab", tab2);
+        tabPane.addTab("Tab", tab3);
+        tabPane.addTab("Tab", tab4);
 
         mainContainer.add(tabPane);
 
@@ -81,16 +58,16 @@ public class FComponentsController {
         testingPanel.setButtonText(4, "");
         testingPanel.setButtonText(5, "");
         testingPanel.setButtonEvent(1, e -> {
-
+            tabPane.addTab("Tab 1", tab1);
         });
         testingPanel.setButtonEvent(2, e -> {
-
+            tabPane.addTab("Tab 2", tab2);
         });
         testingPanel.setButtonEvent(3, e -> {
-
+            tabPane.addTab("Tab 3", tab3);
         });
         testingPanel.setButtonEvent(4, e -> {
-
+            tabPane.addTab("Tab 4", tab4);
         });
         testingPanel.setButtonEvent(5, e -> {
 

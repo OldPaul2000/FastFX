@@ -29,6 +29,8 @@ public class HelloApplication extends Application {
         stage.heightProperty().addListener((val, oldVal, newVal) -> {
             mainContainer.height((double) newVal);
         });
+        stage.setX(100);
+        stage.setY(100);
     }
 
     public static void main(String[] args) {
