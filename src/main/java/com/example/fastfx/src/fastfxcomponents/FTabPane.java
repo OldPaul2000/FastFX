@@ -6,20 +6,26 @@ import com.example.fastfx.src.stylehelpers.ComponentStyleTracker;
 import com.example.fastfx.src.stylehelpers.MainProps;
 import com.example.fastfx.src.util.style.BackgroundUtil;
 import com.example.fastfx.src.util.style.BorderUtil;
+import com.example.fastfx.src.util.style.FontUtil;
 import com.example.fastfx.src.util.style.PaddingUtil;
 import com.example.fastfx.src.util.ui.UIUtil;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.skin.ScrollBarSkin;
+import javafx.scene.control.skin.ScrollPaneSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
@@ -33,8 +39,12 @@ public class FTabPane extends Pane implements FLabeled {
     private static final double DEFAULT_TABS_BAR_HEIGHT = 20;
     private static final double DEFAULT_TABS_WIDTH = 80;
     private static final double DEFAULT_TABS_SPACING = 5;
-    private static final double DEFAULT_ICONS_DIMENSION_PERCENTAGE = 0.75;
+    private static final double DEFAULT_TABS_ICONS_DIMENSION_PERCENTAGE = 0.75;
+    private static final double DEFAULT_CLOSE_ICONS_DIMENSION_PERCENTAGE = 0.75;
     private static final String DEFAULT_CLOSE_BUTTON_SVG_ICON = "M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z";
+
+    private static final String TABS_COMPONENT_TO_STYLE_ID = "tabs";
+    private static final String VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID = "viewScrollPanes";
 
     private Margin margin;
     private ScrollPane tabsBar;
@@ -47,37 +57,66 @@ public class FTabPane extends Pane implements FLabeled {
     private Map<Pane, Pane> tabsCloseButtonIconPanes;
     private Map<Pane, Node> tabsCloseButtonIcons;
     private Map<Pane, ScrollPane> tabPaneViewComponents;
-    private Map<String, Integer> tabsNames;
+    private Map<String, List<Integer>> tabsNames;
 
-    private Padding tabsBarPadding;
+    private Padding padding;
     private Padding tabsBarContentPadding;
     private Map<Pane, Padding> tabsPadding;
     private Padding tabPanePadding;
 
     private ScrollPane currVisibleViewComponent;
-    private double tabsBarHeight;
     private double tabsWidth;
-    private double tabsHeight;
     private double tabsSpacing;
     private double tabsIconDimensionPercent;
     private double closeButtonsIconDimensionPercent;
     private double totalTabsBarContentWidth;
 
+    // ScrollPane(tabsBar)-related elements
+    private ScrollBar tabsBarVerticalScrollBar;
+    private ScrollBar tabsBarHorizontalScrollBar;
+    private Region tabsBarVerticalThumb;
+    private Region tabsBarHorizontalThumb;
+    private Region tabsBarIncrementVButton;
+    private Region tabsBarDecrementVButton;
+    private Region tabsBarIncrementHButton;
+    private Region tabsBarDecrementHButton;
+    private Region tabsBarIncrementVArrow;
+    private Region tabsBarDecrementVArrow;
+    private Region tabsBarIncrementHArrow;
+    private Region tabsBarDecrementHArrow;
+    private StackPane tabsBarCorner;
+    private StackPane tabsBarViewport;
+
+    // ScrollPane(viewComponents)-related elements
+    private Map<ScrollPane, ScrollBar> viewComponentsVerticalScrollBar;
+    private Map<ScrollPane, ScrollBar> viewComponentsHorizontalScrollBar;
+    private Map<ScrollPane, Region> viewComponentsVerticalThumb;
+    private Map<ScrollPane, Region> viewComponentsHorizontalThumb;
+    private Map<ScrollPane, Region> viewComponentsIncrementVButton;
+    private Map<ScrollPane, Region> viewComponentsDecrementVButton;
+    private Map<ScrollPane, Region> viewComponentsIncrementHButton;
+    private Map<ScrollPane, Region> viewComponentsDecrementHButton;
+    private Map<ScrollPane, Region> viewComponentsIncrementVArrow;
+    private Map<ScrollPane, Region> viewComponentsDecrementVArrow;
+    private Map<ScrollPane, Region> viewComponentsIncrementHArrow;
+    private Map<ScrollPane, Region> viewComponentsDecrementHArrow;
+    private Map<ScrollPane, StackPane> viewComponentsCorner;
+    private Map<ScrollPane, StackPane> viewComponentsViewport;
+
     private ComponentStyleTracker styleTracker;
 
     public FTabPane () {
         this.margin = new Margin(0);
-        this.tabsBarPadding = new Padding(0);
+        this.padding = new Padding(0);
         this.tabsBarContentPadding = new Padding(0);
         this.tabsPadding = new HashMap<>();
         this.tabPanePadding = new Padding(0);
         this.styleTracker = new ComponentStyleTracker();
 
-        this.tabsBarHeight = DEFAULT_TABS_BAR_HEIGHT;
         this.tabsWidth = DEFAULT_TABS_WIDTH;
         this.tabsSpacing = DEFAULT_TABS_SPACING;
-        this.tabsIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
-        this.closeButtonsIconDimensionPercent = DEFAULT_ICONS_DIMENSION_PERCENTAGE;
+        this.tabsIconDimensionPercent = DEFAULT_TABS_ICONS_DIMENSION_PERCENTAGE;
+        this.closeButtonsIconDimensionPercent = DEFAULT_CLOSE_ICONS_DIMENSION_PERCENTAGE;
         this.totalTabsBarContentWidth = 0;
 
         this.tabsNames = new HashMap<>();
@@ -99,17 +138,60 @@ public class FTabPane extends Pane implements FLabeled {
         this.tabsCloseButtonIconPanes = new HashMap<>();
         this.tabsCloseButtonIcons = new HashMap<>();
         this.tabPaneViewComponents = new HashMap<>();
+        this.viewComponentsVerticalScrollBar = new LinkedHashMap<>();
+        this.viewComponentsHorizontalScrollBar = new LinkedHashMap<>();
+        this.viewComponentsVerticalThumb = new LinkedHashMap<>();
+        this.viewComponentsHorizontalThumb = new LinkedHashMap<>();
+        this.viewComponentsIncrementVButton = new LinkedHashMap<>();
+        this.viewComponentsDecrementVButton = new LinkedHashMap<>();
+        this.viewComponentsIncrementHButton = new LinkedHashMap<>();
+        this.viewComponentsDecrementHButton = new LinkedHashMap<>();
+        this.viewComponentsIncrementVArrow = new LinkedHashMap<>();
+        this.viewComponentsDecrementVArrow = new LinkedHashMap<>();
+        this.viewComponentsIncrementHArrow = new LinkedHashMap<>();
+        this.viewComponentsDecrementHArrow = new LinkedHashMap<>();
+        this.viewComponentsCorner = new LinkedHashMap<>();
+        this.viewComponentsViewport = new LinkedHashMap<>();
         createTabsBar();
+        initTabsBarScrollPaneComponents();
+    }
+
+    private void initTabsBarScrollPaneComponents () {
+        tabsBar.setSkin(new ScrollPaneSkin(tabsBar));
+        Set<Node> scrollBars = tabsBar.lookupAll(".scroll-bar");
+        scrollBars.forEach(el -> {
+            ScrollBar currScrollBar = (ScrollBar) el;
+            if (currScrollBar.getOrientation() == Orientation.VERTICAL) {
+                this.tabsBarVerticalScrollBar = currScrollBar;
+            }
+            else if (currScrollBar.getOrientation() == Orientation.HORIZONTAL) {
+                this.tabsBarHorizontalScrollBar = currScrollBar;
+            }
+        });
+        this.tabsBarVerticalScrollBar.setSkin(new ScrollBarSkin(tabsBarVerticalScrollBar));
+        this.tabsBarHorizontalScrollBar.setSkin(new ScrollBarSkin(tabsBarHorizontalScrollBar));
+        this.tabsBarVerticalThumb = (Region) tabsBarVerticalScrollBar.lookup(".thumb");
+        this.tabsBarHorizontalThumb = (Region) tabsBarHorizontalScrollBar.lookup(".thumb");
+        this.tabsBarIncrementVButton = (Region) tabsBarVerticalScrollBar.lookup(".increment-button");
+        this.tabsBarDecrementVButton = (Region) tabsBarVerticalScrollBar.lookup(".decrement-button");
+        this.tabsBarIncrementHButton = (Region) tabsBarHorizontalScrollBar.lookup(".increment-button");
+        this.tabsBarDecrementHButton = (Region) tabsBarHorizontalScrollBar.lookup(".decrement-button");
+        this.tabsBarIncrementVArrow = (Region) tabsBarVerticalScrollBar.lookup(".increment-arrow");
+        this.tabsBarDecrementVArrow = (Region) tabsBarVerticalScrollBar.lookup(".decrement-arrow");
+        this.tabsBarIncrementHArrow = (Region) tabsBarHorizontalScrollBar.lookup(".increment-arrow");
+        this.tabsBarDecrementHArrow = (Region) tabsBarHorizontalScrollBar.lookup(".decrement-arrow");
+        this.tabsBarCorner = (StackPane) tabsBar.lookup(".corner");
+        this.tabsBarViewport = (StackPane) tabsBar.lookup(".viewport");
     }
 
     private void createTabsBar () {
         tabsBar.prefHeightProperty().addListener((prop, oldVal, newVal) -> {
-            tabsBarContent.setPrefHeight((double) newVal);
+            tabsBarContent.setPrefHeight((double) newVal - 2);
             tabs.forEach(tab -> {
-                tab.setPrefHeight((double) newVal);
+                tab.setPrefHeight(tabsBarContent.getPrefHeight());
             });
         });
-        BackgroundUtil.setBackgroundColor(tabsBarContent, Color.RED);
+        tabsBar.setMinHeight(0);
         tabsBar.setPrefHeight(DEFAULT_TABS_BAR_HEIGHT);
         tabsBar.setLayoutX(0);
         tabsBar.setLayoutY(0);
@@ -159,7 +241,7 @@ public class FTabPane extends Pane implements FLabeled {
                     currViewPane.setVisible(true);
                     currVisibleViewComponent = currViewPane;
                 }
-                else if (tab != null) {
+                else if (tabCloseButton != null) {
                     closeTab(tabs.indexOf(tab));
                 }
             }
@@ -173,7 +255,6 @@ public class FTabPane extends Pane implements FLabeled {
     private double lastTabLayoutX;
     private boolean mouseWasMoved = false;
     private boolean isCloseButtonPressed;
-    private double lastX;
 
     private void initTabsDragMovementEvent () {
         tabsBarContent.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
@@ -181,6 +262,7 @@ public class FTabPane extends Pane implements FLabeled {
             currTabForDrag = (Node) e.getTarget();
             while (true) {
                 if (currTabForDrag == tabsBarContent) {
+                    currTabForDrag = null;
                     break;
                 }
                 else if (currTabForDrag instanceof Pane && tabs.contains((Pane) currTabForDrag)) {
@@ -199,11 +281,11 @@ public class FTabPane extends Pane implements FLabeled {
         });
         tabsBarContent.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             mouseWasMoved = true;
-            if (!isCloseButtonPressed) {
+            if (!isCloseButtonPressed && currTabForDrag != null) {
                 double x = Math.max(e.getX() - currTabForDragMouseXPositionOffset, tabsBarContentPadding.getLeft());
                 int barToReplaceIndex;
                 barToReplaceIndex = (int) ((x + tabsWidth * TAB_MOVE_FLAG_OFFSET_PERCENT) / (tabsWidth + tabsSpacing));
-                if (barToReplaceIndex < tabs.size() && barToReplaceIndex != lastTabIndex) {
+                if (barToReplaceIndex != lastTabIndex && barToReplaceIndex < tabs.size()) {
                     Pane temp = tabs.get(lastTabIndex);
                     tabs.set(lastTabIndex, tabs.get(barToReplaceIndex));
                     tabs.set(barToReplaceIndex, temp);
@@ -214,7 +296,6 @@ public class FTabPane extends Pane implements FLabeled {
                     lastTabLayoutX = tabs.get(lastTabIndex).getLayoutX();
                 }
                 currTabForDrag.setLayoutX(x);
-                lastX = e.getX();
             }
         });
         tabsBarContent.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
@@ -244,27 +325,16 @@ public class FTabPane extends Pane implements FLabeled {
      *
      */
     public FTabPane addTab (String tabName, Node viewComponent) {
-        return addTab(tabName, null, viewComponent);
-    }
-
-    /**
-     * Adds a component to be displayed in the tab pane and at the same time<br>
-     * it adds a new tab in the tabs bar.
-     *
-     * @param viewComponent the component to be displayed(Pane, Button, etc.)
-     * @param tabIcon       the displayed icon inside the tab
-     * @param tabName       the displayed text inside the tab
-     *
-     */
-    public FTabPane addTab (String tabName, Node tabIcon, Node viewComponent) {
-        Pane tab = createNewTab(tabName, tabIcon);
+        Pane tab = createNewTab(tabName);
         tabs.add(tab);
         tab.setLayoutX(totalTabsBarContentWidth);
         tab.setLayoutY(tabsBarContentPadding.getTop());
-        totalTabsBarContentWidth += tabsWidth + tabsSpacing;
+        totalTabsBarContentWidth += tab.getPrefWidth() + tabsSpacing;
         double minTabsBarContentWidth = Math.max(totalTabsBarContentWidth, tabsBar.getPrefWidth());
         tabsBarContent.setPrefWidth(minTabsBarContentWidth);
         ScrollPane scrollPaneView = new ScrollPane();
+        scrollPaneView.setSkin(new ScrollPaneSkin(scrollPaneView));
+        initScrollPaneViewComponents(scrollPaneView);
         scrollPaneView.setContent(viewComponent);
         if (currVisibleViewComponent != null) {
             currVisibleViewComponent.setVisible(false);
@@ -278,16 +348,22 @@ public class FTabPane extends Pane implements FLabeled {
         currVisibleViewComponent = scrollPaneView;
         UIUtil.add(tabsBarContent, tab);
         UIUtil.add(this, scrollPaneView);
+        addTabToStyleTracker(tab);
+        addScrollPaneViewToStyleTracker(scrollPaneView);
         return this;
     }
 
-    private Pane createNewTab (String tabName, Node tabIcon) {
+    private Pane createNewTab (String tabName) {
         Pane tab = new Pane();
         Pane iconPane = new Pane();
         Label tabNameLabel = new Label(createTabName(tabName));
+        tabNameLabel.setMinHeight(0);
+        tabNameLabel.setAlignment(Pos.CENTER_LEFT);
         Pane closeButtonPane = new Pane();
         Pane closeButtonIcon = new Pane();
+        BackgroundUtil.setBackgroundColor(closeButtonIcon, Color.BLACK);
         tabsIconPanes.put(tab, iconPane);
+        tabsLabels.put(tab, tabNameLabel);
         tabsCloseButtonPanes.add(closeButtonPane);
         tabsCloseButtonIconPanes.put(tab, closeButtonPane);
         tabsCloseButtonIcons.put(tab, closeButtonIcon);
@@ -304,9 +380,9 @@ public class FTabPane extends Pane implements FLabeled {
             double tabElementsHeight = (double) newVal - padding.getTop() - padding.getBottom();
             iconPane.setPrefWidth(tabElementsHeight);
             iconPane.setPrefHeight(tabElementsHeight);
-            tabNameLabel.setPrefHeight(tabElementsHeight);
             closeButtonPane.setPrefWidth(tabElementsHeight);
             closeButtonPane.setPrefHeight(tabElementsHeight);
+            tabNameLabel.setPrefHeight(tabElementsHeight);
             tabNameLabel.setPrefWidth(tab.getPrefWidth() - iconPane.getPrefWidth() - closeButtonPane.getPrefWidth());
             tabNameLabel.setLayoutX(tabsPadding.get(tab).getLeft() + iconPane.getPrefWidth());
             closeButtonPane.setLayoutX(tabsPadding.get(tab).getLeft() + iconPane.getPrefWidth() + tabNameLabel.getPrefWidth());
@@ -349,22 +425,108 @@ public class FTabPane extends Pane implements FLabeled {
         tab.setPrefWidth(tabsWidth);
         tab.setPrefHeight(tabsBar.getPrefHeight() - tabsBarContentPadding.getTop() - tabsBarContentPadding.getBottom());
 
-        //        BackgroundUtil.setBackgroundOpacity(iconPane, 0);
-        //        BackgroundUtil.setBackgroundOpacity(tabNameLabel, 0);
-        //        BackgroundUtil.setBackgroundOpacity(closeButtonPane, 0);
-        BackgroundUtil.setBackgroundColor(iconPane, Color.BLACK);
-        BackgroundUtil.setBackgroundColor(tabNameLabel, Color.ORANGE);
-        BackgroundUtil.setBackgroundColor(closeButtonIcon, Color.BLUE);
-        BackgroundUtil.setBackgroundColor(tab, Color.GREEN);
-
-        if (tabIcon != null) {
-            UIUtil.add(iconPane, tabIcon);
-        }
         UIUtil.add(closeButtonPane, closeButtonIcon);
         UIUtil.add(tab, iconPane);
         UIUtil.add(tab, tabNameLabel);
         UIUtil.add(tab, closeButtonPane);
+
+        addTabIconPaneToStyleTracker(iconPane);
+        addTabLabelToStyleTracker(tabNameLabel);
+        addCloseIconPaneToStyleTracker(closeButtonPane);
         return tab;
+    }
+
+    private void initScrollPaneViewComponents (ScrollPane scrollPane) {
+        Set<Node> scrollBars = scrollPane.lookupAll(".scroll-bar");
+        for (Node scrollBar : scrollBars) {
+            ScrollBar currScrollBar = (ScrollBar) scrollBar;
+            currScrollBar.setSkin(new ScrollBarSkin(currScrollBar));
+            if (currScrollBar.getOrientation() == Orientation.VERTICAL) {
+                Region thumb = (Region) currScrollBar.lookup(".thumb");
+                Region incrementButton = (Region) currScrollBar.lookup(".increment-button");
+                Region decrementButton = (Region) currScrollBar.lookup(".decrement-button");
+                Region incrementArrow = (Region) currScrollBar.lookup(".increment-arrow");
+                Region decrementArrow = (Region) currScrollBar.lookup(".decrement-arrow");
+                viewComponentsVerticalScrollBar.put(scrollPane, currScrollBar);
+                viewComponentsVerticalThumb.put(scrollPane, thumb);
+                viewComponentsIncrementVButton.put(scrollPane, incrementButton);
+                viewComponentsDecrementVButton.put(scrollPane, decrementButton);
+                viewComponentsIncrementVArrow.put(scrollPane, incrementArrow);
+                viewComponentsDecrementVArrow.put(scrollPane, decrementArrow);
+                styleTracker.addComponent(currScrollBar, new HashSet<>());
+                styleTracker.addComponent(thumb, new HashSet<>());
+                styleTracker.addComponent(incrementButton, new HashSet<>());
+                styleTracker.addComponent(decrementButton, new HashSet<>());
+                styleTracker.addComponent(incrementArrow, new HashSet<>());
+                styleTracker.addComponent(decrementArrow, new HashSet<>());
+            }
+            else if (currScrollBar.getOrientation() == Orientation.HORIZONTAL) {
+                Region thumb = (Region) currScrollBar.lookup(".thumb");
+                Region incrementButton = (Region) currScrollBar.lookup(".increment-button");
+                Region decrementButton = (Region) currScrollBar.lookup(".decrement-button");
+                Region incrementArrow = (Region) currScrollBar.lookup(".increment-arrow");
+                Region decrementArrow = (Region) currScrollBar.lookup(".decrement-arrow");
+                viewComponentsHorizontalScrollBar.put(scrollPane, currScrollBar);
+                viewComponentsHorizontalThumb.put(scrollPane, thumb);
+                viewComponentsIncrementHButton.put(scrollPane, incrementButton);
+                viewComponentsDecrementHButton.put(scrollPane, decrementButton);
+                viewComponentsIncrementHArrow.put(scrollPane, incrementArrow);
+                viewComponentsDecrementHArrow.put(scrollPane, decrementArrow);
+                styleTracker.addComponent(currScrollBar, new HashSet<>());
+                styleTracker.addComponent(thumb, new HashSet<>());
+                styleTracker.addComponent(incrementButton, new HashSet<>());
+                styleTracker.addComponent(decrementButton, new HashSet<>());
+                styleTracker.addComponent(incrementArrow, new HashSet<>());
+                styleTracker.addComponent(decrementArrow, new HashSet<>());
+            }
+        }
+        StackPane corner = (StackPane) scrollPane.lookup(".corner");
+        StackPane viewport = (StackPane) scrollPane.lookup(".viewport");
+        viewComponentsCorner.put(scrollPane, corner);
+        viewComponentsViewport.put(scrollPane, viewport);
+        styleTracker.addComponent(corner, new HashSet<>());
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.TRANSLATE_X);
+        notAllowedProperties.add(MainProps.TRANSLATE_Y);
+        styleTracker.addComponent(viewport, notAllowedProperties);
+    }
+
+    private void removeScrollPaneViewComponents (ScrollPane scrollPane) {
+        styleTracker.removeComponent(viewComponentsVerticalScrollBar.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsHorizontalScrollBar.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsVerticalThumb.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsHorizontalThumb.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsIncrementVButton.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsDecrementVButton.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsIncrementHButton.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsDecrementHButton.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsIncrementVArrow.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsDecrementVArrow.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsIncrementHArrow.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsDecrementHArrow.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsCorner.get(scrollPane));
+        styleTracker.removeComponent(viewComponentsViewport.get(scrollPane));
+
+        viewComponentsVerticalScrollBar.remove(scrollPane);
+        viewComponentsHorizontalScrollBar.remove(scrollPane);
+        viewComponentsVerticalThumb.remove(scrollPane);
+        viewComponentsHorizontalThumb.remove(scrollPane);
+        viewComponentsIncrementVButton.remove(scrollPane);
+        viewComponentsDecrementVButton.remove(scrollPane);
+        viewComponentsIncrementHButton.remove(scrollPane);
+        viewComponentsDecrementHButton.remove(scrollPane);
+        viewComponentsIncrementVArrow.remove(scrollPane);
+        viewComponentsDecrementVArrow.remove(scrollPane);
+        viewComponentsIncrementHArrow.remove(scrollPane);
+        viewComponentsDecrementHArrow.remove(scrollPane);
+        viewComponentsCorner.remove(scrollPane);
+        viewComponentsViewport.remove(scrollPane);
     }
 
     /**
@@ -376,15 +538,41 @@ public class FTabPane extends Pane implements FLabeled {
      * @param name the user input name
      */
     private String createTabName (String name) {
-        int index = 0;
+        int index = 1;
         if (tabsNames.containsKey(name)) {
-            index = tabsNames.get(name) + 1;
+            List<Integer> indexList = tabsNames.get(name);
+            index = indexList.get(indexList.size() - 1) + 1;
+            indexList.add(index);
         }
-        tabsNames.put(name, index);
-        if (index > 0) {
+        else {
+            tabsNames.put(name, new ArrayList<>(List.of(1)));
+        }
+        if (index > 1) {
             name += " (" + index + ")";
         }
         return name;
+    }
+
+    private void removeTabName (String tabName) {
+        String name = tabName.replaceAll("\\s\\(\\d+\\)", "");
+        String strIndex = "";
+        int index = 1;
+        for (int i = tabName.length() - 1; i >= 0; i--) {
+            if (tabName.charAt(i) == '(') {
+                break;
+            }
+            if (i < tabName.length() - 1) {
+                strIndex = tabName.charAt(i) + strIndex;
+            }
+        }
+        if (strIndex.matches("\\d+")) {
+            index = Integer.parseInt(strIndex);
+        }
+        List<Integer> namesIndexes = tabsNames.get(name);
+        namesIndexes.remove((Integer) index);
+        if (namesIndexes.isEmpty()) {
+            tabsNames.remove(name);
+        }
     }
 
     public FTabPane tabsBarHeight (double value) {
@@ -392,28 +580,48 @@ public class FTabPane extends Pane implements FLabeled {
         return this;
     }
 
-    public FTabPane tabsWidth (double value) {
+    private FTabPane setTabsWidth (double value) {
         tabsWidth = value;
         tabs.forEach(tab -> {
             tab.setPrefWidth(value);
         });
-        rearrangeTabs();
+        rearrangeTabsOnWidth();
         return this;
     }
 
     public FTabPane tabsSpacing (double value) {
         tabsSpacing = value;
-        rearrangeTabs();
+        rearrangeTabsOnWidth();
         return this;
     }
 
-    private void rearrangeTabs () {
+    private void rearrangeTabsOnWidth () {
         totalTabsBarContentWidth = tabsBarContentPadding.getLeft();
         for (int i = 0; i < tabs.size(); i++) {
             Pane currTab = tabs.get(i);
             currTab.setLayoutX(totalTabsBarContentWidth);
             totalTabsBarContentWidth += currTab.getPrefWidth() + tabsSpacing;
         }
+    }
+
+    private void rearrangeTabsOnHeight () {
+        for (int i = 0; i < tabs.size(); i++) {
+            Pane currTab = tabs.get(i);
+            currTab.setPrefHeight(tabsBarContent.getPrefHeight() - tabsBarContentPadding.getTop() - tabsBarContentPadding.getBottom());
+            currTab.setLayoutY(tabsBarContentPadding.getTop());
+        }
+    }
+
+    private void rearrangeMainComponents () {
+        tabsBar.setPrefWidth(getPrefWidth() - padding.getLeft() - padding.getRight());
+        tabsBar.setLayoutX(padding.getLeft());
+        tabsBar.setLayoutY(padding.getTop());
+        tabPaneViewComponents.forEach((tab, scrollPaneView) -> {
+            scrollPaneView.setPrefWidth(getPrefWidth() - padding.getLeft() - padding.getRight());
+            scrollPaneView.setPrefHeight(getPrefHeight() - tabsBar.getPrefHeight() - padding.getTop() - padding.getBottom());
+            scrollPaneView.setLayoutX(padding.getLeft());
+            scrollPaneView.setLayoutY(tabsBar.getPrefHeight() + padding.getTop());
+        });
     }
 
     /**
@@ -428,65 +636,88 @@ public class FTabPane extends Pane implements FLabeled {
                 currVisibleViewComponent.setVisible(false);
             }
             if (tabs.size() == 1) {
+                UIUtil.remove(this, tabPaneViewComponents.get(currTab));
+                styleTracker.removeComponent(tabPaneViewComponents.get(currTab));
+                removeScrollPaneViewComponents(tabPaneViewComponents.get(currTab));
+                tabPaneViewComponents.remove(currTab);
                 currVisibleViewComponent = null;
             }
             else if (index < tabs.size() - 1) {
                 Pane nextTab = tabs.get(index + 1);
+                UIUtil.remove(this, tabPaneViewComponents.get(currTab));
+                styleTracker.removeComponent(tabPaneViewComponents.get(currTab));
+                removeScrollPaneViewComponents(tabPaneViewComponents.get(currTab));
+                tabPaneViewComponents.remove(currTab);
                 currVisibleViewComponent = tabPaneViewComponents.get(nextTab);
                 currVisibleViewComponent.setVisible(true);
             }
             else if (index == tabs.size() - 1) {
                 Pane prevTab = tabs.get(index - 1);
+                ScrollPane viewComponent = tabPaneViewComponents.get(currTab);
+                UIUtil.remove(this, viewComponent);
+                styleTracker.removeComponent(viewComponent);
+                removeScrollPaneViewComponents(viewComponent);
+                tabPaneViewComponents.remove(currTab);
                 currVisibleViewComponent = tabPaneViewComponents.get(prevTab);
                 currVisibleViewComponent.setVisible(true);
             }
             UIUtil.remove(tabsBarContent, currTab);
+            removeTabName(tabsLabels.get(currTab).getText());
             tabsCloseButtonPanes.remove(tabsCloseButtonIconPanes.get(currTab));
-            tabs.remove(currTab);
             tabsLabels.remove(currTab);
             tabsIconPanes.remove(currTab);
             tabsIcons.remove(currTab);
-            rearrangeTabs();
+            tabs.remove(currTab);
+            rearrangeTabsOnWidth();
         }
         return this;
     }
 
     public FTabPane setCloseButtonIcon (Image image) {
-        tabsIconPanes.forEach((tab, iconPane) -> {
-            Node currIcon = tabsIcons.get(tab);
-            UIUtil.remove(iconPane, currIcon);
+        tabsCloseButtonIconPanes.forEach((tab, closeIconPane) -> {
+            Node currIcon = tabsCloseButtonIcons.get(tab);
+            UIUtil.remove(closeIconPane, currIcon);
             ImageView icon = new ImageView();
             icon.setImage(image);
-            tabsIcons.put(tab, icon);
-            double width = iconPane.getPrefWidth() * closeButtonsIconDimensionPercent;
-            double height = iconPane.getPrefHeight() * closeButtonsIconDimensionPercent;
-            double x = iconPane.getPrefWidth() / 2 - width / 2;
-            double y = iconPane.getPrefHeight() / 2 - height / 2;
+            tabsCloseButtonIcons.put(tab, icon);
+            double width = closeIconPane.getPrefWidth() * closeButtonsIconDimensionPercent;
+            double height = closeIconPane.getPrefHeight() * closeButtonsIconDimensionPercent;
+            double x = closeIconPane.getPrefWidth() / 2 - width / 2;
+            double y = closeIconPane.getPrefHeight() / 2 - height / 2;
             icon.setFitWidth(width);
             icon.setFitHeight(height);
             icon.setLayoutX(x);
             icon.setLayoutY(y);
-            UIUtil.add(iconPane, icon);
+            UIUtil.add(closeIconPane, icon);
         });
         return this;
     }
 
     public FTabPane setCloseButtonIcon (Shape shape) {
-        tabsIconPanes.forEach((tab, iconPane) -> {
-            Node currIcon = tabsIcons.get(tab);
-            UIUtil.remove(iconPane, currIcon);
+        tabsCloseButtonIconPanes.forEach((tab, closeIconPane) -> {
+            Node currIcon = tabsCloseButtonIcons.get(tab);
+            UIUtil.remove(closeIconPane, currIcon);
             Pane icon = new Pane();
             icon.setShape(shape);
-            tabsIcons.put(tab, icon);
-            double width = iconPane.getPrefWidth() * closeButtonsIconDimensionPercent;
-            double height = iconPane.getPrefHeight() * closeButtonsIconDimensionPercent;
-            double x = iconPane.getPrefWidth() / 2 - width / 2;
-            double y = iconPane.getPrefHeight() / 2 - height / 2;
+            tabsCloseButtonIcons.put(tab, icon);
+            double width = closeIconPane.getPrefWidth() * closeButtonsIconDimensionPercent;
+            double height = closeIconPane.getPrefHeight() * closeButtonsIconDimensionPercent;
+            double x = closeIconPane.getPrefWidth() / 2 - width / 2;
+            double y = closeIconPane.getPrefHeight() / 2 - height / 2;
             icon.setPrefWidth(width);
             icon.setPrefHeight(height);
             icon.setLayoutX(x);
             icon.setLayoutY(y);
-            UIUtil.add(iconPane, icon);
+            UIUtil.add(closeIconPane, icon);
+        });
+        return this;
+    }
+
+    public FTabPane setCloseButtonIconColor (Color color) {
+        tabsCloseButtonIcons.forEach((tab, icon) -> {
+            if (icon instanceof Pane) {
+                BackgroundUtil.setBackgroundColor((Pane) icon, color);
+            }
         });
         return this;
     }
@@ -535,12 +766,21 @@ public class FTabPane extends Pane implements FLabeled {
         return this;
     }
 
+    public FTabPane setTabIconColor (Color color) {
+        tabsIcons.forEach((tab, icon) -> {
+            if (icon instanceof Pane) {
+                BackgroundUtil.setBackgroundColor((Pane) icon, color);
+            }
+        });
+        return this;
+    }
+
     public FTabPane setTabIconsSizePercent (int value) {
         if (value >= 0 && value <= 100) {
             tabsIconDimensionPercent = (double) value / 100;
             tabsIconPanes.forEach((tab, iconPane) -> {
                 if (!iconPane.getChildren().isEmpty()) {
-                    Node icon = iconPane.getChildren().get(0);
+                    Node icon = tabsIcons.get(tab);
                     double width = iconPane.getPrefWidth() * tabsIconDimensionPercent;
                     double height = iconPane.getPrefHeight() * tabsIconDimensionPercent;
                     double x = iconPane.getPrefWidth() / 2 - width / 2;
@@ -561,12 +801,12 @@ public class FTabPane extends Pane implements FLabeled {
         return this;
     }
 
-    public FTabPane setCloseButtonsSizePercent (int value) {
+    public FTabPane setCloseButtonsIconsSizePercent (int value) {
         if (value >= 0 && value <= 100) {
             closeButtonsIconDimensionPercent = (double) value / 100;
             tabsCloseButtonIconPanes.forEach((tab, iconPane) -> {
                 if (!iconPane.getChildren().isEmpty()) {
-                    Node icon = iconPane.getChildren().get(0);
+                    Node icon = tabsCloseButtonIcons.get(tab);
                     double width = iconPane.getPrefWidth() * closeButtonsIconDimensionPercent;
                     double height = iconPane.getPrefHeight() * closeButtonsIconDimensionPercent;
                     double x = iconPane.getPrefWidth() / 2 - width / 2;
@@ -587,18 +827,82 @@ public class FTabPane extends Pane implements FLabeled {
         return this;
     }
 
+    private void addTabToStyleTracker (Pane tab) {
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.X);
+        styleTracker.addComponent(tab, notAllowedProperties);
+    }
+
+    private void addTabIconPaneToStyleTracker (Pane iconPane) {
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.X);
+        styleTracker.addComponent(iconPane, notAllowedProperties);
+    }
+
+    private void addTabLabelToStyleTracker (Label tabLabel) {
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        styleTracker.addComponent(tabLabel, notAllowedProperties);
+    }
+
+    private void addCloseIconPaneToStyleTracker (Pane closeIconPane) {
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        styleTracker.addComponent(closeIconPane, notAllowedProperties);
+    }
+
+    private void addScrollPaneViewToStyleTracker (ScrollPane scrollPane) {
+        Set<String> notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        styleTracker.addComponent(scrollPane, notAllowedProperties);
+    }
+
     private void initAllowedElementsProperties () {
         Set<String> notAllowedProperties = new HashSet<>();
         styleTracker.addComponent(this, notAllowedProperties);
         styleTracker.setCurrentComponent(this);
 
         notAllowedProperties = new HashSet<>();
-        notAllowedProperties.add(MainProps.X);
-        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.SCALE_X);
         notAllowedProperties.add(MainProps.SCALE_Y);
-        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
         styleTracker.addComponent(tabsBar, notAllowedProperties);
+
+        notAllowedProperties = new HashSet<>();
+        notAllowedProperties.add(MainProps.WIDTH);
+        notAllowedProperties.add(MainProps.HEIGHT);
+        notAllowedProperties.add(MainProps.SCALE_X);
+        notAllowedProperties.add(MainProps.SCALE_Y);
+        notAllowedProperties.add(MainProps.X);
+        notAllowedProperties.add(MainProps.Y);
+        notAllowedProperties.add(MainProps.TRANSLATE_X);
+        notAllowedProperties.add(MainProps.TRANSLATE_Y);
+        styleTracker.addComponent(tabsBarViewport, notAllowedProperties);
 
         notAllowedProperties = new HashSet<>();
         notAllowedProperties.add(MainProps.X);
@@ -608,6 +912,8 @@ public class FTabPane extends Pane implements FLabeled {
         notAllowedProperties.add(MainProps.WIDTH);
         notAllowedProperties.add(MainProps.HEIGHT);
         styleTracker.addComponent(tabsBarContent, notAllowedProperties);
+
+        styleTracker.addComponentToStyleID(TABS_COMPONENT_TO_STYLE_ID);
     }
 
     public FTabPane tabsBar (PseudoElement pseudoElement) {
@@ -625,8 +931,19 @@ public class FTabPane extends Pane implements FLabeled {
     }
 
     public FTabPane tabs (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(TABS_COMPONENT_TO_STYLE_ID);
         for (int i = 0; i < tabs.size(); i++) {
             styleTracker.setCurrentComponent(tabs.get(i));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane tabsIconPanes (PseudoElements pseudoElements) {
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(tabsIconPanes.get(tabs.get(i)));
             pseudoElements.apply(i);
         }
         styleTracker.setCurrentComponent(this);
@@ -634,20 +951,283 @@ public class FTabPane extends Pane implements FLabeled {
     }
 
     public FTabPane tabsLabels (PseudoElements pseudoElements) {
-        for (int i = 0; i < tabsLabels.size(); i++) {
-            styleTracker.setCurrentComponent(tabsLabels.get(i));
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(tabsLabels.get(tabs.get(i)));
             pseudoElements.apply(i);
         }
         styleTracker.setCurrentComponent(this);
         return this;
     }
 
-    public FTabPane tabsIconPanes (PseudoElements pseudoElements) {
-        for (int i = 0; i < tabsIconPanes.size(); i++) {
-            styleTracker.setCurrentComponent(tabsIconPanes.get(i));
+    public FTabPane tabsCloseIconPanes (PseudoElements pseudoElements) {
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(tabsCloseButtonIconPanes.get(tabs.get(i)));
             pseudoElements.apply(i);
         }
         styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane viewScrollPanes (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(tabPaneViewComponents.get(tabs.get(i)));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane tabsBarVerticalScrollBar (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarVerticalScrollBar);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarHorizontalScrollBar (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarHorizontalScrollBar);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarVerticalThumb (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarVerticalThumb);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarHorizontalThumb (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarHorizontalThumb);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarIncrementVButton (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarIncrementVButton);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarDecrementVButton (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarDecrementVButton);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarIncrementHButton (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarIncrementHButton);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarDecrementHButton (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarDecrementHButton);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarIncrementVArrow (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarIncrementVArrow);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarDecrementVArrow (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarDecrementVArrow);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarIncrementHArrow (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarIncrementHArrow);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarDecrementHArrow (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarDecrementHArrow);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarCorner (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarCorner);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane tabsBarViewport (PseudoElement pseudoElement) {
+        styleTracker.setCurrentComponent(tabsBarViewport);
+        pseudoElement.apply();
+        styleTracker.setCurrentComponent(this);
+        return this;
+    }
+
+    public FTabPane viewComponentVerticalScrollBar (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsVerticalScrollBar.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentHorizontalScrollBar (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsHorizontalScrollBar.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentVerticalThumb (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsVerticalThumb.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentHorizontalThumb (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsHorizontalThumb.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentIncrementVButton (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsIncrementVButton.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentDecrementVButton (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsDecrementVButton.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentIncrementHButton (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsIncrementHButton.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentDecrementHButton (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsDecrementHButton.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentIncrementVArrow (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsIncrementVArrow.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentDecrementVArrow (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsDecrementVArrow.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentIncrementHArrow (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsIncrementHArrow.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentDecrementHArrow (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsDecrementHArrow.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentCorner (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsCorner.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
+        return this;
+    }
+
+    public FTabPane viewComponentViewport (PseudoElements pseudoElements) {
+        styleTracker.setCurrentComponentID(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID);
+        for (int i = 0; i < tabs.size(); i++) {
+            styleTracker.setCurrentComponent(viewComponentsViewport.get(tabPaneViewComponents.get(tabs.get(i))));
+            pseudoElements.apply(i);
+        }
+        styleTracker.setCurrentComponent(this);
+        styleTracker.setCurrentComponentID(ComponentStyleTracker.THIS_COMPONENT_TO_STYLE_ID);
         return this;
     }
 
@@ -680,7 +1260,16 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane width (double value) {
         if (styleTracker.isAllowedProperty(MainProps.WIDTH)) {
-            styleTracker.getCurrentComponent().setPrefWidth(value);
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                setTabsWidth(value);
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                styleTracker.getCurrentComponent().setPrefWidth(value);
+                rearrangeMainComponents();
+            }
+            else {
+                styleTracker.getCurrentComponent().setPrefWidth(value);
+            }
         }
         return this;
     }
@@ -688,7 +1277,21 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane height (double value) {
         if (styleTracker.isAllowedProperty(MainProps.HEIGHT)) {
-            styleTracker.getCurrentComponent().setPrefHeight(value);
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                styleTracker.getCurrentComponent().setPrefHeight(value);
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                styleTracker.getCurrentComponent().setPrefHeight(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBar) {
+                styleTracker.getCurrentComponent().setPrefHeight(value);
+                rearrangeMainComponents();
+            }
+            else {
+                styleTracker.getCurrentComponent().setPrefHeight(value);
+            }
         }
         return this;
     }
@@ -730,9 +1333,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane padding (double value) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).set(value);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.set(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.set(value);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setPadding(styleTracker.getCurrentComponent(), value);
@@ -744,9 +1358,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane padding (double topBottom, double rightLeft) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).set(topBottom, rightLeft);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.set(topBottom, rightLeft);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.set(topBottom, rightLeft);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setPadding(styleTracker.getCurrentComponent(), topBottom, rightLeft);
@@ -758,9 +1383,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane padding (double top, double right, double bottom, double left) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).set(top, right, bottom, left);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.set(top, right, bottom, left);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.set(top, right, bottom, left);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setPadding(styleTracker.getCurrentComponent(), top, right, bottom, left);
@@ -772,9 +1408,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane topPadding (double value) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).setTop(value);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.setTop(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.setTop(value);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setTopPadding(styleTracker.getCurrentComponent(), value);
@@ -786,9 +1433,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane rightPadding (double value) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).setRight(value);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.setRight(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.setRight(value);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setRightPadding(styleTracker.getCurrentComponent(), value);
@@ -800,9 +1458,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane bottomPadding (double value) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).setBottom(value);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.setBottom(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.setBottom(value);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setBottomPadding(styleTracker.getCurrentComponent(), value);
@@ -814,9 +1483,20 @@ public class FTabPane extends Pane implements FLabeled {
     @Override
     public FTabPane leftPadding (double value) {
         if (styleTracker.isAllowedProperty(MainProps.PADDING)) {
-            if (styleTracker.getCurrentComponent() == tabsBarContent) {
+            if (styleTracker.getCurrentComponentID().equals(TABS_COMPONENT_TO_STYLE_ID)) {
+                for (int i = 0; i < tabs.size(); i++) {
+                    tabsPadding.get(tabs.get(i)).setLeft(value);
+                }
+                rearrangeTabsOnHeight();
+            }
+            else if (styleTracker.getCurrentComponent() == this) {
+                padding.setLeft(value);
+                rearrangeMainComponents();
+            }
+            else if (styleTracker.getCurrentComponent() == tabsBarContent) {
                 tabsBarContentPadding.setLeft(value);
-                rearrangeTabs();
+                rearrangeTabsOnWidth();
+                rearrangeTabsOnHeight();
             }
             else {
                 PaddingUtil.setLeftPadding(styleTracker.getCurrentComponent(), value);
@@ -1081,7 +1761,9 @@ public class FTabPane extends Pane implements FLabeled {
 
     @Override
     public FTabPane alignment (Pos pos) {
-        //        setAlignment(pos);
+        tabsLabels.forEach((tab, label) -> {
+            label.setAlignment(pos);
+        });
         return this;
     }
 
@@ -1631,97 +2313,117 @@ public class FTabPane extends Pane implements FLabeled {
 
     @Override
     public FTabPane font (String fontFamily, FontWeight fontWeight, FontPosture fontPosture, double fontSize) {
-        //        FontUtil.setFont(this, fontFamily, fontWeight, fontPosture, fontSize);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFont(label, fontFamily, fontWeight, fontPosture, fontSize);
+        });
         return this;
     }
 
     @Override
     public FTabPane font (String fontFamily, FontPosture fontPosture, double fontSize) {
-        //        FontUtil.setFont(this, fontFamily, fontPosture, fontSize);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFont(label, fontFamily, fontPosture, fontSize);
+        });
         return this;
     }
 
     @Override
     public FTabPane font (String fontFamily, FontWeight fontWeight, double fontSize) {
-        //        FontUtil.setFont(this, fontFamily, fontWeight, fontSize);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFont(label, fontFamily, fontWeight, fontSize);
+        });
         return this;
     }
 
     @Override
     public FTabPane font (String fontFamily, double fontSize) {
-        //        FontUtil.setFont(this, fontFamily, fontSize);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFont(label, fontFamily, fontSize);
+        });
         return this;
     }
 
     @Override
     public FTabPane fontColor (Color color) {
-        //        FontUtil.setFontColor(this, color);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontColor(label, color);
+        });
         return this;
     }
 
     @Override
     public FTabPane fontColor (String color) {
-        //        FontUtil.setFontColor(this, color);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontColor(label, color);
+        });
         return this;
     }
 
     @Override
     public Color getFontColor () {
-        //        return FontUtil.getFontColor(this);
-        return null;
+        return FontUtil.getFontColor(tabsLabels.get(tabs.get(0)));
     }
 
     @Override
     public String getFontColorHex () {
-        //        return FontUtil.getFontColorHex(this);
-        return "";
+        return FontUtil.getFontColorHex(tabsLabels.get(tabs.get(0)));
     }
 
     @Override
     public FTabPane fontFamily (String fontFamily) {
-        //        FontUtil.setFontFamily(this, fontFamily);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontFamily(label, fontFamily);
+        });
         return this;
     }
 
     @Override
     public FTabPane fontPosture (FontPosture fontPosture) {
-        //        FontUtil.setFontPosture(this, fontPosture);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontPosture(label, fontPosture);
+        });
         return this;
     }
 
     @Override
     public FTabPane fontPosture (String fontPosture) {
-        //        FontUtil.setFontPosture(this, fontPosture);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontPosture(label, fontPosture);
+        });
         return this;
     }
 
     @Override
     public String getFontPostureString () {
-        //        return getFont().getStyle();
-        return "";
+        return tabsLabels.get(tabs.get(0)).getFont().getStyle();
     }
 
     @Override
     public FTabPane fontWeight (FontWeight fontWeight) {
-        //        FontUtil.setFontWeight(this, fontWeight);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontWeight(label, fontWeight);
+        });
         return this;
     }
 
     @Override
     public FTabPane fontSize (double fontSize) {
-        //        FontUtil.setFontSize(this, fontSize);
+        tabsLabels.forEach((tab, label) -> {
+            FontUtil.setFontSize(label, fontSize);
+        });
         return this;
     }
 
     @Override
     public double getFontSize () {
-        //        return getFont().getSize();
-        return 0;
+        return tabsLabels.get(tabs.get(0)).getFont().getSize();
     }
 
     @Override
     public FTabPane textAlignment (TextAlignment textAlignment) {
-        //        setTextAlignment(textAlignment);
+        tabsLabels.forEach((tab, label) -> {
+            label.setTextAlignment(textAlignment);
+        });
         return this;
     }
 
@@ -1732,82 +2434,345 @@ public class FTabPane extends Pane implements FLabeled {
     }
 
     public FTabPane hBarPolicy (ScrollPane.ScrollBarPolicy scrollBarPolicy) {
-        tabsBar.setHbarPolicy(scrollBarPolicy);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setHbarPolicy(scrollBarPolicy);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setHbarPolicy(scrollBarPolicy);
+        }
         return this;
     }
 
     public FTabPane vBarPolicy (ScrollPane.ScrollBarPolicy scrollBarPolicy) {
-        tabsBar.setVbarPolicy(scrollBarPolicy);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setVbarPolicy(scrollBarPolicy);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setVbarPolicy(scrollBarPolicy);
+        }
         return this;
     }
 
     public FTabPane vMin (double value) {
-        tabsBar.setVmin(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setVmin(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setVmin(value);
+        }
         return this;
     }
 
     public FTabPane vMax (double value) {
-        tabsBar.setVmax(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setVmax(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setVmax(value);
+        }
         return this;
     }
 
     public FTabPane hMin (double value) {
-        tabsBar.setHmin(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setHmin(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setHmin(value);
+        }
         return this;
     }
 
     public FTabPane hMax (double value) {
-        tabsBar.setHmax(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setHmax(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setHmax(value);
+        }
         return this;
     }
 
     public FTabPane hValue (double value) {
-        tabsBar.setHvalue(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setHvalue(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setHvalue(value);
+        }
         return this;
     }
 
     public FTabPane vValue (double value) {
-        tabsBar.setVvalue(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setVvalue(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setVvalue(value);
+        }
         return this;
     }
 
     public FTabPane fitToWidth (boolean fit) {
-        tabsBar.setFitToWidth(fit);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setFitToWidth(fit);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setFitToWidth(fit);
+        }
         return this;
     }
 
     public FTabPane fitToHeight (boolean fit) {
-        tabsBar.setFitToHeight(fit);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setFitToHeight(fit);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setFitToHeight(fit);
+        }
         return this;
     }
 
     public FTabPane pannable (boolean pannable) {
-        tabsBar.setPannable(pannable);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setPannable(pannable);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setPannable(pannable);
+        }
         return this;
     }
 
     public FTabPane minViewportWidth (double value) {
-        tabsBar.setMinViewportWidth(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setMinViewportWidth(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setMinViewportWidth(value);
+        }
         return this;
     }
 
     public FTabPane minViewportHeight (double value) {
-        tabsBar.setMinViewportHeight(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setMinViewportHeight(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setMinViewportHeight(value);
+        }
         return this;
     }
 
     public FTabPane prefViewportWidth (double value) {
-        tabsBar.setPrefViewportWidth(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setPrefViewportWidth(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setPrefViewportWidth(value);
+        }
         return this;
     }
 
     public FTabPane prefViewportHeight (double value) {
-        tabsBar.setPrefViewportHeight(value);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setPrefViewportHeight(value);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setPrefViewportHeight(value);
+        }
         return this;
     }
 
     public FTabPane viewportBounds (Bounds bounds) {
-        tabsBar.setViewportBounds(bounds);
+        if (styleTracker.getCurrentComponentID().equals(VIEW_SCROLLPANES_COMPONENT_TO_STYLE_ID)) {
+            for (int i = 0; i < tabs.size(); i++) {
+                tabPaneViewComponents.get(tabs.get(i)).setViewportBounds(bounds);
+            }
+        }
+        else if (styleTracker.getCurrentComponent() == tabsBar) {
+            tabsBar.setViewportBounds(bounds);
+        }
         return this;
+    }
+
+    public ScrollBar getTabsBarVScrollBar () {
+        return tabsBarVerticalScrollBar;
+    }
+
+    public ScrollBar getTabsBarHScrollBar () {
+        return tabsBarHorizontalScrollBar;
+    }
+
+    public Region getTabsBarVThumb () {
+        return tabsBarVerticalThumb;
+    }
+
+    public Region getTabsBarHThumb () {
+        return tabsBarHorizontalThumb;
+    }
+
+    public Region getTabsBarIncrementVButton () {
+        return tabsBarIncrementVButton;
+    }
+
+    public Region getTabsBarDecrementVButton () {
+        return tabsBarDecrementVButton;
+    }
+
+    public Region getTabsBarIncrementHButton () {
+        return tabsBarIncrementHButton;
+    }
+
+    public Region getTabsBarDecrementHButton () {
+        return tabsBarDecrementHButton;
+    }
+
+    public Region getTabsBarIncrementVArrow () {
+        return tabsBarIncrementVArrow;
+    }
+
+    public Region getTabsBarDecrementVArrow () {
+        return tabsBarDecrementVArrow;
+    }
+
+    public Region getTabsBarIncrementHArrow () {
+        return tabsBarIncrementHArrow;
+    }
+
+    public Region getTabsBarDecrementHArrow () {
+        return tabsBarDecrementHArrow;
+    }
+
+    public StackPane getTabsBarCorner () {
+        return tabsBarCorner;
+    }
+
+    public ScrollBar getViewComponentVScrollBar (ScrollPane viewComponent) {
+        if (viewComponentsVerticalScrollBar.containsKey(viewComponent)) {
+            return viewComponentsVerticalScrollBar.get(viewComponent);
+        }
+        return null;
+    }
+
+    public ScrollBar getViewComponentHScrollBar (ScrollPane viewComponent) {
+        if (viewComponentsHorizontalScrollBar.containsKey(viewComponent)) {
+            return viewComponentsHorizontalScrollBar.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentVThumb (ScrollPane viewComponent) {
+        if (viewComponentsVerticalThumb.containsKey(viewComponent)) {
+            return viewComponentsVerticalThumb.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentHThumb (ScrollPane viewComponent) {
+        if (viewComponentsHorizontalThumb.containsKey(viewComponent)) {
+            return viewComponentsHorizontalThumb.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentIncrementVButton (ScrollPane viewComponent) {
+        if (viewComponentsIncrementVButton.containsKey(viewComponent)) {
+            return viewComponentsIncrementVButton.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentDecrementVButton (ScrollPane viewComponent) {
+        if (viewComponentsDecrementVButton.containsKey(viewComponent)) {
+            return viewComponentsDecrementVButton.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentIncrementHButton (ScrollPane viewComponent) {
+        if (viewComponentsIncrementHButton.containsKey(viewComponent)) {
+            return viewComponentsIncrementHButton.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentDecrementHButton (ScrollPane viewComponent) {
+        if (viewComponentsDecrementHButton.containsKey(viewComponent)) {
+            return viewComponentsDecrementHButton.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentIncrementVArrow (ScrollPane viewComponent) {
+        if (viewComponentsIncrementVArrow.containsKey(viewComponent)) {
+            return viewComponentsIncrementVArrow.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentDecrementVArrow (ScrollPane viewComponent) {
+        if (viewComponentsDecrementVArrow.containsKey(viewComponent)) {
+            return viewComponentsDecrementVArrow.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentIncrementHArrow (ScrollPane viewComponent) {
+        if (viewComponentsIncrementHArrow.containsKey(viewComponent)) {
+            return viewComponentsIncrementHArrow.get(viewComponent);
+        }
+        return null;
+    }
+
+    public Region getViewComponentDecrementHArrow (ScrollPane viewComponent) {
+        if (viewComponentsDecrementHArrow.containsKey(viewComponent)) {
+            return viewComponentsDecrementHArrow.get(viewComponent);
+        }
+        return null;
+    }
+
+    public StackPane getViewComponentCorner (ScrollPane viewComponent) {
+        if (viewComponentsCorner.containsKey(viewComponent)) {
+            return viewComponentsCorner.get(viewComponent);
+        }
+        return null;
+    }
+
+    public ScrollPane getTabsBar () {
+        return tabsBar;
+    }
+
+    public Map<Pane, ScrollPane> getTabPaneViewComponents () {
+        return Map.copyOf(tabPaneViewComponents);
     }
 }

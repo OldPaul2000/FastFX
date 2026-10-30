@@ -215,8 +215,8 @@ public class UIUtil {
     /**
      * Removes all children from the specified parent
      */
-    public static void removeAll(Pane parent){
-        if(parent != null){
+    public static void removeAll (Pane parent) {
+        if (parent != null) {
             parent.getChildren().clear();
         }
     }
@@ -295,11 +295,11 @@ public class UIUtil {
         return -1;
     }
 
-    public static Node getParent(Node child){
+    public static Node getParent (Node child) {
         return child.getParent();
     }
 
-    public static boolean contains(Pane parent, Node child){
+    public static boolean contains (Pane parent, Node child) {
         return parent.getChildren().contains(child);
     }
 

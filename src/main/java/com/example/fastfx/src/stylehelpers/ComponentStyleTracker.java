@@ -2,6 +2,7 @@ package com.example.fastfx.src.stylehelpers;
 
 import javafx.scene.layout.Region;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,12 +13,18 @@ import java.util.Set;
  * property to style is allowed for the specific component;
  */
 public class ComponentStyleTracker {
+    public static final String THIS_COMPONENT_TO_STYLE_ID = "this";
     private Region currComponentToStyle;
     private Map<Region, Set<String>> componentsToStyle;
+    private Set<String> componentsToStyleIDs;
+    private String currentComponentID;
 
     public ComponentStyleTracker () {
         currComponentToStyle = null;
         this.componentsToStyle = new LinkedHashMap<>();
+        this.componentsToStyleIDs = new HashSet<>();
+        componentsToStyleIDs.add(THIS_COMPONENT_TO_STYLE_ID);
+        currentComponentID = THIS_COMPONENT_TO_STYLE_ID;
     }
 
     public void setCurrentComponent (Region currComponent) {
@@ -40,7 +47,7 @@ public class ComponentStyleTracker {
         return componentsToStyle.containsKey(currComponentToStyle) && !componentsToStyle.get(currComponentToStyle).contains(propertyName);
     }
 
-    public void removeComponent(Region component){
+    public void removeComponent (Region component) {
         componentsToStyle.remove(component);
     }
 
@@ -50,5 +57,19 @@ public class ComponentStyleTracker {
 
     public Map<Region, Set<String>> getNotAllowedProperties () {
         return componentsToStyle;
+    }
+
+    public void addComponentToStyleID (String id) {
+        componentsToStyleIDs.add(id);
+    }
+
+    public void setCurrentComponentID (String id) {
+        if (componentsToStyleIDs.contains(id)) {
+            currentComponentID = id;
+        }
+    }
+
+    public String getCurrentComponentID () {
+        return currentComponentID;
     }
 }
